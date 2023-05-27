@@ -9,4 +9,4 @@ realm = 'shared'
 
 [dependencies]
 LuauPolyfill = 'core-packages/luau-polyfill@1.2.3'
-RegExp = 'core-packages/reg-exp@0.2.0'
+RegExp = 'jsdotlua/regex@1.0.0'
