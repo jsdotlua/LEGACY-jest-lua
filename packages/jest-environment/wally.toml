@@ -8,7 +8,7 @@ registry = 'https://github.com/UpliftGames/wally-index'
 realm = 'shared'
 
 [dependencies]
-JestFakeTimers = 'core-packages/jest-fake-timers@3.2.5'
-JestMock = 'core-packages/jest-mock@3.2.5'
-JestTypes = 'core-packages/jest-types@3.2.5'
-LuauPolyfill = 'core-packages/luau-polyfill@1.2.3'
+JestFakeTimers = 'jsdotlua/jest-fake-timers@3.2.5'
+JestMock = 'jsdotlua/jest-mock@3.2.5'
+JestTypes = 'jsdotlua/jest-types@3.2.5'
+LuauPolyfill = 'jsdotlua/luau-polyfill@1.2.3'

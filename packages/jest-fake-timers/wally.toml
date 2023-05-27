@@ -8,6 +8,6 @@ registry = 'https://github.com/UpliftGames/wally-index'
 realm = 'shared'
 
 [dependencies]
-JestGetType = 'core-packages/jest-get-type@3.2.5'
-JestMock = 'core-packages/jest-mock@3.2.5'
-LuauPolyfill = 'core-packages/luau-polyfill@1.2.3'
+JestGetType = 'jsdotlua/jest-get-type@3.2.5'
+JestMock = 'jsdotlua/jest-mock@3.2.5'
+LuauPolyfill = 'jsdotlua/luau-polyfill@1.2.3'
