@@ -1,5 +1,7 @@
+deps/
+temp/
+
 .DS_Store
 
 sourcemap.json
 globalTypes.d.lua
-deps/
