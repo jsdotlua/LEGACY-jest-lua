@@ -1,0 +1,20 @@
+[package]
+name = 'jsdotlua/jest-config'
+description = 'https://github.com/jsdotlua/jest-lua'
+version = '3.2.5'
+license = 'MIT'
+authors = ['Roblox Corporation']
+registry = 'https://github.com/UpliftGames/wally-index'
+realm = 'shared'
+
+[dependencies]
+ChalkLua = 'core-packages/chalk-lua@0.2.0'
+JestEnvironmentLuau = 'core-packages/jest-environment-luau@3.2.5'
+JestGetType = 'core-packages/jest-get-type@3.2.5'
+JestTypes = 'core-packages/jest-types@3.2.5'
+JestUtil = 'core-packages/jest-util@3.2.5'
+JestValidate = 'core-packages/jest-validate@3.2.5'
+LuauPolyfill = 'core-packages/luau-polyfill@1.2.3'
+Promise = 'evaera/promise@4.0.0'
+RegExp = 'core-packages/reg-exp@0.2.0'
+RobloxShared = 'core-packages/roblox-shared@3.2.5'

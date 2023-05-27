@@ -1,0 +1,16 @@
+[package]
+name = 'jsdotlua/jest-matcher-utils'
+description = 'https://github.com/jsdotlua/jest-lua'
+version = '3.2.5'
+license = 'MIT'
+authors = ['Roblox Corporation']
+registry = 'https://github.com/UpliftGames/wally-index'
+realm = 'shared'
+
+[dependencies]
+ChalkLua = 'core-packages/chalk-lua@0.2.0'
+JestDiff = 'core-packages/jest-diff@3.2.5'
+JestGetType = 'core-packages/jest-get-type@3.2.5'
+LuauPolyfill = 'core-packages/luau-polyfill@1.2.3'
+PrettyFormat = 'core-packages/pretty-format@3.2.5'
+RegExp = 'core-packages/reg-exp@0.2.0'

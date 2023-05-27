@@ -1,0 +1,27 @@
+[package]
+name = 'jsdotlua/jest-circus'
+description = 'https://github.com/jsdotlua/jest-lua'
+version = '3.2.5'
+license = 'MIT'
+authors = ['Roblox Corporation']
+registry = 'https://github.com/UpliftGames/wally-index'
+realm = 'shared'
+
+[dependencies]
+ChalkLua = 'core-packages/chalk-lua@0.2.0'
+Expect = 'core-packages/expect@3.2.5'
+JestEach = 'core-packages/jest-each@3.2.5'
+JestEnvironment = 'core-packages/jest-environment@3.2.5'
+JestMatcherUtils = 'core-packages/jest-matcher-utils@3.2.5'
+JestMessageUtil = 'core-packages/jest-message-util@3.2.5'
+JestRuntime = 'core-packages/jest-runtime@3.2.5'
+JestSnapshot = 'core-packages/jest-snapshot@3.2.5'
+JestTestResult = 'core-packages/jest-test-result@3.2.5'
+JestTypes = 'core-packages/jest-types@3.2.5'
+JestUtil = 'core-packages/jest-util@3.2.5'
+LuauPolyfill = 'core-packages/luau-polyfill@1.2.3'
+PrettyFormat = 'core-packages/pretty-format@3.2.5'
+Promise = 'evaera/promise@4.0.0'
+RegExp = 'core-packages/reg-exp@0.2.0'
+RobloxShared = 'core-packages/roblox-shared@3.2.5'
+Throat = 'core-packages/throat@3.2.5'

@@ -1,0 +1,20 @@
+[package]
+name = 'jsdotlua/jest-reporters'
+description = 'https://github.com/jsdotlua/jest-lua'
+version = '3.2.5'
+license = 'MIT'
+authors = ['Roblox Corporation']
+registry = 'https://github.com/UpliftGames/wally-index'
+realm = 'shared'
+
+[dependencies]
+ChalkLua = 'core-packages/chalk-lua@0.2.0'
+JestConsole = 'core-packages/jest-console@3.2.5'
+JestMock = 'core-packages/jest-mock@3.2.5'
+JestTestResult = 'core-packages/jest-test-result@3.2.5'
+JestTypes = 'core-packages/jest-types@3.2.5'
+JestUtil = 'core-packages/jest-util@3.2.5'
+LuauPolyfill = 'core-packages/luau-polyfill@1.2.3'
+Path = 'core-packages/path@3.2.5'
+RobloxShared = 'core-packages/roblox-shared@3.2.5'
+TestUtils = 'core-packages/test-utils@3.2.5'
