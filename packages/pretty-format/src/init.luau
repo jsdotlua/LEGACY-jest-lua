@@ -24,7 +24,8 @@ local printListItems = Collections.printListItems
 local AsymmetricMatcher = require(CurrentModule.plugins.AsymmetricMatcher)
 local ConvertAnsi = require(CurrentModule.plugins.ConvertAnsi)
 local RobloxInstance = require(CurrentModule.plugins.RobloxInstance)
-local ReactElement = require(CurrentModule.plugins.ReactElement)
+-- TODO: Re-enable React support. See: https://github.com/jsdotlua/jest-lua/issues/2
+-- local ReactElement = require(CurrentModule.plugins.ReactElement)
 local ReactTestComponent = require(CurrentModule.plugins.ReactTestComponent)
 
 local JestGetType = require(Packages.JestGetType)
@@ -457,7 +458,8 @@ end
 local plugins = {
 	AsymmetricMatcher = AsymmetricMatcher,
 	ConvertAnsi = ConvertAnsi,
-	ReactElement = ReactElement,
+	-- TODO: Re-enable React support. See: https://github.com/jsdotlua/jest-lua/issues/2
+	-- ReactElement = ReactElement,
 	ReactTestComponent = ReactTestComponent,
 	-- ROBLOX deviation: Roblox Instance matchers
 	RobloxInstance = RobloxInstance,

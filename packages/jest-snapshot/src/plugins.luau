@@ -20,7 +20,8 @@ local plugins = require(Packages.PrettyFormat).plugins
 local PLUGINS: PrettyFormatPlugins = {
 	jestMockSerializer,
 	plugins.AsymmetricMatcher,
-	plugins.ReactElement,
+	-- TODO: Re-enable React support. See: https://github.com/jsdotlua/jest-lua/issues/2
+	-- plugins.ReactElement,
 	plugins.ReactTestComponent,
 	-- ROBLOX deviation: Roblox Instance matchers
 	plugins.RobloxInstance,

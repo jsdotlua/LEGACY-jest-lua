@@ -11,6 +11,7 @@ realm = 'shared'
 ChalkLua = 'core-packages/chalk-lua@0.2.0'
 JestGetType = 'core-packages/jest-get-type@3.2.5'
 LuauPolyfill = 'core-packages/luau-polyfill@1.2.3'
-ReactIs = 'core-packages/react-is-proxy@0.0.1'
+# TODO: Re-enable React support. See: https://github.com/jsdotlua/jest-lua/issues/2
+# ReactIs = 'core-packages/react-is-proxy@0.0.1'
 RegExp = 'core-packages/reg-exp@0.2.0'
 RobloxShared = 'core-packages/roblox-shared@3.2.5'
