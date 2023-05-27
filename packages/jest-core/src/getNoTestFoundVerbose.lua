@@ -58,8 +58,7 @@ local function getNoTestFoundVerbose(testRunData: TestRunData, globalConfig: Con
 			then ("In %s\n"):format(chalk.bold(tostring(config.rootDir))) .. ("  %s checked.\n"):format(
 				pluralize("file", Boolean.toJSBoolean(testRun.matches.total) and testRun.matches.total or 0, "s")
 			) .. statsMessage
-			else
-				("No files found in %s.\n"):format(tostring(config.rootDir))
+			else ("No files found in %s.\n"):format(tostring(config.rootDir))
 				.. "Make sure Jest's configuration does not exclude this directory."
 				.. "\nTo set up Jest, make sure a package.json file exists.\n"
 				.. "Jest Documentation: "

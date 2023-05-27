@@ -78,9 +78,10 @@ do
 					table.insert(
 						currentlyRunningTest.errors,
 						Error.new(
-							(
-								'Cannot nest a describe inside a test. Describe block "%s" cannot run because it is nested within "%s".'
-							):format(blockName, currentlyRunningTest.name)
+							('Cannot nest a describe inside a test. Describe block "%s" cannot run because it is nested within "%s".'):format(
+								blockName,
+								currentlyRunningTest.name
+							)
 						)
 					)
 					break
@@ -96,9 +97,9 @@ do
 
 				if not Boolean.toJSBoolean(describeBlockHasTests(currentDescribeBlock)) then
 					Array.forEach(currentDescribeBlock.hooks, function(hook)
-						hook.asyncError.message = (
-							"Invalid: %s() may not be used in a describe block containing no tests."
-						):format(hook.type)
+						hook.asyncError.message = ("Invalid: %s() may not be used in a describe block containing no tests."):format(
+							hook.type
+						)
 						table.insert(state.unhandledErrors, hook.asyncError)
 					end)
 				end
@@ -106,11 +107,11 @@ do
 				-- pass mode of currentDescribeBlock to tests
 				-- but do not when there is already a single test with "only" mode
 				local shouldPassMode = not (
-						currentDescribeBlock.mode == "only"
-						and Array.some(currentDescribeBlock.children, function(child)
-							return child.type == "test" and child.mode == "only"
-						end)
-					)
+					currentDescribeBlock.mode == "only"
+					and Array.some(currentDescribeBlock.children, function(child)
+						return child.type == "test" and child.mode == "only"
+					end)
+				)
 				if shouldPassMode then
 					Array.forEach(currentDescribeBlock.children, function(child)
 						if child.type == "test" and not Boolean.toJSBoolean(child.mode) then
