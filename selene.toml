@@ -7,5 +7,9 @@ empty_if = "allow"
 shadowing = "allow"
 if_same_then_else = "allow"
 
+# This is primarily an issue with Selele reporting `assert` needing 2 arguments, when it actually doesn't. 
+# NOTE: This will also silence issues with `GetService` importing internal-only services, which we want to catch.
+incorrect_standard_library_use = "allow"
+
 # TODO: Actually fix unused varaibles. This is just a bandaid.
 unused_variable = "allow"

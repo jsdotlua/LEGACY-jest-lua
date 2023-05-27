@@ -318,10 +318,8 @@ end
 
 function deepMerge(target: any, source: any): any
 	if isObject(target) and isObject(source) then
-		local mergedOutput = {}
-		for key, value in pairs(target) do
-			mergedOutput[key] = value
-		end
+		-- JS.Lua Note: Converted this to table.clone rather than using a loop.
+		local mergedOutput = table.clone(target)
 
 		for key, value in pairs(source) do
 			if isObject(source[key]) and not source[key]["$$typeof"] then
