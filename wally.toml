@@ -9,4 +9,5 @@ realm = "shared"
 
 [dependencies]
 LuauPolyfill = "jsdotlua/luau-polyfill@1.2.3"
+RegExp = "jsdotlua/regex@1.0.0"
 Promise = "evaera/promise@4.0.0"
