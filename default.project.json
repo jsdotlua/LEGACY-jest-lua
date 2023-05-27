@@ -2,65 +2,105 @@
     "name": "react-lua",
     "tree": {
         "$className": "Folder",
-        "React": {
-            "$path": "packages/react/default.project.json"
+        "DiffSequences": {
+            "$path": "packages/diff-sequences/default.project.json"
         },
-        "ReactDebugTools": {
-            "$path": "packages/react-debug-tools/default.project.json"
+        "Emittery": {
+            "$path": "packages/emittery/default.project.json"
         },
-        "ReactDevtoolsShared": {
-            "$path": "packages/react-devtools-shared/default.project.json"
+        "Expect": {
+            "$path": "packages/expect/default.project.json"
         },
-        "ReactIs": {
-            "$path": "packages/react-is/default.project.json"
+        "Jest": {
+            "$path": "packages/jest/default.project.json"
         },
-        "ReactReconciler": {
-            "$path": "packages/react-reconciler/default.project.json"
+        "JestCircus": {
+            "$path": "packages/jest-circus/default.project.json"
         },
-        "ReactRoblox": {
-            "$path": "packages/react-roblox/default.project.json"
+        "JestConfig": {
+            "$path": "packages/jest-config/default.project.json"
         },
-        "RoactCompat": {
-            "$path": "packages/roact-compat/default.project.json"
+        "JestConsole": {
+            "$path": "packages/jest-console/default.project.json"
         },
-        "scheduler": {
-            "$path": "packages/scheduler/default.project.json"
+        "JestCore": {
+            "$path": "packages/jest-core/default.project.json"
         },
-        "Shared": {
-            "$path": "packages/shared/default.project.json"
+        "JestDiff": {
+            "$path": "packages/jest-diff/default.project.json"
         },
-        "Boolean": {
-            "$path": "vendor/luau-polyfill/packages/boolean/default.project.json"
+        "JestEach": {
+            "$path": "packages/jest-each/default.project.json"
         },
-        "Collections": {
-            "$path": "vendor/luau-polyfill/packages/collections/default.project.json"
+        "JestEnvironment": {
+            "$path": "packages/jest-environment/default.project.json"
         },
-        "Console": {
-            "$path": "vendor/luau-polyfill/packages/console/default.project.json"
+        "JestEnvironmentLuau": {
+            "$path": "packages/jest-environment-luau/default.project.json"
         },
-        "ES7Types": {
-            "$path": "vendor/luau-polyfill/packages/es7-types/default.project.json"
+        "JestFakeTimers": {
+            "$path": "packages/jest-fake-timers/default.project.json"
         },
-        "InstanceOf": {
-            "$path": "vendor/luau-polyfill/packages/instance-of/default.project.json"
+        "JestGetType": {
+            "$path": "packages/jest-get-type/default.project.json"
+        },
+        "JestMatcherUtils": {
+            "$path": "packages/jest-matcher-utils/default.project.json"
+        },
+        "JestMessageUtil": {
+            "$path": "packages/jest-message-util/default.project.json"
+        },
+        "JestMock": {
+            "$path": "packages/jest-mock/default.project.json"
+        },
+        "JestReporters": {
+            "$path": "packages/jest-reporters/default.project.json"
+        },
+        "JestRunner": {
+            "$path": "packages/jest-runner/default.project.json"
+        },
+        "JestRuntime": {
+            "$path": "packages/jest-runtime/default.project.json"
+        },
+        "JestSnapshot": {
+            "$path": "packages/jest-snapshot/default.project.json"
+        },
+        "JestTestResult": {
+            "$path": "packages/jest-test-result/default.project.json"
+        },
+        "JestTypes": {
+            "$path": "packages/jest-types/default.project.json"
+        },
+        "JestUtil": {
+            "$path": "packages/jest-util/default.project.json"
+        },
+        "JestValidate": {
+            "$path": "packages/jest-validate/default.project.json"
+        },
+        "Path": {
+            "$path": "packages/path/default.project.json"
+        },
+        "PrettyFormat": {
+            "$path": "packages/pretty-format/default.project.json"
+        },
+        "RobloxShared": {
+            "$path": "packages/roblox-shared/default.project.json"
+        },
+        "TestUtils": {
+            "$path": "packages/test-utils/default.project.json"
+        },
+        "Throat": {
+            "$path": "packages/throat/default.project.json"
+        },
+
+        "_Index": {
+            "$path": "deps/_Index"
         },
         "LuauPolyfill": {
-            "$path": "vendor/luau-polyfill/packages/luau-polyfill/default.project.json"
+            "$path": "deps/LuauPolyfill.lua"
         },
-        "Math": {
-            "$path": "vendor/luau-polyfill/packages/math/default.project.json"
-        },
-        "Number": {
-            "$path": "vendor/luau-polyfill/packages/number/default.project.json"
-        },
-        "String": {
-            "$path": "vendor/luau-polyfill/packages/string/default.project.json"
-        },
-        "Symbol": {
-            "$path": "vendor/luau-polyfill/packages/symbol/default.project.json"
-        },
-        "Timers": {
-            "$path": "vendor/luau-polyfill/packages/timers/default.project.json"
+        "Promise": {
+            "$path": "deps/Promise.lua"
         }
     }
 }
