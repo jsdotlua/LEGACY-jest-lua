@@ -35,7 +35,7 @@ jobs:
         run: bash ./scripts/publish.sh ${{ steps.latest-release.outputs.tag_name }}
 
       - name: Build project
-        run: rojo build --output ReactLua.rbxm
+        run: rojo build --output JestLua.rbxm
 
       - name: Create GitHub Release
         id: create_release
@@ -53,6 +53,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./ReactLua.rbxm
-          asset_name: ReactLua.rbxm
+          asset_path: ./JestLua.rbxm
+          asset_name: JestLua.rbxm
           asset_content_type: application/octet-stream
