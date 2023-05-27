@@ -101,6 +101,9 @@
         },
         "Promise": {
             "$path": "deps/Promise.lua"
+        },
+        "RegExp": {
+            "$path": "deps/RegExp.lua"
         }
     }
 }
