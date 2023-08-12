@@ -5,62 +5,7 @@ registry = "test"
 [[package]]
 name = "brooke/jest-lua"
 version = "0.1.0"
-dependencies = [["LuauPolyfill", "jsdotlua/luau-polyfill@1.2.3"], ["Promise", "evaera/promise@4.0.0"], ["RegExp", "jsdotlua/regex@1.0.0"]]
-
-[[package]]
-name = "core-packages/boolean"
-version = "1.2.3"
-dependencies = [["Number", "core-packages/number@1.2.3"]]
-
-[[package]]
-name = "core-packages/collections"
-version = "1.2.3"
-dependencies = [["ES7Types", "core-packages/es7-types@1.2.3"], ["InstanceOf", "core-packages/instance-of@1.2.3"]]
-
-[[package]]
-name = "core-packages/console"
-version = "1.2.3"
-dependencies = [["Collections", "core-packages/collections@1.2.3"]]
-
-[[package]]
-name = "core-packages/es7-types"
-version = "1.2.3"
-dependencies = []
-
-[[package]]
-name = "core-packages/instance-of"
-version = "1.2.3"
-dependencies = []
-
-[[package]]
-name = "core-packages/luau-polyfill"
-version = "1.2.3"
-dependencies = [["Boolean", "core-packages/boolean@1.2.3"], ["Collections", "core-packages/collections@1.2.3"], ["Console", "core-packages/console@1.2.3"], ["ES7Types", "core-packages/es7-types@1.2.3"], ["InstanceOf", "core-packages/instance-of@1.2.3"], ["Math", "core-packages/math@1.2.3"], ["Number", "core-packages/number@1.2.3"], ["String", "core-packages/string@1.2.3"], ["Symbol", "core-packages/symbol@1.1.0"], ["Timers", "core-packages/timers@1.2.3"]]
-
-[[package]]
-name = "core-packages/math"
-version = "1.2.3"
-dependencies = []
-
-[[package]]
-name = "core-packages/number"
-version = "1.2.3"
-dependencies = []
-
-[[package]]
-name = "core-packages/string"
-version = "1.2.3"
-dependencies = [["ES7Types", "core-packages/es7-types@1.2.3"], ["Number", "core-packages/number@1.2.3"]]
-
-[[package]]
-name = "core-packages/symbol"
-version = "1.1.0"
-dependencies = []
-
-[[package]]
-name = "core-packages/timers"
-version = "1.2.3"
-dependencies = [["Collections", "core-packages/collections@1.2.3"]]
+dependencies = [["LuauPolyfill", "jsdotlua/luau-polyfill@1.2.3"], ["Promise", "evaera/promise@4.0.0"], ["RegExp", "jsdotlua/regex@1.0.1"]]
 
 [[package]]
 name = "evaera/promise"
@@ -109,8 +54,8 @@ dependencies = []
 
 [[package]]
 name = "jsdotlua/regex"
-version = "1.0.0"
-dependencies = [["LuauPolyfill", "core-packages/luau-polyfill@1.2.3"]]
+version = "1.0.1"
+dependencies = [["LuauPolyfill", "jsdotlua/luau-polyfill@1.2.3"]]
 
 [[package]]
 name = "jsdotlua/string"

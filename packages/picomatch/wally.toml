@@ -1,0 +1,12 @@
+[package]
+name = 'jsdotlua/picomatch-lua'
+description = 'https://github.com/jsdotlua/jest-lua'
+version = '5.2.0'
+license = 'MIT'
+authors = ['Matt Hargett']
+registry = 'https://github.com/UpliftGames/wally-index'
+realm = 'shared'
+
+[dependencies]
+LuauPolyfill = "jsdotlua/luau-polyfill@1.2.3"
+RegExp = "jsdotlua/regex@1.0.1"

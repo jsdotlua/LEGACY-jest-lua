@@ -1,4 +1,4 @@
-analyze: install-packages
+analyze:
     rojo sourcemap default.project.json --output sourcemap.json
     curl -O https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/main/scripts/globalTypes.d.lua
     luau-lsp analyze --definitions=globalTypes.d.lua --base-luaurc=.luaurc --sourcemap=sourcemap.json packages/

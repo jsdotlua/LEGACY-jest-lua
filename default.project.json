@@ -2,6 +2,9 @@
     "name": "jest-lua",
     "tree": {
         "$className": "Folder",
+        "ChalkLua": {
+            "$path": "packages/chalk/default.project.json"
+        },
         "DiffSequences": {
             "$path": "packages/diff-sequences/default.project.json"
         },
@@ -79,6 +82,9 @@
         },
         "Path": {
             "$path": "packages/path/default.project.json"
+        },
+        "Picomatch": {
+            "$path": "packages/picomatch/default.project.json"
         },
         "PrettyFormat": {
             "$path": "packages/pretty-format/default.project.json"
