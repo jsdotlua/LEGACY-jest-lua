@@ -1,0 +1,9 @@
+{
+  "luau-lsp.require.mode": "relativeToFile",
+  "luau-lsp.types.roblox": true,
+  "luau-lsp.sourcemap.enabled": true,
+  "luau-lsp.require.directoryAliases": {
+    "@lune/": "~/.lune/.typedefs/0.7.2/",
+    "@packages": "/Users/brooke/Documents/Projects/js-for-lua/jest-lua/packages",
+  }
+}
