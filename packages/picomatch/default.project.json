@@ -1,5 +1,5 @@
 {
-  "name": "picomatch",
+  "name": "picomatch-lua",
   "tree": {
     "$path": "src/"
   }
