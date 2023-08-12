@@ -3,7 +3,7 @@
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf
     Attributions and copyright licensing by Mozilla Contributors is licensed under CC-BY-SA 2.5
 ]]
---!strict
+--!nonstrict
 
 local LuauPolyfill = require(script.Parent.Parent.LuauPolyfill)
 local String = LuauPolyfill.String

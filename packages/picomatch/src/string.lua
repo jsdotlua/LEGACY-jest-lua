@@ -3,7 +3,7 @@
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf
     Attributions and copyright licensing by Mozilla Contributors is licensed under CC-BY-SA 2.5
 ]]
---!strict
+--!nonstrict
 
 local Packages = script.Parent.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
@@ -134,7 +134,8 @@ exports.replaceAll = function(str: string, substring: string, replacer)
 	local endIndex = 1
 
 	repeat
-		output ..= string.sub(str, endIndex, index - 1) .. substring .. replacer
+		--                                   v error here
+		output ..= string.sub(str, endIndex, index - 1) .. substring .. replacer -- this line errors
 		endIndex = index + substringLength
 		-- TODO: add indexOf to string and use it here
 		index = string.find(str, substring, endIndex, true)
