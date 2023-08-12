@@ -23,6 +23,10 @@ jobs:
       - name: Install Just
         uses: extractions/setup-just@v1
 
+      - name: Install dependencies
+        shell: bash
+        run: just install-packages
+
       - name: Analyze
         shell: bash
         run: just analyze
