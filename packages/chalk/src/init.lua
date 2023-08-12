@@ -118,7 +118,7 @@ local function applyOptions(object, options_: Object?)
 	end
 	-- Detect level if not set manually
 	-- local colorLevel = if stdoutColor then stdoutColor.level else 0
-    local colorLevel = 0
+	local colorLevel = 0
 	object.level = if options.level == nil then colorLevel else options.level
 end
 
@@ -184,8 +184,11 @@ for _, model in usedModels do
 	styles[model] = (function(...)
 		local this = styles[model]
 		local level = this.level
-		local styler =
-			createStyler((ansiStyles :: any).color[levelMapping[level]][model](...), ansiStyles.color.close, this._styler)
+		local styler = createStyler(
+			(ansiStyles :: any).color[levelMapping[level]][model](...),
+			ansiStyles.color.close,
+			this._styler
+		)
 		return createBuilder(this, styler, this._isEmpty)
 	end)()
 
@@ -193,8 +196,11 @@ for _, model in usedModels do
 	styles[bgModel] = (function(...)
 		local this = styles[bgModel]
 		local level = this.level :: number
-		local styler =
-			createStyler((ansiStyles :: any).bgColor[levelMapping[level]][model](...), ansiStyles.bgColor.close, this._styler)
+		local styler = createStyler(
+			(ansiStyles :: any).bgColor[levelMapping[level]][model](...),
+			ansiStyles.bgColor.close,
+			this._styler
+		)
 		return createBuilder(this, styler, this._isEmpty)
 	end)()
 end

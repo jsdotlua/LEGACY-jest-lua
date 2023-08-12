@@ -423,7 +423,7 @@ do
 				-- ROBLOX deviation START: need to check if value returned is a Promise, otherwise we can't run `:expect()`
 				-- ROBLOX FIXME Luau: need to cast handler explicitely as Luau can't infer from type union properly
 				local result = (
-					handler :: ((self: any, event: Circus_AsyncEvent, state: Circus_State) -> (nil | Promise<nil>))
+					handler :: (self: any, event: Circus_AsyncEvent, state: Circus_State) -> nil | Promise<nil>
 				)(nil, event, getState())
 				if result ~= nil then
 					result:expect()
@@ -436,7 +436,7 @@ do
 	function dispatchSync(event: Circus_SyncEvent): ()
 		for _, handler in ipairs(eventHandlers) do
 			-- ROBLOX FIXME Luau: need to cast handler explicitely as Luau can't infer from type union properly
-			(handler :: ((self: any, event: Circus_SyncEvent, state: Circus_State) -> ()))(nil, event, getState())
+			(handler :: (self: any, event: Circus_SyncEvent, state: Circus_State) -> ())(nil, event, getState())
 		end
 	end
 	exports.dispatchSync = dispatchSync
