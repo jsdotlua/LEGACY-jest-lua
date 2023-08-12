@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-runtime/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-runtime/src/types.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -13,11 +13,11 @@ type Config_ProjectConfig = typesModule.Config_ProjectConfig
 
 export type Context = {
 	config: Config_ProjectConfig,
-	-- ROBLOX deviation START: no supported
+	-- deviation START: no supported
 	-- hasteFS: HasteFS,
 	-- moduleMap: ModuleMap,
 	-- resolver: Resolver,
-	-- ROBLOX deviation END
+	-- deviation END
 }
 
 return {}

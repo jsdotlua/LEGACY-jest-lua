@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -6,7 +6,7 @@
 --  * LICENSE file in the root directory of this source tree.
 --  */
 
--- ROBLOX deviation: ansi-styles not ported
+-- deviation: ansi-styles not ported
 
 local CurrentModule = script
 local Packages = CurrentModule.Parent
@@ -52,7 +52,7 @@ local PrettyFormatPluginError = extends(Error, "PrettyFormatPluginError", functi
 	self.message = message
 end)
 
--- ROBLOX deviation: isToStringedArrayType omitted because lua has no typed arrays
+-- deviation: isToStringedArrayType omitted because lua has no typed arrays
 
 local printer, createIndent
 
@@ -64,7 +64,7 @@ local function printNumber(val: number): string
 	return tostring(val)
 end
 
--- ROBLOX deviation: printBigInt omitted
+-- deviation: printBigInt omitted
 
 local function printFunction(val: any, printFunctionName: boolean): string
 	if not printFunctionName then
@@ -97,8 +97,8 @@ local function printBasicValue(
 ): string | nil
 	local typeOf = getType(val)
 
-	-- ROBLOX deviation: we check for boolean type since we can't do strict equality comparison
-	-- ROBLOX deviation: undefined is treated as nil in lua
+	-- deviation: we check for boolean type since we can't do strict equality comparison
+	-- deviation: undefined is treated as nil in lua
 	if typeOf == "boolean" or typeOf == "nil" then
 		return tostring(val)
 	end
@@ -107,7 +107,7 @@ local function printBasicValue(
 		return printNumber(val)
 	end
 
-	-- ROBLOX deviation: printBigInt omitted because lua has no bingint type
+	-- deviation: printBigInt omitted because lua has no bingint type
 	if typeOf == "string" then
 		if escapeString then
 			val = val:gsub("\\", "\\\\")
@@ -123,9 +123,9 @@ local function printBasicValue(
 		return printSymbol(val)
 	end
 
-	-- ROBLOX deviation: modified to use Roblox DateTime
+	-- deviation: modified to use Roblox DateTime
 	if typeOf == "DateTime" then
-		-- Roblox DateTime:ToIsoDate doesn't include milliseconds
+		-- DateTime:ToIsoDate doesn't include milliseconds
 		return string.sub(val:ToIsoDate(), 1, -2)
 			.. "."
 			.. string.format("%03d", val:ToUniversalTime().Millisecond)
@@ -146,27 +146,27 @@ local function printBasicValue(
 		return val
 	end
 
-	-- ROBLOX deviation: output classname for Instance types
+	-- deviation: output classname for Instance types
 	if typeOf == "Instance" then
 		return val.ClassName
 	end
 
-	-- ROBLOX deviation: output DataType for builtin types
+	-- deviation: output DataType for builtin types
 	if isRobloxBuiltin(val) then
 		return string.format("%s(%s)", typeOf, tostring(val))
 	end
 
-	-- ROBLOX deviation: catchall for arbitrary userdata
+	-- deviation: catchall for arbitrary userdata
 	if typeOf == "userdata" then
 		return tostring(val)
 	end
 
-	-- ROBLOX deviation: omitted all the JS types
+	-- deviation: omitted all the JS types
 
 	return nil
 end
 
--- ROBLOX deviation: function to check whether a table is an array
+-- deviation: function to check whether a table is an array
 -- https://stackoverflow.com/questions/7526223/how-do-i-know-if-a-table-is-an-array/52697380#52697380
 local function is_array(t)
 	if type(t) ~= "table" then
@@ -219,7 +219,7 @@ local function printComplexValue(
 		return printer(val.toJSON(), config, indentation, depth, refs, true)
 	end
 
-	-- ROBLOX deviation start: rewrote this part since lua only has tables
+	-- deviation start: rewrote this part since lua only has tables
 	if hitMaxDepth then
 		if getType(val) == "set" then
 			return "[Set]"
@@ -245,7 +245,7 @@ local function printComplexValue(
 	end
 
 	return retval .. "{" .. printTableEntries(val, config, indentation, depth, refs, printer) .. "}"
-	-- ROBLOX deviation end
+	-- deviation end
 end
 
 local function isNewPlugin(plugin_: Plugin): boolean
@@ -272,11 +272,11 @@ function printPlugin(plugin_: Plugin, val: any, config: Config, indentation: str
 		end
 	end)
 	if not ok then
-		-- ROBLOX deviation START: float the error up if a PrettyFormatPluginError is already thrown to avoid nesting
+		-- deviation START: float the error up if a PrettyFormatPluginError is already thrown to avoid nesting
 		if typeof(err) == "table" and err.name == "PrettyFormatPluginError" then
 			error(err)
 		end
-		-- ROBLOX deviation END
+		-- deviation END
 		error(PrettyFormatPluginError(err))
 	end
 
@@ -293,7 +293,7 @@ function printPlugin(plugin_: Plugin, val: any, config: Config, indentation: str
 	return printed
 end
 
--- ROBLOX FIXME Luau: should infer this function a Plugin | nil, with no warnings
+-- FIXME Luau: should infer this function a Plugin | nil, with no warnings
 local function findPlugin(plugins: Plugins, val: any): Plugin | nil
 	for _, p in ipairs(plugins) do
 		local ok, ret = pcall(p.test, val)
@@ -328,11 +328,11 @@ function printer(
 	return printComplexValue(val, config, indentation, depth, refs, hasCalledToJSON)
 end
 
--- ROBLOX deviation: color formatting omitted
+-- deviation: color formatting omitted
 
 local DEFAULT_OPTIONS = {
 	callToJSON = true,
-	-- ROBLOX deviation: using Object.None instead of nil because assigning nil is no different from not assigning value at all
+	-- deviation: using Object.None instead of nil because assigning nil is no different from not assigning value at all
 	compareKeys = Object.None,
 	escapeRegex = false,
 	escapeString = true,
@@ -343,7 +343,7 @@ local DEFAULT_OPTIONS = {
 	plugins = {},
 	printBasicPrototype = true,
 	printFunctionName = true,
-	-- ROBLOX deviation: color formatting omitted
+	-- deviation: color formatting omitted
 	theme = nil,
 }
 
@@ -358,12 +358,12 @@ local function validateOptions(options: OptionsReceived)
 		error(Error('pretty-format: Options "min" and "indent" cannot be used together.'))
 	end
 
-	-- ROBLOX deviation: color formatting omitted
+	-- deviation: color formatting omitted
 end
 
--- ROBLOX deviation: color formatting omitted
+-- deviation: color formatting omitted
 
--- ROBLOX deviation: replaced most get methods to reduce code repetition
+-- deviation: replaced most get methods to reduce code repetition
 local function getOption(options: OptionsReceived?, opt): any
 	if options and options[opt] ~= nil then
 		return options[opt]
@@ -396,11 +396,11 @@ local function getSpacingOuter(options: OptionsReceived?)
 	return "\n"
 end
 
--- ROBLOX deviation: rewrote to replace ternary operators and reduce code repetition
+-- deviation: rewrote to replace ternary operators and reduce code repetition
 local function getConfig(options: OptionsReceived?): Config
 	return {
 		callToJSON = getOption(options, "callToJSON"),
-		-- ROBLOX deviation: color formatting omitted
+		-- deviation: color formatting omitted
 		colors = nil,
 		compareKeys = if options ~= nil and typeof(options.compareKeys) == "function"
 			then options.compareKeys
@@ -421,7 +421,7 @@ local function getConfig(options: OptionsReceived?): Config
 end
 
 function createIndent(indent: number): string
-	-- ROBLOX deviation: used string repeat instead of a table join, also don't need the +1
+	-- deviation: used string repeat instead of a table join, also don't need the +1
 	return string.rep(" ", indent)
 end
 
@@ -451,7 +451,7 @@ local function format(val: any, options: OptionsReceived?): string
 		return basicResult
 	end
 
-	-- ROBLOX deviation: luau doesn't handle optional arguments, explicitly pass nil
+	-- deviation: luau doesn't handle optional arguments, explicitly pass nil
 	return printComplexValue(val, getConfig(options), "", 0, {}, nil)
 end
 
@@ -461,7 +461,7 @@ local plugins = {
 	-- TODO: Re-enable React support. See: https://github.com/jsdotlua/jest-lua/issues/2
 	-- ReactElement = ReactElement,
 	ReactTestComponent = ReactTestComponent,
-	-- ROBLOX deviation: Roblox Instance matchers
+	-- deviation: Roblox Instance matchers
 	RobloxInstance = RobloxInstance,
 }
 

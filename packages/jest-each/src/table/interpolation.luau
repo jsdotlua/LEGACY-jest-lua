@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/table/interpolation.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/table/interpolation.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -24,7 +24,7 @@ local isPrimitive = require(Packages.JestGetType).isPrimitive
 
 local pretty = require(Packages.PrettyFormat).format
 
--- ROBLOX deviation predefine variables
+-- deviation predefine variables
 local getMatchingKeyPaths, replaceKeyPathWithValue, getPath
 
 export type Template = Record<string, any>
@@ -37,7 +37,7 @@ local function interpolateVariables(title: string, template: Template, index: nu
 		replaceKeyPathWithValue(template),
 		title
 	):gsub(
-		"%$#", -- ROBLOX deviation: escaped string
+		"%$#", -- deviation: escaped string
 		tostring(index),
 		1
 	)
@@ -50,7 +50,7 @@ function getMatchingKeyPaths(title: string)
 			matches,
 			(function()
 				local ref = {}
-				for match in title:gmatch(("%%$%s[%%.%%w]*"):format(key)) do -- ROBLOX deviation: escape characters
+				for match in title:gmatch(("%%$%s[%%.%%w]*"):format(key)) do -- deviation: escape characters
 					table.insert(ref, match)
 				end
 				return ref
@@ -61,7 +61,7 @@ end
 
 function replaceKeyPathWithValue(template: Template): (title: string, match: string) -> string
 	return function(title: string, match: string)
-		local newMatch = match:gsub("%$", "", 1) -- ROBLOX deviation: escape string
+		local newMatch = match:gsub("%$", "", 1) -- deviation: escape string
 		local keyPath = String.split(newMatch, ".")
 		local value = getPath(template, keyPath)
 		if isPrimitive(value) then

@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/test-utils/src/config.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/test-utils/src/config.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -80,9 +80,9 @@ local DEFAULT_GLOBAL_CONFIG: Config_GlobalConfig = {
 local DEFAULT_PROJECT_CONFIG: Config_ProjectConfig = {
 	automock = false,
 	cache = false,
-	-- ROBLOX deviation START: caching not supported
+	-- deviation START: caching not supported
 	-- cacheDirectory = "/test_cache_dir/",
-	-- ROBLOX deviation END
+	-- deviation END
 	clearMocks = false,
 	coveragePathIgnorePatterns = {},
 	cwd = "/test_root_dir/",

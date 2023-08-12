@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/testCaseReportHandler.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/testCaseReportHandler.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -22,7 +22,7 @@ local function testCaseReportHandler(testPath: string, sendMessageToJest: TestFi
 		if event.name == "test_done" then
 			local testResult = makeSingleTestResult(event.test)
 			local testCaseResult = parseSingleTestResult(testResult)
-			-- ROBLOX FIXME Luau: roblox-cli doesn't allow for mixed arrays
+			-- FIXME Luau: roblox-cli doesn't allow for mixed arrays
 			sendMessageToJest("test-case-result", { testPath :: any, testCaseResult })
 		end
 	end

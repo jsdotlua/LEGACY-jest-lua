@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/utils.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -20,12 +20,12 @@ local exports = {}
 local path = require(Packages.Path).path
 local chalk = require(Packages.ChalkLua)
 
--- ROBLOX deviation START: not supporting windows path separator
+-- deviation START: not supporting windows path separator
 -- local slash = require(Packages.slash)
 local slash = function(path_: string): string
 	return path_:gsub("\\", "/")
 end
--- ROBLOX deviation END
+-- deviation END
 
 local testResultModule = require(Packages.JestTestResult)
 type AggregatedResult = testResultModule.AggregatedResult
@@ -52,7 +52,7 @@ local PROGRESS_BAR_WIDTH = 40
 local function printDisplayName(config: Config_ProjectConfig): string
 	local displayName = config.displayName
 
-	-- ROBLOX deviation: Lua Chalk doesn't support chaining. Using nested calls
+	-- deviation: Lua Chalk doesn't support chaining. Using nested calls
 	local white = function(...)
 		return chalk.reset(chalk.inverse(chalk.white(...)))
 	end
@@ -72,7 +72,7 @@ local function printDisplayName(config: Config_ProjectConfig): string
 		end
 	end
 
-	-- ROBLOX deviation: chalk.supportsColor isn't defined so we'll assume
+	-- deviation: chalk.supportsColor isn't defined so we'll assume
 	-- it supports colors unless it is explicitly set to false
 	return if chalk.supportsColor == nil or chalk.supportsColor == true
 		then chosenColor((" %s "):format(name))
@@ -91,16 +91,16 @@ local function trimAndFormatPath(
 	local basename = relative.basename
 	local dirname = relative.dirname
 
-	-- ROBLOX deviation START: assert pathLength is valid
+	-- deviation START: assert pathLength is valid
 	-- length is ok
 	local pathLength = utf8.len(dirname .. path.sep .. basename)
 	assert(pathLength ~= nil)
 	if pathLength <= maxLength then
-		-- ROBLOX deviation END
+		-- deviation END
 		return slash(chalk.dim(dirname .. path.sep) .. chalk.bold(basename))
 	end
 
-	-- ROBLOX deviation START: assert basenameLength is valid
+	-- deviation START: assert basenameLength is valid
 	-- we can fit trimmed dirname and full basename
 	local basenameLength = utf8.len(basename)
 	assert(basenameLength)
@@ -121,7 +121,7 @@ local function trimAndFormatPath(
 
 	-- can't fit dirname, but can fit trimmed basename
 	return slash(chalk.bold("..." .. String.slice(basename, basenameLength - maxLength - 4, basenameLength + 1)))
-	-- ROBLOX deviation END
+	-- deviation END
 end
 exports.trimAndFormatPath = trimAndFormatPath
 
@@ -139,14 +139,14 @@ function relativePath(
 	-- this function can be called with ProjectConfigs or GlobalConfigs. GlobalConfigs
 	-- do not have config.cwd, only config.rootDir. Try using config.cwd, fallback
 	-- to config.rootDir. (Also, some unit just use config.rootDir, which is ok)
-	-- ROBLOX FIXME START
+	-- FIXME START
 	testPath = testPath
 	-- path:relative(
 	-- 	Boolean.toJSBoolean((config :: Config_ProjectConfig).cwd) and (config :: Config_ProjectConfig).cwd
 	-- 		or config.rootDir,
 	-- 	testPath
 	-- )
-	-- ROBLOX FIXME END
+	-- FIXME END
 	local dirname = path:dirname(testPath) :: string
 	local basename = path:basename(testPath) :: string
 	return { basename = basename, dirname = dirname }
@@ -302,13 +302,13 @@ function renderTime(runTime: number, estimatedTime: number, width: number)
 	return time
 end
 
--- ROBLOX deviation START: We don't need to wrap lines so return the string as-is.
+-- deviation START: We don't need to wrap lines so return the string as-is.
 -- word-wrap a string that contains ANSI escape sequences.
 -- ANSI escape sequences do not add to the string length.
 local function wrapAnsiString(string: string, terminalWidth: number): string
 	return string
 end
 exports.wrapAnsiString = wrapAnsiString
--- ROBLOX deviation END
+-- deviation END
 
 return exports

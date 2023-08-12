@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -19,7 +19,7 @@ type Record<T, V> = { [T]: V }
 local PrettyFormat = require(Packages.PrettyFormat)
 local prettyFormat = PrettyFormat.format
 local PrettyFormat_ = require(CurrentModule.PrettyFormat)
--- ROBLOX TODO: fix PrettyFormat types imports
+-- TODO: fix PrettyFormat types imports
 type PrettyFormatOptions = PrettyFormat_.PrettyFormatOptions
 
 local chalk = require(Packages.ChalkLua)
@@ -49,23 +49,23 @@ export type DiffOptionsColor = typesModule.DiffOptionsColor
 local NO_DIFF_MESSAGE = require(CurrentModule.Constants).NO_DIFF_MESSAGE
 local SIMILAR_MESSAGE = require(CurrentModule.Constants).SIMILAR_MESSAGE
 
--- ROBLOX deviation start: predefine functions
+-- deviation start: predefine functions
 local comparePrimitive
 local compareObjects
 local getFormatOptions
 local getObjectsDifference
--- ROBLOX deviation end
+-- deviation end
 
 local function getCommonMessage(message: string, options: DiffOptions?)
 	local commonColor = normalizeDiffOptions(options)["commonColor"]
 	return commonColor(message)
 end
 
--- ROBLOX TODO: continue to add prettyFormat plugins
+-- TODO: continue to add prettyFormat plugins
 local prettyFormatPlugins = PrettyFormat.plugins
 local PLUGINS = {
 	prettyFormatPlugins.AsymmetricMatcher,
-	-- ROBLOX deviation: Roblox Instance matchers
+	-- deviation: Roblox Instance matchers
 	prettyFormatPlugins.RobloxInstance,
 }
 local FORMAT_OPTIONS = {
@@ -122,7 +122,7 @@ local function diff(a: any, b: any, options: DiffOptions?): string?
 		return diffLinesUnified(string.split(a, "\n"), string.split(b, "\n"), options)
 	elseif aType == "boolean" or aType == "number" then
 		return comparePrimitive(a, b, options)
-		-- ROBLOX deviation: omitted, no ordered tables in lua
+		-- deviation: omitted, no ordered tables in lua
 		-- elseif aType == 'table' then
 		-- 	return compareObjects(sortTable(a), sortTable(b), options)
 	end
@@ -138,7 +138,7 @@ function comparePrimitive(a: number | boolean, b: number | boolean, options: Dif
 	return diffLinesUnified(string.split(aFormat, "\n"), string.split(bFormat, "\n"), options)
 end
 
--- ROBLOX deviation: omitted, no ordered tables in lua
+-- deviation: omitted, no ordered tables in lua
 
 function compareObjects(a, b, options: DiffOptions?)
 	local difference

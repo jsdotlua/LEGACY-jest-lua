@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/luvit/luvit/blob/master/deps/path/base.lua
+-- upstream: https://github.com/luvit/luvit/blob/master/deps/path/base.lua
 --[[
 Copyright 2014 The Luvit Authors. All Rights Reserved.
 Licensed under the Apache License, Version 2.0 (the "License");

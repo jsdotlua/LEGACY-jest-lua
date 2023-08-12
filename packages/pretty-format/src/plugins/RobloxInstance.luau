@@ -12,7 +12,7 @@
 	* See the License for the specific language governing permissions and
 	* limitations under the License.
 ]]
--- ROBLOX NOTE: no upstream
+-- NOTE: no upstream
 -- this plugin serializes Roblox Instance objects
 -- https://developer.roblox.com/en-us/api-reference/class/Instance
 

@@ -1,6 +1,6 @@
 --!nonstrict
--- ROBLOX upstream: https://github.com/sindresorhus/emittery/blob/v0.11.0/index.js
--- ROBLOX upstream types: https://github.com/sindresorhus/emittery/blob/v0.11.0/index.d.ts
+-- upstream: https://github.com/sindresorhus/emittery/blob/v0.11.0/index.js
+-- upstream types: https://github.com/sindresorhus/emittery/blob/v0.11.0/index.d.ts
 --[[
 	MIT License
 
@@ -30,11 +30,11 @@ type EventName = PropertyKey
 
 local HttpService = game:GetService("HttpService")
 
--- ROBLOX deviation START: predefine variables
+-- deviation START: predefine variables
 local isMetaEvent
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation: adding a special marker to as { nil } is equivalent to empty array and won't be iterated over
+-- deviation: adding a special marker to as { nil } is equivalent to empty array and won't be iterated over
 local NIL = Object.None
 
 local exports = {}
@@ -54,11 +54,11 @@ local metaEventsAllowed = Symbol("metaEventsAllowed")
 
 local isGlobalDebugEnabled = false
 
--- ROBLOX deviation START: additional isSymbol function as Luau doesn't support symbols natively
+-- deviation START: additional isSymbol function as Luau doesn't support symbols natively
 local function isSymbol(value: any): boolean
 	return typeof(value) == "userdata" and tostring(value):match("Symbol%(.*%)") ~= nil
 end
--- ROBLOX deviation END
+-- deviation END
 
 --[[
 	ROBLOX deviation START:
@@ -72,12 +72,12 @@ local function isCallable(f: any): boolean
 			and typeof(getmetatable(f).__call) == "function"
 		)
 end
--- ROBLOX deviation END
+-- deviation END
 
 local function assertEventName(eventName, allowMetaEvents)
 	if
 		typeof(eventName) ~= "string"
-		-- ROBLOX deviation: using isSymbol as Luau doesn't support symbols natively
+		-- deviation: using isSymbol as Luau doesn't support symbols natively
 		and not isSymbol(eventName)
 		and typeof(eventName) ~= "number"
 	then
@@ -89,7 +89,7 @@ local function assertEventName(eventName, allowMetaEvents)
 end
 
 local function assertListener(listener)
-	-- ROBLOX deviation: using isCallable to allow for callable tables being passed
+	-- deviation: using isCallable to allow for callable tables being passed
 	if not isCallable(listener) then
 		error(TypeError.new("listener must be a function"))
 	end
@@ -105,7 +105,7 @@ end
 
 local function getEventProducers(instance, eventName)
 	local key = if typeof(eventName) == "string"
-			-- ROBLOX deviation: using isSymbol as Luau doesn't support symbols natively
+			-- deviation: using isSymbol as Luau doesn't support symbols natively
 			or isSymbol(eventName)
 			or typeof(eventName) == "number"
 		then eventName
@@ -126,10 +126,10 @@ local function enqueueProducers(instance, eventName, eventData)
 	end
 	if producers:has(anyProducer) then
 		local item = Promise.all({
-			-- ROBLOX deviation START: eventName and eventData aren't necessarily Promises
+			-- deviation START: eventName and eventData aren't necessarily Promises
 			Promise.resolve(eventName),
 			Promise.resolve(eventData),
-			-- ROBLOX deviation END
+			-- deviation END
 		})
 		for _, producer in producers:get(anyProducer):ipairs() do
 			producer:enqueue(item)
@@ -138,11 +138,11 @@ local function enqueueProducers(instance, eventName, eventData)
 end
 
 local function iterator(instance, eventNames)
-	-- ROBLOX deviation: adding a special marker as { nil } is equivalent to empty array and won't be iterated over
+	-- deviation: adding a special marker as { nil } is equivalent to empty array and won't be iterated over
 	eventNames = if Array.isArray(eventNames) then eventNames elseif eventNames ~= nil then { eventNames } else { NIL }
 	local isFinished = false
 	local function flush() end
-	-- ROBLOX deviation: casting to Array<any>? to allow assigning nil later
+	-- deviation: casting to Array<any>? to allow assigning nil later
 	local queue = {} :: Array<any>?
 
 	local producer = {
@@ -180,7 +180,7 @@ local function iterator(instance, eventNames)
 				end
 				return {
 					done = false,
-					-- ROBLOX deviation: values in queue are not necessarily Promises
+					-- deviation: values in queue are not necessarily Promises
 					value = Promise.resolve(table.remove(queue, 1) :: any):expect(),
 				}
 			end)
@@ -200,15 +200,15 @@ local function iterator(instance, eventNames)
 				return if #arguments > 0 then { done = true, value = value:expect() } else { done = true }
 			end)
 		end,
-		-- ROBLOX deviation START: Symbol.asyncIterator is not supported
+		-- deviation START: Symbol.asyncIterator is not supported
 		-- [Symbol.asyncIterator] = function(self)
 		-- 	return self
 		-- end,
-		-- ROBLOX deviation END
+		-- deviation END
 	}
 end
 
--- ROBLOX deviation START: defaultMethodNamesOrAssert is not used right now
+-- deviation START: defaultMethodNamesOrAssert is not used right now
 -- local function defaultMethodNamesOrAssert(methodNames)
 -- 	if methodNames == nil then
 -- 		return allEmitteryMethods
@@ -229,7 +229,7 @@ end
 
 -- 	return methodNames
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 function isMetaEvent(eventName)
 	return eventName == listenerAdded or eventName == listenerRemoved
@@ -277,13 +277,13 @@ function Emittery.new(options_: Object?): Emittery
 			end)
 
 			if
-				-- ROBLOX deviation: using isSymbol as Luau doesn't support symbols natively
+				-- deviation: using isSymbol as Luau doesn't support symbols natively
 				isSymbol(eventName) or typeof(eventName) == "number"
 			then
 				eventName = tostring(eventName)
 			end
 
-			-- ROBLOX deviation START: modified logic for extracting time from a DateTime object
+			-- deviation START: modified logic for extracting time from a DateTime object
 			local currentTime = DateTime.now():ToUniversalTime()
 			local logTime = ("%d:%d:%d.%d"):format(
 				currentTime.Hour,
@@ -291,7 +291,7 @@ function Emittery.new(options_: Object?): Emittery
 				currentTime.Second,
 				currentTime.Millisecond
 			)
-			-- ROBLOX deviation END
+			-- deviation END
 			console.log(
 				("[%s][emittery:%s][%s] Event Name: %s\n\tdata: %s"):format(
 					logTime,
@@ -306,7 +306,7 @@ function Emittery.new(options_: Object?): Emittery
 	return (self :: any) :: Emittery
 end
 
--- ROBLOX deviation START: not supporting Emittery.mixin for now
+-- deviation START: not supporting Emittery.mixin for now
 -- function Emittery.mixin(emitteryPropertyName, methodNames)
 -- 	methodNames = defaultMethodNamesOrAssert(methodNames)
 -- 	return function(target)
@@ -362,12 +362,12 @@ end
 -- 		return target
 -- 	end
 -- end
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation: mocking process
+-- deviation: mocking process
 local process = nil
 
--- ROBLOX deviation: getIsDebugEnabled instead of a getter
+-- deviation: getIsDebugEnabled instead of a getter
 function Emittery.getIsDebugEnabled(): boolean
 	if typeof(process) ~= "table" then
 		return isGlobalDebugEnabled
@@ -376,14 +376,14 @@ function Emittery.getIsDebugEnabled(): boolean
 	return env.DEBUG == "emittery" or env.DEBUG == "*" or isGlobalDebugEnabled
 end
 
--- ROBLOX deviation: setIsDebugEnabled instead of a setter
+-- deviation: setIsDebugEnabled instead of a setter
 function Emittery.setIsDebugEnabled(newValue: boolean)
 	isGlobalDebugEnabled = newValue
 end
 
 function Emittery:logIfDebugEnabled(type_, eventName, eventData)
 	if
-		-- ROBLOX deviation: getIsDebugEnabled instead of a setter
+		-- deviation: getIsDebugEnabled instead of a setter
 		Emittery.getIsDebugEnabled() or self.debug.enabled
 	then
 		self.debug:logger(type_, self.debug.name, eventName, eventData)
@@ -460,13 +460,13 @@ function Emittery:emit(eventName, eventData, allowMetaEvents)
 			then {}
 			else Array.concat({}, Array.from(anyListeners))
 
-		-- ROBLOX deviation START: need to delay a promise as awaited promises are deferred in JS
+		-- deviation START: need to delay a promise as awaited promises are deferred in JS
 		resolvedPromise
 			:andThen(function(...)
 				return Promise.delay(0):andThenReturn(...)
 			end)
 			:expect()
-		-- ROBLOX deviation END
+		-- deviation END
 		Promise.all(Array.concat(
 			{},
 			Array.map(staticListeners, function(listener)
@@ -500,24 +500,24 @@ function Emittery:emitSerial(eventName, eventData, allowMetaEvents)
 		local staticListeners = Array.concat({}, Array.from(listeners))
 		local staticAnyListeners = Array.concat({}, Array.from(anyListeners))
 
-		-- ROBLOX deviation START: need to delay a promise as awaited promises are deferred in JS
+		-- deviation START: need to delay a promise as awaited promises are deferred in JS
 		resolvedPromise
 			:andThen(function(...)
 				return Promise.delay(0):andThenReturn(...)
 			end)
 			:expect()
-		-- ROBLOX deviation END
+		-- deviation END
 		--[[ eslint-disable no-await-in-loop ]]
 		for _, listener in staticListeners do
 			if listeners:has(listener) then
-				-- ROBLOX deviation: listener doesn't necessarily return a Promise
+				-- deviation: listener doesn't necessarily return a Promise
 				Promise.resolve(listener(eventData)):expect()
 			end
 		end
 
 		for _, listener in staticAnyListeners do
 			if anyListeners:has(listener) then
-				-- ROBLOX deviation: listener doesn't necessarily return a Promise
+				-- deviation: listener doesn't necessarily return a Promise
 				Promise.resolve(listener(eventName, eventData)):expect()
 			end
 		end
@@ -551,7 +551,7 @@ function Emittery:offAny(listener)
 end
 
 function Emittery:clearListeners(eventNames)
-	-- ROBLOX deviation: adding a special marker as { nil } is equivalent to empty array and won't be iterated over
+	-- deviation: adding a special marker as { nil } is equivalent to empty array and won't be iterated over
 	eventNames = if Array.isArray(eventNames) then eventNames elseif eventNames ~= nil then { eventNames } else { NIL }
 
 	for _, eventName in eventNames do
@@ -559,7 +559,7 @@ function Emittery:clearListeners(eventNames)
 
 		if
 			typeof(eventName) == "string"
-			-- ROBLOX deviation: using isSymbol as Luau doesn't support symbols natively
+			-- deviation: using isSymbol as Luau doesn't support symbols natively
 			or isSymbol(eventName)
 			or typeof(eventName) == "number"
 		then
@@ -591,7 +591,7 @@ function Emittery:clearListeners(eventNames)
 end
 
 function Emittery:listenerCount(eventNames)
-	-- ROBLOX deviation: adding a special marker as { nil } is equivalent to empty array and won't be iterated over
+	-- deviation: adding a special marker as { nil } is equivalent to empty array and won't be iterated over
 	eventNames = if Array.isArray(eventNames) then eventNames elseif eventNames ~= nil then { eventNames } else { NIL }
 	local count = 0
 
@@ -603,7 +603,7 @@ function Emittery:listenerCount(eventNames)
 			continue
 		end
 
-		-- ROBLOX deviation: adding a special marker as { nil } is equivalent to empty array and won't be iterated over
+		-- deviation: adding a special marker as { nil } is equivalent to empty array and won't be iterated over
 		if eventName ~= nil and eventName ~= NIL then
 			assertEventName(eventName, metaEventsAllowed)
 		end
@@ -622,7 +622,7 @@ function Emittery:listenerCount(eventNames)
 	return count
 end
 
--- ROBLOX deviation START: not supporting Emittery:bindMethods for now
+-- deviation START: not supporting Emittery:bindMethods for now
 -- function Emittery:bindMethods(target, methodNames)
 -- 	if typeof(target) ~= "table" or target == nil then
 -- 		error(TypeError.new("`target` must be an object"))
@@ -641,7 +641,7 @@ end
 -- local allEmitteryMethods = Array.filter(Object.getOwnPropertyNames(Emittery.prototype), function(v)
 -- 	return v ~= "constructor"
 -- end)
--- ROBLOX deviation END
+-- deviation END
 
 --[[
 	ROBLOX deviation START:
@@ -660,7 +660,7 @@ end
 ]]
 Emittery.listenerAdded = listenerAdded
 Emittery.listenerRemoved = listenerRemoved
--- ROBLOX deviation END
+-- deviation END
 exports.default = Emittery
 
 --[[*

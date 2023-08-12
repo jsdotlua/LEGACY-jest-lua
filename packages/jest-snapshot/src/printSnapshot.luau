@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/printSnapshot.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/printSnapshot.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -66,12 +66,12 @@ local deserializeString = utils.deserializeString
 local minify = utils.minify
 local serialize = utils.serialize
 
--- ROBLOX deviation: omitted chalk type
+-- deviation: omitted chalk type
 
--- ROBLOX deviation: omitted Chalk and DiffOptionsColor types
+-- deviation: omitted Chalk and DiffOptionsColor types
 export type Chalk = any
 
--- ROBLOX FIXME: these *should* return a function, but they don't. we're misaligned on types and implementation here
+-- FIXME: these *should* return a function, but they don't. we're misaligned on types and implementation here
 local function getSnapshotColorForChalkInstance(chalkInstance: Chalk): any --: DiffOptionsColor
 	-- return function(_: string): string
 	local level = chalkInstance.level
@@ -89,7 +89,7 @@ local function getSnapshotColorForChalkInstance(chalkInstance: Chalk): any --: D
 	-- end
 end
 
--- ROBLOX FIXME: these *should* return a function, but they don't. we're misaligned on types and implementation here
+-- FIXME: these *should* return a function, but they don't. we're misaligned on types and implementation here
 local function getReceivedColorForChalkInstance(chalkInstance: Chalk): any --: DiffOptionsColor
 	-- return function(_: string): string
 	local level = chalkInstance.level
@@ -173,14 +173,14 @@ end
 -- * include change substrings which have argument op
 --   with change color only if there is a common substring
 local function joinDiffs(
-	-- ROBLOX deviation: changed Array<Diff> to Array<any>
+	-- deviation: changed Array<Diff> to Array<any>
 	diffs: Array<any>,
 	op: number,
 	hasCommon: boolean
 ): string
 	return Array.reduce(
 		diffs,
-		-- ROBLOX deviation: Diff changed to any
+		-- deviation: Diff changed to any
 		function(reduced: string, diff: Diff): string
 			local retval = reduced
 			if diff[1] == DIFF_EQUAL then
@@ -207,7 +207,7 @@ local function isLineDiffable(received: any): boolean
 		return typeof(received) == "string"
 	end
 
-	-- ROBLOX deviation: type changed from "date" to "DateTime"
+	-- deviation: type changed from "date" to "DateTime"
 	if receivedType == "DateTime" or receivedType == "function" or receivedType == "regexp" then
 		return false
 	end
@@ -248,7 +248,7 @@ local function printPropertiesAndReceived(
 				aColor = EXPECTED_COLOR,
 				bAnnotation = bAnnotation,
 				bColor = RECEIVED_COLOR,
-				-- ROBLOX FIXME: our types and implementation are seriously misaligned
+				-- FIXME: our types and implementation are seriously misaligned
 				changeLineTrailingSpaceColor = chalk.bgYellow :: any,
 				commonLineTrailingSpaceColor = chalk.bgYellow :: any,
 				emptyFirstOrLastLinePlaceholder = utf8.char(8629), -- U+21B5
@@ -283,7 +283,7 @@ local function printSnapshotAndReceived(
 		aColor = aColor,
 		bAnnotation = bAnnotation,
 		bColor = bColor,
-		-- ROBLOX FIXME: our types and implementation are seriously misaligned
+		-- FIXME: our types and implementation are seriously misaligned
 		changeLineTrailingSpaceColor = noColor :: any,
 		commonLineTrailingSpaceColor = chalk.bgYellow :: any,
 		emptyFirstOrLastLinePlaceholder = utf8.char(8629), -- U+21B5

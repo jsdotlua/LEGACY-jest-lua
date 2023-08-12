@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/VerboseReporter.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/VerboseReporter.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -62,12 +62,12 @@ local VerboseReporter = setmetatable({}, { __index = DefaultReporter }) :: any
 VerboseReporter.__index = VerboseReporter
 VerboseReporter.filename = "VerboseReporter"
 
--- ROBLOX deviation START: added round function
+-- deviation START: added round function
 local function round(num: number)
 	local mult = 10 ^ 0
 	return math.floor(num * mult + 0.5) / mult
 end
--- ROBLOX deviation END
+-- deviation END
 
 function VerboseReporter.new(globalConfig: Config_GlobalConfig): VerboseReporter
 	local self = setmetatable((DefaultReporter.new(globalConfig) :: any) :: VerboseReporterPrivate, VerboseReporter)
@@ -119,7 +119,7 @@ function VerboseReporter.groupTestsBySuites(testResults: Array<AssertionResult>)
 end
 
 function VerboseReporter:onTestResult(test: Test, result: TestResult, aggregatedResults: AggregatedResult): ()
-	-- ROBLOX NOTE: Current way of using 'super', might change in the future
+	-- NOTE: Current way of using 'super', might change in the future
 	DefaultReporter.testFinished(self, test.context.config, result, aggregatedResults)
 
 	if not Boolean.toJSBoolean(result.skipped) then
@@ -130,7 +130,7 @@ function VerboseReporter:onTestResult(test: Test, result: TestResult, aggregated
 		self:printTestFileFailureMessage(result.testFilePath, test.context.config, result)
 	end
 
-	-- ROBLOX NOTE: Current way of using 'super', might change in the future
+	-- NOTE: Current way of using 'super', might change in the future
 	DefaultReporter.forceFlushBufferedOutput(self)
 end
 

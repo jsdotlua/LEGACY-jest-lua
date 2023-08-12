@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/isPromise.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/isPromise.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -16,7 +16,7 @@ local exports = {}
 local function isPromise(
 	candidate: unknown
 ): boolean --[[ ROBLOX FIXME: change to TSTypePredicate equivalent if supported ]] --[[ candidate is Promise<unknown> ]]
-	-- ROBLOX deviation: using Promise library implementation to check if a variable is a Promise
+	-- deviation: using Promise library implementation to check if a variable is a Promise
 	return Promise.is(candidate)
 end
 exports.default = isPromise

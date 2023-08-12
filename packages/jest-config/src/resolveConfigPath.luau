@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/resolveConfigPath.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/resolveConfigPath.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -16,39 +16,39 @@ type Array<T> = LuauPolyfill.Array<T>
 
 local exports = {}
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local path = require(Packages.path)
--- ROBLOX deviation END
+-- deviation END
 local chalk = require(Packages.ChalkLua)
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local fs = require(Packages["graceful-fs"])
 -- local slash = require(Packages.slash)
--- ROBLOX deviation END
+-- deviation END
 local typesModule = require(Packages.JestTypes)
 type Config_Path = typesModule.Config_Path
 local constantsModule = require(script.Parent.constants)
 local JEST_CONFIG_BASE_NAME = constantsModule.JEST_CONFIG_BASE_NAME
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local JEST_CONFIG_EXT_ORDER = constantsModule.JEST_CONFIG_EXT_ORDER
 -- local PACKAGE_JSON = constantsModule.PACKAGE_JSON
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: predefine functions
+-- deviation START: predefine functions
 local resolveConfigPathByTraversing: (
 	pathToResolve: Instance,
 	initialPath: Config_Path | Instance,
-	-- ROBLOX deviation: using Instance instead of Config_Path
+	-- deviation: using Instance instead of Config_Path
 	cwd: Instance,
 	skipMultipleConfigWarning: boolean
-) -> ModuleScript -- ROBLOX deviation: using ModuleScript instead of Config_Path
+) -> ModuleScript -- deviation: using ModuleScript instead of Config_Path
 local makeResolutionErrorMessage: (initialPath: Config_Path | Instance, cwd: Instance) -> string
 local makeMultipleConfigsWarning
--- ROBLOX deviation END
+-- deviation END
 
 local function isFile(filePath: Instance?)
-	-- ROBLOX deviation START: custom implementation
+	-- deviation START: custom implementation
 	return typeof(filePath) == "Instance" and filePath:IsA("ModuleScript") and String.endsWith(filePath.Name, ".config")
-	-- ROBLOX deviation END
+	-- deviation END
 end
 
 local function getConfigFilename(ext: string)
@@ -57,15 +57,15 @@ end
 
 exports.default = function(
 	pathToResolve: Config_Path | Instance,
-	-- ROBLOX deviation: using Instance instead of Config_Path
+	-- deviation: using Instance instead of Config_Path
 	cwd: Instance,
 	_skipMultipleConfigWarning: boolean?
-): ModuleScript -- ROBLOX deviation: using ModuleScript instead of Config_Path
+): ModuleScript -- deviation: using ModuleScript instead of Config_Path
 	local skipMultipleConfigWarning = if _skipMultipleConfigWarning ~= nil then _skipMultipleConfigWarning else false
 
-	-- ROBLOX deviation START: custom implementation
+	-- deviation START: custom implementation
 	local function resolvePath(root: Instance, path: string): Instance | nil
-		-- ROBLOX TODO: handle nested path
+		-- TODO: handle nested path
 		return (root :: any)[path]
 	end
 
@@ -91,30 +91,30 @@ exports.default = function(
 	end
 
 	return resolveConfigPathByTraversing(
-		-- ROBLOX FIXME Luau: absolutePath nil check above
+		-- FIXME Luau: absolutePath nil check above
 		absolutePath :: Instance,
 		pathToResolve,
 		cwd,
 		skipMultipleConfigWarning
 	)
-	-- ROBLOX deviation END
+	-- deviation END
 end
 
--- ROBLOX deviation START: additional helper function
+-- deviation START: additional helper function
 local function isJestConfigFile(child: Instance)
 	return child:IsA("ModuleScript") and child.Name == JEST_CONFIG_BASE_NAME
 end
--- ROBLOX deviation END
+-- deviation END
 
 function resolveConfigPathByTraversing(
 	pathToResolve: Instance,
 	initialPath: Config_Path | Instance,
-	-- ROBLOX deviation: using Instance instead of Config_Path
+	-- deviation: using Instance instead of Config_Path
 	cwd: Instance,
 	skipMultipleConfigWarning: boolean
 ) --[[ ROBLOX deviation: using ModuleScript instead of Config_Path]]: ModuleScript
-	-- ROBLOX deviation START: custom logic
-	-- ROBLOX NOTE: additional nil check
+	-- deviation START: custom logic
+	-- NOTE: additional nil check
 	if (pathToResolve :: any) == nil or typeof(pathToResolve.GetChildren) ~= "function" then
 		error(Error.new(makeResolutionErrorMessage(initialPath, cwd)))
 	end
@@ -140,10 +140,10 @@ function resolveConfigPathByTraversing(
 
 	-- go up a level and try it again
 	return resolveConfigPathByTraversing(pathToResolve.Parent :: Instance, initialPath, cwd, skipMultipleConfigWarning)
-	-- ROBLOX deviation END
+	-- deviation END
 end
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local function findPackageJson(pathToResolve: Config_Path)
 -- 	local packagePath = path:resolve(pathToResolve, PACKAGE_JSON)
 -- 	if Boolean.toJSBoolean(isFile(packagePath)) then
@@ -165,28 +165,28 @@ end
 -- 		end
 -- 	end
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 function makeResolutionErrorMessage(
-	-- ROBLOX deviation: using Instance instead of Config_Path
+	-- deviation: using Instance instead of Config_Path
 	initialPath: Config_Path | Instance,
-	-- ROBLOX deviation: using Instance instead of Config_Path
+	-- deviation: using Instance instead of Config_Path
 	cwd: Instance
 ): string
 	return "Could not find a config file based on provided values:\n"
 		.. ('path: "%s"\n'):format(tostring(initialPath))
 		.. ('cwd: "%s"\n'):format(tostring(cwd))
-		-- ROBLOX deviation START: align message to make more sense in Luau context
+		-- deviation START: align message to make more sense in Luau context
 		.. "Config paths must be specified by either a direct path to a config script\n"
 		.. "or a path to a directory. If directory is given, Jest will try to\n"
-		-- ROBLOX deviation END
+		-- deviation END
 		.. ("traverse directory tree up, until it finds one of those files in exact order: %s."):format(
 			Array.join(
 				Array.map(
-					-- ROBLOX deviation START: only support Lua config files
+					-- deviation START: only support Lua config files
 					-- JEST_CONFIG_EXT_ORDER
 					{ ".lua" },
-					-- ROBLOX deviation END
+					-- deviation END
 					function(ext)
 						return ('"%s"'):format((getConfigFilename(ext)))
 					end
@@ -197,11 +197,11 @@ function makeResolutionErrorMessage(
 end
 
 local function extraIfPackageJson(configPath: Config_Path)
-	-- ROBLOX deviation START: no package.json handling
+	-- deviation START: no package.json handling
 	-- if Boolean.toJSBoolean(configPath:endsWith(PACKAGE_JSON)) then
 	-- 	return "`jest` key in "
 	-- end
-	-- ROBLOX deviation END
+	-- deviation END
 	return ""
 end
 

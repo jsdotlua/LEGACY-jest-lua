@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/types.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -10,7 +10,7 @@ local Packages = CurrentModule.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 type Object = LuauPolyfill.Object
 
--- ROBLOX TODO: upstream is `MatcherState &`, which is from `expect` package, but would result in a circular rotriever dependency
+-- TODO: upstream is `MatcherState &`, which is from `expect` package, but would result in a circular rotriever dependency
 export type Context = Object
 
 export type MatchSnapshotConfig = {

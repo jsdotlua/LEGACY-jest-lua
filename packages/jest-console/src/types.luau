@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-console/src/types.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-console/src/types.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -38,10 +38,10 @@ export type LogType =
 
 export type ConsoleBuffer = Array<LogEntry>
 
--- ROBLOX deviation START: add type for supproted inspect options
+-- deviation START: add type for supproted inspect options
 export type InspectOptions = {
 	depth: number?,
 }
--- Roblox deviation END
+-- deviation END
 
 return exports

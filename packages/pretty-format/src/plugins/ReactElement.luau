@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/plugins/ReactElement.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/plugins/ReactElement.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -47,7 +47,7 @@
 -- 	if typeof(type_) == "string" then
 -- 		return type_
 -- 	end
--- 	-- ROBLOX deviation START: functions can't have properties in Lua
+-- 	-- deviation START: functions can't have properties in Lua
 -- 	if typeof(type_) == "function" then
 -- 		local typeName = debug.info(type_, "n")
 -- 		return if Boolean.toJSBoolean(typeName) then typeName else "Unknown"
@@ -61,7 +61,7 @@
 -- 				else "Unknown"
 -- 		end
 -- 	end
--- 	-- ROBLOX deviation END
+-- 	-- deviation END
 
 -- 	if ReactIs.isFragment(element) then
 -- 		return "React.Fragment"
@@ -82,7 +82,7 @@
 -- 				return type_.displayName
 -- 			end
 
--- 			-- ROBLOX deviation START: check if type_.render is callable table
+-- 			-- deviation START: check if type_.render is callable table
 -- 			local functionName = if typeof(type_.render) == "function"
 -- 					and Boolean.toJSBoolean(debug.info(type_.render, "n"))
 -- 				then debug.info(type_.render, "n")
@@ -92,7 +92,7 @@
 -- 						elseif Boolean.toJSBoolean(type_.render.name) then type_.render.name
 -- 						else ""
 -- 					else ""
--- 			-- ROBLOX deviation END
+-- 			-- deviation END
 
 -- 			return if functionName ~= "" then "ForwardRef(" .. functionName .. ")" else "ForwardRef"
 -- 		end
@@ -101,7 +101,7 @@
 -- 			local functionName = if Boolean.toJSBoolean(type_.displayName)
 -- 				then type_.displayName
 -- 				elseif
--- 					typeof(type_.type) == "table" -- ROBLOX deviation: can't index functions in Lua
+-- 					typeof(type_.type) == "table" -- deviation: can't index functions in Lua
 -- 					and Boolean.toJSBoolean(type_.type.displayName)
 -- 				then type_.type.displayName
 -- 				elseif

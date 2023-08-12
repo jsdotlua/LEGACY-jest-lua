@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -6,7 +6,7 @@
 --  * LICENSE file in the root directory of this source tree.
 --  */
 
--- ROBLOX deviation: omitting imports for file system interaction
+-- deviation: omitting imports for file system interaction
 
 local CurrentModule = script
 local Packages = CurrentModule.Parent
@@ -18,7 +18,7 @@ local AssertionError = LuauPolyfill.AssertionError
 
 local getType = require(Packages.JestGetType).getType
 
--- ROBLOX TODO: ADO-1633 fix Jest Types imports
+-- TODO: ADO-1633 fix Jest Types imports
 -- local Config = require(Packages.JestTypes).Config
 type ConfigPath = string
 
@@ -67,7 +67,7 @@ local _toMatchSnapshot, _toThrowErrorMatchingSnapshot
 local DID_NOT_THROW = "Received function did not throw"
 local NOT_SNAPSHOT_MATCHERS = "Snapshot matchers cannot be used with " .. BOLD_WEIGHT("never")
 
--- ROBLOX deviation: we cannot have multiline regex patterns in Lua so in our usage of
+-- deviation: we cannot have multiline regex patterns in Lua so in our usage of
 -- this pattern, we will first split on newlines and then use it
 -- local INDENTATION_REGEX = "^([^%S\n]*)%S"
 
@@ -97,9 +97,9 @@ local function printSnapshotName(concatenatedBlockNames_: string?, hint_: string
 	return retval
 end
 
--- ROBLOX TODO: ADO-1552 Add stripAddedIndentation when we support inlineSnapshot testing
+-- TODO: ADO-1552 Add stripAddedIndentation when we support inlineSnapshot testing
 
--- ROBLOX deviation: omitted fileExists and cleanup
+-- deviation: omitted fileExists and cleanup
 
 local function toMatchSnapshot(...)
 	local args = { ... }
@@ -112,7 +112,7 @@ local function toMatchSnapshot(...)
 	local properties
 
 	local length = select("#", ...)
-	-- ROBLOX deviation: all the length parameters are one more than upstream because
+	-- deviation: all the length parameters are one more than upstream because
 	-- the this parameter isn't counted in upstream
 	if length == 3 and typeof(propertiesOrHint) == "string" then
 		hint = propertiesOrHint
@@ -159,7 +159,7 @@ local function toMatchSnapshot(...)
 	})
 end
 
--- ROBLOX TODO: ADO-1552 add toMatchInlineSnapshot
+-- TODO: ADO-1552 add toMatchInlineSnapshot
 
 function _toMatchSnapshot(config: MatchSnapshotConfig): {
 	pass: boolean,
@@ -176,11 +176,11 @@ function _toMatchSnapshot(config: MatchSnapshotConfig): {
 	local properties = config.properties
 	local received = config.received
 
-	-- ROBLOX deviation START: we don't call dontThrow because we don't yet have the functionality in
+	-- deviation START: we don't call dontThrow because we don't yet have the functionality in
 	-- place where we add errors to global matcher state and deal with them accordingly
 	-- so we instead rely on throwing the actual errors
 	-- local _ = context.dontThrow and context.dontThrow()
-	-- ROBLOX deviation END
+	-- deviation END
 
 	local currentTestName = context.currentTestName
 	local isNot = context.isNot
@@ -210,7 +210,7 @@ function _toMatchSnapshot(config: MatchSnapshotConfig): {
 		else currentTestName or "" -- future BREAKING change: || hint
 
 	if typeof(properties) == "table" then
-		-- ROBLOX deviation: Roblox Instance matchers
+		-- deviation: Roblox Instance matchers
 		-- allow property matchers against received Instance values
 		if received == nil or (typeof(received) ~= "table" and getType(received) ~= "Instance") then
 			error(AssertionError.new({
@@ -227,17 +227,17 @@ function _toMatchSnapshot(config: MatchSnapshotConfig): {
 		local propertyPass = context.equals(received, properties, {
 			context.utils.iterableEquality,
 			context.utils.subsetEquality,
-			-- ROBLOX deviation: Roblox Instance matchers
-			-- ROBLOX TODO: uncomment when implementing snapshot property matchers on Instances
+			-- deviation: Roblox Instance matchers
+			-- TODO: uncomment when implementing snapshot property matchers on Instances
 			-- context.utils.instanceSubsetEquality,
 		})
 
 		if not propertyPass then
 			local key = snapshotState:fail(fullTestName, received)
 			local matched = key:match("(%d+)$")
-			-- ROBLOX deviation START: no way for Luau to know if matched is non-nil then tonumber(matched) is guaranteed to be non-nil
+			-- deviation START: no way for Luau to know if matched is non-nil then tonumber(matched) is guaranteed to be non-nil
 			local count = if matched == nil then 1 else tonumber(matched) :: number
-			-- ROBLOX deviation END
+			-- deviation END
 
 			local message = function()
 				return matcherHintFromConfig(config, false)
@@ -353,11 +353,11 @@ function _toThrowErrorMatchingSnapshot(config: types.MatchSnapshotConfig, fromPr
 	local matcherName = config.matcherName
 	local received = config.received
 
-	-- ROBLOX deviation START: we don't call dontThrow because we don't yet have the functionality in
+	-- deviation START: we don't call dontThrow because we don't yet have the functionality in
 	-- place where we add errors to global matcher state and deal with them accordingly
 	-- so we instead rely on throwing the actual errors
 	-- local _ = context.dontThrow and context.dontThrow()
-	-- ROBLOX deviation END
+	-- deviation END
 
 	local isNot = context.isNot
 	local promise = context.promise
@@ -400,7 +400,7 @@ function _toThrowErrorMatchingSnapshot(config: types.MatchSnapshotConfig, fromPr
 		error(AssertionError.new({ message = matcherHintFromConfig(config, false) .. "\n\n" .. DID_NOT_THROW }))
 	end
 
-	-- ROBLOX deviation: instead of being able to set received = error.message in our
+	-- deviation: instead of being able to set received = error.message in our
 	-- _toMatchSnapshot call, we have to deal with different cases since in Lua
 	-- we could be dealing with our Error polyfill, a thrown object, or a thrown
 	-- string

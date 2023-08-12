@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/mockSerializer.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/mockSerializer.ts
 -- /**
 -- * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 -- *
@@ -9,7 +9,7 @@
 
 local CurrentModule = script.Parent
 local Packages = CurrentModule.Parent
--- ROBLOX deviation: omitted external type NewPlugin
+-- deviation: omitted external type NewPlugin
 local PrettyFormat = require(Packages.PrettyFormat)
 type Config = PrettyFormat.Config
 type Printer = PrettyFormat.Printer
@@ -64,7 +64,7 @@ local function serialize(
 end
 
 local function test(val: any): boolean
-	-- ROBLOX deviation: add a table check to prevent access errors on non-tables
+	-- deviation: add a table check to prevent access errors on non-tables
 	return val and typeof(val) == "table" and val._isMockFunction
 end
 

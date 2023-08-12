@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/graphql/graphql-js/blob/1951bce42092123e844763b6a8e985a8a3327511/src/__testUtils__/dedent.js
+-- upstream: https://github.com/graphql/graphql-js/blob/1951bce42092123e844763b6a8e985a8a3327511/src/__testUtils__/dedent.js
 --[[
 	MIT License
 
@@ -18,7 +18,7 @@ function dedent(strings: Array<string> | string, ...): string
 
 	local str = ""
 
-	-- ROBLOX TODO Luau: Array.isArray true should narrow to Array<?> and therefore narrow strings to Array<string>
+	-- TODO Luau: Array.isArray true should narrow to Array<?> and therefore narrow strings to Array<string>
 	if Array.isArray(strings) then
 		for i = 1, #strings do
 			str ..= (strings :: Array<string>)[i]

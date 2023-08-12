@@ -1,5 +1,5 @@
 --!nonstrict
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-matcher-utils/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-matcher-utils/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -39,11 +39,11 @@ local prettyFormat = PrettyFormat.format
 local Replaceable = require(CurrentModule.Replaceable)
 local deepCyclicCopyReplaceable = require(CurrentModule.deepCyclicCopyReplaceable)
 
--- ROBLOX TODO: continue to implement prettyFormat plugins
+-- TODO: continue to implement prettyFormat plugins
 local prettyFormatPlugins = PrettyFormat.plugins
 local PLUGINS = {
 	prettyFormatPlugins.AsymmetricMatcher,
-	-- ROBLOX deviation: Roblox Instance matchers
+	-- deviation: Roblox Instance matchers
 	prettyFormatPlugins.RobloxInstance,
 }
 
@@ -51,14 +51,14 @@ type MatcherHintColor = (string) -> string -- subset of Chalk type
 
 export type MatcherHintOptions = {
 	comment: string?,
-	-- ROBLOX TODO? should be MatcherHintColor like in upstream, but requires modeling Chalk differently
+	-- TODO? should be MatcherHintColor like in upstream, but requires modeling Chalk differently
 	expectedColor: MatcherHintColor?,
 	isDirectExpectCall: boolean?,
 	isNot: boolean?,
 	promise: string?,
 	receivedColor: MatcherHintColor?,
 	secondArgument: string?,
-	-- ROBLOX TODO? should be MatcherHintColor like in upstream, but requires modeling Chalk differently
+	-- TODO? should be MatcherHintColor like in upstream, but requires modeling Chalk differently
 	secondArgumentColor: MatcherHintColor?,
 }
 
@@ -97,7 +97,7 @@ local replaceTrailingSpaces, getCommonAndChangedSubstrings, isLineDiffable, shou
 local matcherErrorMessage, matcherHint
 
 local function stringify(object: any, maxDepth: number?): string
-	-- ROBLOX deviation: Added this if logic to deal with handling nil values in Lua tables
+	-- deviation: Added this if logic to deal with handling nil values in Lua tables
 	if object == Symbol.for_("$$nil") then
 		object = nil
 	end
@@ -196,7 +196,7 @@ end
 
 -- Ensures that 'actual' is of type 'number'
 local function ensureActualIsNumber(actual: any, matcherName: string, options: MatcherHintOptions?): ()
-	-- ROBLOX deviation: we do not support a "bigint" type
+	-- deviation: we do not support a "bigint" type
 	if typeof(actual) ~= "number" then
 		-- Prepend maybe not only for backward compatibility
 		local matcherString = matcherName
@@ -219,7 +219,7 @@ end
 
 -- Ensures that 'expected' is of type 'number'
 local function ensureExpectedIsNumber(expected: any, matcherName: string, options: MatcherHintOptions?): ()
-	-- ROBLOX deviation: we do not support a "bigint" type
+	-- deviation: we do not support a "bigint" type
 	if typeof(expected) ~= "number" then
 		-- Prepend maybe not only for backward compatibility
 		local matcherString = matcherName
@@ -411,7 +411,7 @@ function shouldPrintDiff(actual: any, expected: any)
 		return false
 	end
 
-	-- ROBLOX deviation: excluded if statement checking bigint types
+	-- deviation: excluded if statement checking bigint types
 
 	if typeof(actual) == "boolean" and typeof(expected) == "boolean" then
 		return false
@@ -473,7 +473,7 @@ function replaceMatchedToAsymmetricMatcher(
 	}
 end
 
--- ROBLOX deviation: excluded type annotation for AsymmetricMatcher because Luau does
+-- deviation: excluded type annotation for AsymmetricMatcher because Luau does
 -- not yet support type annotations for a generic function
 
 function isAsymmetricMatcher(data: any)
@@ -484,7 +484,7 @@ end
 local function diff(
 	a: any,
 	b: any,
-	options -- ROBLOX deviation: omitted type annotation since we don't have DiffOptions translated
+	options -- deviation: omitted type annotation since we don't have DiffOptions translated
 ): string | nil
 	return shouldPrintDiff(a, b) and diffDefault(a, b, options) or nil
 end
@@ -504,7 +504,7 @@ end
 
 type PrintLabel = (string) -> string
 
--- ROBLOX deviation: no annotation for "..." args
+-- deviation: no annotation for "..." args
 function getLabelPrinter(...): PrintLabel
 	local strings: Array<string> = { ... }
 
@@ -513,7 +513,7 @@ function getLabelPrinter(...): PrintLabel
 	end, 0)
 
 	return function(string_: string): string
-		-- ROBLOX deviation: We need to throw an error since string.rep called for
+		-- deviation: We need to throw an error since string.rep called for
 		-- a negative repetition doesn't actually throw whereas upstream
 		-- would throw
 		if #string_ > maxLength then

@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-get-type/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-get-type/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -86,22 +86,22 @@ local function getType(value: any): string
 		return typeof(value)
 	end
 
-	-- ROBLOX deviation: added luau types for userdata and thread
+	-- deviation: added luau types for userdata and thread
 	if type(value) == "userdata" then
 		return "userdata"
 	end
 	if typeof(value) == "thread" then
 		return "thread"
 	end
-	-- ROBLOX deviation: code omitted because lua has no primitive bigint type
-	-- ROBLOX deviation: code omitted because lua makes no distinction between tables, arrays, and objects
+	-- deviation: code omitted because lua has no primitive bigint type
+	-- deviation: code omitted because lua makes no distinction between tables, arrays, and objects
 
-	-- ROBLOX deviation: include the type in the error message
+	-- deviation: include the type in the error message
 	error(string.format("value of unknown type: %s (%s)", typeof(value), tostring(value)))
 end
 
 local function isPrimitive(value: any): boolean
-	-- ROBLOX deviation: explicitly define objects and functions and Instances as non primitives
+	-- deviation: explicitly define objects and functions and Instances as non primitives
 	return typeof(value) ~= "table" and typeof(value) ~= "function" and not isRobloxBuiltin(value)
 end
 

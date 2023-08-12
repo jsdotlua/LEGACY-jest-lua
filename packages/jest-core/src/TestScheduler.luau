@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/TestScheduler.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/TestScheduler.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -27,13 +27,13 @@ local exports = {}
 local chalk = require(Packages.ChalkLua)
 local exit = require(Packages.RobloxShared).nodeUtils.exit
 local reportersModule = require(Packages.JestReporters)
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local CoverageReporter = reportersModule.CoverageReporter
--- ROBLOX deviation END
+-- deviation END
 local DefaultReporter = reportersModule.DefaultReporter
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local NotifyReporter = reportersModule.NotifyReporter
--- ROBLOX deviation END
+-- deviation END
 type Reporter = reportersModule.Reporter
 local SummaryReporter = reportersModule.SummaryReporter
 local VerboseReporter = reportersModule.VerboseReporter
@@ -45,9 +45,9 @@ type TestResult = test_resultModule.TestResult
 local addResult = test_resultModule.addResult
 local buildFailureTestResult = test_resultModule.buildFailureTestResult
 local makeEmptyAggregatedTestResult = test_resultModule.makeEmptyAggregatedTestResult
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local createScriptTransformer = require(Packages["@jest"].transform).createScriptTransformer
--- ROBLOX deviation END
+-- deviation END
 local typesModule = require(Packages.JestTypes)
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
 type Config_Path = typesModule.Config_Path
@@ -57,12 +57,12 @@ local jest_runnerModule = require(Packages.JestRunner)
 type TestRunner = jest_runnerModule.TestRunner
 local jest_runtimeModule = require(Packages.JestRuntime)
 type Context = jest_runtimeModule.Context
--- ROBLOX deviation START: snapshot not used yet
+-- deviation START: snapshot not used yet
 -- local snapshot = require(Packages.JestSnapshot)
--- ROBLOX deviation END
--- ROBLOX deviation START: not needed
+-- deviation END
+-- deviation START: not needed
 -- local requireOrImportModule = require(Packages.JestUtil).requireOrImportModule
--- ROBLOX deviation END
+-- deviation END
 local ReporterDispatcherModule = require(script.Parent.ReporterDispatcher)
 local ReporterDispatcher = ReporterDispatcherModule.default
 type ReporterDispatcher = ReporterDispatcherModule.ReporterDispatcher
@@ -70,12 +70,12 @@ local TestWatcherModule = require(script.Parent.TestWatcher)
 type TestWatcher = TestWatcherModule.TestWatcher
 local shouldRunInBand = require(script.Parent.testSchedulerHelper).shouldRunInBand
 
--- ROBLOX deviation START: predefine variables
+-- deviation START: predefine variables
 local TestScheduler: TestSchedulerPrivate & TestScheduler_statics
 local invariant
 local createAggregatedResults
 local getEstimatedTime
--- ROBLOX deviation END
+-- deviation END
 
 export type TestSchedulerOptions = { startRun: (globalConfig: Config_GlobalConfig) -> () }
 export type TestSchedulerContext = {
@@ -130,12 +130,12 @@ type TestSchedulerPrivate = {
 		reporters: Array<string | Config_ReporterConfig>?
 	) -> boolean,
 	_setupDefaultReporters: (self: TestSchedulerPrivate, _collectCoverage: boolean) -> (),
-	-- ROBLOX deviation START: no custom reporters support yet
+	-- deviation START: no custom reporters support yet
 	-- _addCustomReporters: (
 	-- 	self: TestSchedulerPrivate,
 	-- 	reporters: Array<string | Config_ReporterConfig>
 	-- ) -> Promise<nil>,
-	-- ROBLOX deviation END
+	-- deviation END
 	_getReporterProps: (
 		self: TestSchedulerPrivate,
 		reporter: string | Config_ReporterConfig
@@ -182,11 +182,11 @@ end
 
 function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): Promise<AggregatedResult>
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: predeclare functions
+		-- deviation START: predeclare functions
 		local onResult
 		local onFailure
 		local updateSnapshotState
-		-- ROBLOX deviation END
+		-- deviation END
 
 		local onTestFileStart = function(...)
 			return self._dispatcher:onTestFileStart(...)
@@ -195,12 +195,12 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 		local contexts = Set.new()
 		Array.forEach(tests, function(test)
 			contexts:add(test.context)
-			-- ROBLOX deviation START: can't compare nil to number
+			-- deviation START: can't compare nil to number
 			local duration = test.duration or 0
 			if duration > 0 then
 				table.insert(timings, duration)
 			end
-			-- ROBLOX deviation END
+			-- deviation END
 		end)
 
 		local aggregatedResults = createAggregatedResults(#tests)
@@ -244,7 +244,7 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 				testResult.failureMessage = formatExecError(
 					testResult.testExecError,
 					test.context.config,
-					-- ROBLOX FIXME Luau: Config_GlobalConfig contains noStackTrace and noCodeFrame is optional in StackTraceOptions so it should be fine
+					-- FIXME Luau: Config_GlobalConfig contains noStackTrace and noCodeFrame is optional in StackTraceOptions so it should be fine
 					(self._globalConfig :: any) :: { noStackTrace: boolean, noCodeFrame: boolean? },
 					test.path
 				)
@@ -259,15 +259,15 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 					return Promise.resolve():andThen(function()
 						return {
 							context,
-							-- ROBLOX deviation START: no snapshot resolver implemented yet
+							-- deviation START: no snapshot resolver implemented yet
 							-- snapshot:buildSnapshotResolver(context.config):expect(),
-							-- ROBLOX deviation END
+							-- deviation END
 						}
 					end)
 				end)):expect()
 
 				Array.forEach(contextsWithSnapshotResolvers, function(_ref)
-					-- ROBLOX deviation START: no snapshot resolver implemented yet
+					-- deviation START: no snapshot resolver implemented yet
 					-- local context, snapshotResolver = table.unpack(ref, 1, 2)
 					local status = {
 						filesRemoved = 0,
@@ -279,7 +279,7 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 					-- 	snapshotResolver,
 					-- 	context.config.testPathIgnorePatterns
 					-- )
-					-- ROBLOX deviation END
+					-- deviation END
 
 					aggregatedResults.snapshot.filesRemoved += status.filesRemoved
 					aggregatedResults.snapshot.filesRemovedList = Array.concat(
@@ -313,11 +313,11 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 			return Promise.resolve():andThen(function()
 				local config = context.config
 				if not Boolean.toJSBoolean(testRunners[config.runner]) then
-					-- ROBLOX deviation START: use regular require to load TestRunner
+					-- deviation START: use regular require to load TestRunner
 					-- local transformer = createScriptTransformer(config):expect()
 					-- local Runner: TestRunner = transformer:requireAndTranspileModule(config.runner):expect()
 					local Runner: TestRunner = require(Packages.JestRunner).default
-					-- ROBLOX deviation END
+					-- deviation END
 					local runner = Runner.new(self._globalConfig, {
 						changedFiles = if typeof(self._context) == "table" then self._context.changedFiles else nil,
 						sourcesRelatedToTestsInChangedFiles = if typeof(self._context) == "table"
@@ -368,7 +368,7 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 								local testPath, testCaseResult = table.unpack(ref, 1, 2)
 								local test: Test = {
 									context = context,
-									-- ROBLOX FIXME: need script path
+									-- FIXME: need script path
 									path = testPath.Name,
 									script = testPath,
 								}
@@ -378,7 +378,7 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 
 						testRunner
 							:runTests(
-								-- ROBLOX FIXME Luau: Type 'Array<Test>' from 'JestRoblox/_Workspace/JestCore/JestCore/TestScheduler' could not be converted into 'Array<Test>' from 'JestRoblox/_Workspace/JestRunner/JestRunner'
+								-- FIXME Luau: Type 'Array<Test>' from 'JestRoblox/_Workspace/JestCore/JestCore/TestScheduler' could not be converted into 'Array<Test>' from 'JestRoblox/_Workspace/JestRunner/JestRunner'
 								tests :: Array<any>,
 								watcher,
 								nil,
@@ -394,22 +394,22 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 					else
 						testRunner
 							:runTests(
-								-- ROBLOX FIXME Luau: Type 'Array<Test>' from 'JestRoblox/_Workspace/JestCore/JestCore/TestScheduler' could not be converted into 'Array<Test>' from 'JestRoblox/_Workspace/JestRunner/JestRunner'
+								-- FIXME Luau: Type 'Array<Test>' from 'JestRoblox/_Workspace/JestCore/JestCore/TestScheduler' could not be converted into 'Array<Test>' from 'JestRoblox/_Workspace/JestRunner/JestRunner'
 								tests :: Array<any>,
 								watcher,
 								onTestFileStart,
-								-- ROBLOX FIXME Luau: Type '(Test, TestResult) -> Promise<nil>' could not be converted into '((Test, TestResult) -> Promise<nil>)?'
+								-- FIXME Luau: Type '(Test, TestResult) -> Promise<nil>' could not be converted into '((Test, TestResult) -> Promise<nil>)?'
 								onResult :: Function,
-								-- ROBLOX FIXME Luau: Type '(Test, SerializableError) -> Promise<nil>' could not be converted into '((Test, SerializableError) -> Promise<nil>)?'
+								-- FIXME Luau: Type '(Test, SerializableError) -> Promise<nil>' could not be converted into '((Test, SerializableError) -> Promise<nil>)?'
 								onFailure :: Function,
 								testRunnerOptions
 							)
 							:expect()
 					end
-					-- ROBLOX deviation START: add cache of loaded module functions to a test runner
+					-- deviation START: add cache of loaded module functions to a test runner
 					-- test runner should call clean up functions when it is done
 					testRunner:cleanup()
-					-- ROBLOX deviation END
+					-- deviation END
 				end
 			end)
 
@@ -468,19 +468,19 @@ end
 
 function TestScheduler:_setupReporters()
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: not supported: collectCoverage, notify, reporters
-		-- ROBLOX FIXME Luau: it seems this type is not inferred correctly without explicit cast
+		-- deviation START: not supported: collectCoverage, notify, reporters
+		-- FIXME Luau: it seems this type is not inferred correctly without explicit cast
 		-- local ref = self._globalConfig :: Config_GlobalConfig
 		-- local collectCoverage, _notify, reporters = ref.collectCoverage, ref.notify, ref.reporters
 		local collectCoverage, reporters = false, nil
-		-- ROBLOX deviation END
+		-- deviation END
 		local isDefault = self:_shouldAddDefaultReporters(reporters)
 
 		if isDefault then
 			self:_setupDefaultReporters(collectCoverage)
 		end
 
-		-- ROBLOX deviation START: no collectCoverage support
+		-- deviation START: no collectCoverage support
 		-- if not isDefault and collectCoverage then
 		-- 	self:addReporter(CoverageReporter.new(self._globalConfig, {
 		-- 		changedFiles = if typeof(self._context) == "table" then self._context.changedFiles else nil,
@@ -489,19 +489,19 @@ function TestScheduler:_setupReporters()
 		-- 			else nil,
 		-- 	}))
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
-		-- ROBLOX deviation START: no NotifyReporter support
+		-- deviation START: no NotifyReporter support
 		-- if notify then
 		-- 	self:addReporter(NotifyReporter.new(self._globalConfig, self._options.startRun, self._context))
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
-		-- ROBLOX deviation START: no custom reporters support yet
+		-- deviation START: no custom reporters support yet
 		-- if reporters ~= nil and Array.isArray(reporters) then
 		-- 	self:_addCustomReporters(reporters):expect()
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 	end)
 end
 
@@ -512,7 +512,7 @@ function TestScheduler:_setupDefaultReporters(_collectCoverage: boolean)
 			else DefaultReporter.new(self._globalConfig)
 	)
 
-	-- ROBLOX deviation START: no collectCoverage support
+	-- deviation START: no collectCoverage support
 	-- if collectCoverage then
 	-- 	self:addReporter(CoverageReporter.new(self._globalConfig, {
 	-- 		changedFiles = if typeof(self._context) == "table" then self._context.changedFiles else nil,
@@ -521,12 +521,12 @@ function TestScheduler:_setupDefaultReporters(_collectCoverage: boolean)
 	-- 			else nil,
 	-- 	}))
 	-- end
-	-- ROBLOX deviation END
+	-- deviation END
 
 	self:addReporter(SummaryReporter.new(self._globalConfig))
 end
 
--- ROBLOX deviation START: no custom reporters support yet
+-- deviation START: no custom reporters support yet
 -- function TestScheduler:_addCustomReporters(reporters: Array<string | Config_ReporterConfig>)
 -- 	return Promise.resolve():andThen(function()
 -- 		for _, reporter in reporters do
@@ -553,7 +553,7 @@ end
 -- 		end
 -- 	end)
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 --[[*
  * Get properties of a reporter in an object
@@ -565,9 +565,9 @@ function TestScheduler:_getReporterProps(
 	if typeof(reporter) == "string" then
 		return { options = self._options :: any, path = reporter }
 	elseif Array.isArray(reporter) then
-		-- ROBLOX deviation START: need explicit types as Luau doesn't support tuple types
+		-- deviation START: need explicit types as Luau doesn't support tuple types
 		local path, options = reporter[1] :: string, reporter[2] :: Record<string, any>
-		-- ROBLOX deviation END
+		-- deviation END
 		return { options = options, path = path }
 	end
 
@@ -623,7 +623,7 @@ function getEstimatedTime(timings: Array<number>, workers: number): number
 	return if #timings <= workers
 		then max
 		else math.max(Array.reduce(timings, function(
-			-- ROBLOX FIXME Luau: should be inferred from reduce's initial value
+			-- FIXME Luau: should be inferred from reduce's initial value
 			sum: number,
 			time_
 		)

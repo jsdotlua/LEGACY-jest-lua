@@ -1,4 +1,4 @@
--- ROBLOX upstream: no upstream
+-- upstream: no upstream
 --[[
 	* Copyright (c) Roblox Corporation. All rights reserved.
 	* Licensed under the MIT License (the "License");
@@ -20,7 +20,7 @@ local exports = circusModule
 export type Event = circusModule.Event
 export type State = circusModule.State
 
--- ROBLOX deviation: exporting runner alongside the main entry point
+-- deviation: exporting runner alongside the main entry point
 local runner = require(script.runner);
 (exports :: any).runner = runner
 

@@ -1,5 +1,5 @@
 --!nonstrict
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/asymmetricMatchers.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/asymmetricMatchers.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -23,7 +23,7 @@ type RegExp = RegExp.RegExp
 
 local getType = require(Packages.JestGetType).getType
 
--- ROBLOX TODO: import jest-matcher-utils when available
+-- TODO: import jest-matcher-utils when available
 -- import * as matcherUtils from 'jest-matcher-utils';
 local matcherUtils = {} :: any
 local JasmineUtils = require(CurrentModule.jasmineUtils)
@@ -34,7 +34,7 @@ local isUndefined = JasmineUtils.isUndefined
 
 local getState = require(CurrentModule.jestMatchersObject_extracted).getState
 local Types = require(CurrentModule.types)
--- ROBLOX TODO: import correct types
+-- TODO: import correct types
 type AssymetricMatcherInterface = any
 type MatcherState = Types.MatcherState
 local Utils = require(CurrentModule.utils)
@@ -86,7 +86,7 @@ end
 	toAsymmetricMatcher?(): string;
 ]]
 
--- ROBLOX deviation: our implementation of any has significant deviations, check README for more info
+-- deviation: our implementation of any has significant deviations, check README for more info
 -- > any("number"):asymmetricMatch(1) -- true
 -- > any("number"):toAsymmetricMatcher() -- "Any<number>"
 -- > any(ClassA):asymmetricMatch(ClassA.new()) -- true
@@ -108,7 +108,7 @@ function Any.new(sample: any)
 end
 
 function Any:asymmetricMatch(other: any): boolean
-	-- ROBLOX deviation: simplified since this covers all the cases in Lua
+	-- deviation: simplified since this covers all the cases in Lua
 	local selfType = getType(self.sample)
 	local otherType = getType(other)
 	-- compare metatable to check instance of Lua prototypical class
@@ -126,7 +126,7 @@ function Any:toString(): string
 end
 
 function Any:getExpectedType(): string
-	-- ROBLOX deviation: simplified since this already covers all the cases in Lua
+	-- deviation: simplified since this already covers all the cases in Lua
 	return tostring(self.sample)
 end
 
@@ -144,7 +144,7 @@ function Anything.new(sample: any)
 end
 
 function Anything:asymmetricMatch(other: any): boolean
-	-- ROBLOX deviation: other !== null is redundant since Lua doesn't distinguish undefined/nil
+	-- deviation: other !== null is redundant since Lua doesn't distinguish undefined/nil
 	return not isUndefined(other)
 end
 
@@ -215,7 +215,7 @@ function ObjectContaining.new(sample: { any }, inverse: boolean?)
 end
 
 function ObjectContaining:asymmetricMatch(other: { any })
-	-- ROBLOX deviation: check for type table instead of object
+	-- deviation: check for type table instead of object
 	if typeof(self.sample) ~= "table" then
 		error(string.format("You must provide an object to %s, not '%s'.", self:toString(), typeof(self.sample)))
 	end
@@ -281,7 +281,7 @@ StringMatching.__index = StringMatching
 setmetatable(StringMatching, AsymmetricMatcher)
 function StringMatching.new(sample: string | RegExp, inverse: boolean?)
 	inverse = if inverse ~= nil then inverse else false
-	-- ROBLOX deviation: we accept matches against a Lua string pattern or RegExp polyfill
+	-- deviation: we accept matches against a Lua string pattern or RegExp polyfill
 	if not isA("string", sample) and not isA("regexp", sample) then
 		error("Expected is not a String")
 	end
@@ -295,7 +295,7 @@ function StringMatching:asymmetricMatch(other: string): boolean
 	if isA("string", other) then
 		-- Lua pattern case
 		if isA("string", self.sample) then
-			-- ROBLOX deviation: escape chalk sequences if necessary
+			-- deviation: escape chalk sequences if necessary
 			self.sample = string.gsub(self.sample, string.char(27) .. "%[", string.char(27) .. "%%[")
 			result = other:find(self.sample)
 			-- Regex case

@@ -1,5 +1,5 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/jestMatchersObject.ts
--- ROBLOX NOTE: extracted from jestMatchersObject.lua to avoid circular dependencies
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/jestMatchersObject.ts
+-- NOTE: extracted from jestMatchersObject.lua to avoid circular dependencies
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *

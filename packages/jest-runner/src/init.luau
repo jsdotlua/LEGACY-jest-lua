@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-runner/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-runner/src/index.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -23,14 +23,14 @@ local Promise = require(Packages.Promise)
 
 local exports = {}
 
--- ROBLOX deviation: chalk used only in parallel tests
+-- deviation: chalk used only in parallel tests
 -- local chalk = require(Packages.ChalkLua)
 local emitteryModule = require(Packages.Emittery)
 local Emittery = emitteryModule.default
 type Emittery = emitteryModule.Emittery
 type Emittery_UnsubscribeFn = emitteryModule.Emittery_UnsubscribeFn
 
--- ROBLOX deviation: exit used only in parallel tests
+-- deviation: exit used only in parallel tests
 -- local exit = require(Packages.exit)
 local throatModule = require(Packages.Throat)
 local throat = throatModule.default
@@ -45,30 +45,30 @@ type TestResult = test_resultModule.TestResult
 local jestTypesModule = require(Packages.JestTypes)
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
 local deepCyclicCopy = require(Packages.JestUtil).deepCyclicCopy
--- ROBLOX deviation START: Worker not used yet
+-- deviation START: Worker not used yet
 -- local jest_workerModule = require(Packages.JestWorker)
 -- local PromiseWithCustomMessage = jest_workerModule.PromiseWithCustomMessage
 -- local Worker = jest_workerModule.Worker
--- ROBLOX deviation END
+-- deviation END
 local runTest = require(script.runTest).default
--- ROBLOX deviation START: Worker not used yet
+-- deviation START: Worker not used yet
 -- local testWorkerModule = require(script.testWorker)
 -- type SerializableResolver = testWorkerModule.SerializableResolver
 -- type worker = testWorkerModule.worker
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: types are exported above
+-- deviation START: types are exported above
 -- -- TODO: remove re-export in Jest 28
 -- exports.Test = test_resultModule.Test
 -- exports.TestFileEvent = test_resultModule.TestFileEvent
 -- exports.TestEvents = test_resultModule.TestEvents
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: Worker not used yet
+-- deviation START: Worker not used yet
 -- local TEST_WORKER_PATH = require_:resolve("./testWorker")
 
 -- type WorkerInterface = Worker & { worker: typeof(worker) }
--- ROBLOX deviation END
+-- deviation END
 
 local typesModule = require(script.types)
 export type OnTestFailure = typesModule.OnTestFailure
@@ -78,9 +78,9 @@ export type TestWatcher = typesModule.TestWatcher
 export type TestRunnerContext = typesModule.TestRunnerContext
 export type TestRunnerOptions = typesModule.TestRunnerOptions
 
--- ROBLOX deviation START: predefine variables
+-- deviation START: predefine variables
 local CancelRun
--- ROBLOX deviation END
+-- deviation END
 
 export type TestRunner = {
 	new: (globalConfig: Config_GlobalConfig, context: TestRunnerContext?) -> TestRunner,
@@ -106,13 +106,13 @@ export type TestRunner = {
 		) -> ...Promise<nil>
 	) -> Emittery_UnsubscribeFn,
 
-	-- ROBLOX NOTE: private
+	-- NOTE: private
 	_globalConfig: Config_GlobalConfig,
 	_context: TestRunnerContext,
-	-- ROBLOX deviation START: add cache of loaded module functions to a test runner
+	-- deviation START: add cache of loaded module functions to a test runner
 	_loadedModuleFns: Map<ModuleScript, { any }>,
 	cleanup: (self: TestRunner) -> (),
-	-- ROBLOX deviation END
+	-- deviation END
 	eventEmitter: Emittery,
 	_createInBandTestRun: (
 		self: TestRunner,
@@ -141,9 +141,9 @@ function TestRunner.new(globalConfig: Config_GlobalConfig, context: TestRunnerCo
 	self.__PRIVATE_UNSTABLE_API_supportsEventEmitters__ = true
 	self._globalConfig = globalConfig
 	self._context = Boolean.toJSBoolean(context) and context or {}
-	-- ROBLOX deviation START: add cache of loaded module functions to a test runner
+	-- deviation START: add cache of loaded module functions to a test runner
 	self._loadedModuleFns = Map.new()
-	-- ROBLOX deviation END
+	-- deviation END
 	return (self :: any) :: TestRunner
 end
 
@@ -171,12 +171,12 @@ function TestRunner:_createInBandTestRun(
 	onFailure: OnTestFailure?
 )
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation: no process available in Luau
+		-- deviation: no process available in Luau
 		-- process.env.JEST_WORKER_ID = "1"
 		local mutex = throat(1) :: ThroatLateBound<nil, nil>
 		return Array.reduce(tests, function(promise: Promise<nil>, test: Test)
 			return mutex(function()
-				-- ROBLOX FIXME START: Promise type doesn't support changing return type with :andThen call
+				-- FIXME START: Promise type doesn't support changing return type with :andThen call
 				return (promise :: Promise<any>)
 					:andThen(function(): Promise<TestResult>
 						return Promise.resolve():andThen(function()
@@ -189,19 +189,19 @@ function TestRunner:_createInBandTestRun(
 							if onStart ~= nil then
 								onStart(test):expect()
 								return runTest(
-									-- ROBLOX deviation: using `script` instead of `path`
+									-- deviation: using `script` instead of `path`
 									test.script,
 									self._globalConfig,
 									test.context.config,
-									-- ROBLOX deviation START: resolver no supported
+									-- deviation START: resolver no supported
 									nil,
 									-- test.context.resolver,
-									-- ROBLOX deviation END
+									-- deviation END
 									self._context,
 									nil,
-									-- ROBLOX deviation START: add cache of loaded module functions to a test runner
+									-- deviation START: add cache of loaded module functions to a test runner
 									self._loadedModuleFns
-									-- ROBLOX deviation END
+									-- deviation END
 								)
 							else
 								-- `deepCyclicCopy` used here to avoid mem-leak
@@ -213,19 +213,19 @@ function TestRunner:_createInBandTestRun(
 								end
 								self.eventEmitter:emit("test-file-start", { test }):expect()
 								return runTest(
-									-- ROBLOX deviation: using `script` instead of `path`
+									-- deviation: using `script` instead of `path`
 									test.script,
 									self._globalConfig,
 									test.context.config,
-									-- ROBLOX deviation START: resolver no supported
+									-- deviation START: resolver no supported
 									nil,
 									-- test.context.resolver,
-									-- ROBLOX deviation END
+									-- deviation END
 									self._context,
 									sendMessageToJest,
-									-- ROBLOX deviation START: add cache of loaded module functions to a test runner
+									-- deviation START: add cache of loaded module functions to a test runner
 									self._loadedModuleFns
-									-- ROBLOX deviation END
+									-- deviation END
 								)
 							end
 						end)
@@ -244,7 +244,7 @@ function TestRunner:_createInBandTestRun(
 							return self.eventEmitter:emit("test-file-failure", { test :: any, err })
 						end
 					end) :: Promise<nil>
-				-- ROBLOX FIXME END
+				-- FIXME END
 			end)
 		end, Promise.resolve())
 	end)
@@ -258,7 +258,7 @@ function TestRunner:_createParallelTestRun(
 	onFailure: OnTestFailure?
 )
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: parallel test run not implemented yet
+		-- deviation START: parallel test run not implemented yet
 		console.warn("Parallel tests run not implemented yet\nRunning tests in band instead")
 		return self:_createInBandTestRun(tests, watcher, onStart, onResult, onFailure)
 		-- local resolvers: Map<string, SerializableResolver> = Map.new()
@@ -388,7 +388,7 @@ function TestRunner:_createParallelTestRun(
 		-- 	end)
 		-- end
 		-- return Promise.race({ runAllTests, onInterrupt }):andThen(cleanup, cleanup)
-		-- ROBLOX deviation END
+		-- deviation END
 	end)
 end
 
@@ -403,7 +403,7 @@ function TestRunner:on<Name>(
 	return self.eventEmitter:on(eventName, listener)
 end
 
--- ROBLOX deviation START: add cache of loaded module functions to a test runner
+-- deviation START: add cache of loaded module functions to a test runner
 -- test runner should call clean up functions when it is done
 function TestRunner:cleanup()
 	self._loadedModuleFns:forEach(function(val)
@@ -413,7 +413,7 @@ function TestRunner:cleanup()
 		end
 	end)
 end
--- ROBLOX deviation END
+-- deviation END
 
 exports.default = TestRunner
 

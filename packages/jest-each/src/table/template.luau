@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/table/template.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/table/template.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -15,7 +15,7 @@ type Array<T> = LuauPolyfill.Array<T>
 
 local exports = {}
 
--- ROBLOX deviation: predefine variables
+-- deviation: predefine variables
 local convertRowToTable, convertTableToTemplates
 
 local typesModule = require(Packages.JestTypes)
@@ -37,7 +37,7 @@ local function default(title: string, headings: Headings, row: Global_Row): Each
 	return Array.map(templates, function(template, index)
 		return {
 			arguments = { Object.assign({}, template) },
-			-- ROBLOX FIXME Luau: analyze should know this is Template because of the Array.map() generic's callbackFn
+			-- FIXME Luau: analyze should know this is Template because of the Array.map() generic's callbackFn
 			title = interpolateVariables(title, template :: Template, index),
 		}
 	end)
@@ -46,14 +46,14 @@ end
 exports.default = default
 
 function convertRowToTable(row: Global_Row, _headings: Headings): Global_Table
-	-- ROBLOX deviation: rows are already formatted as arrays (because there are no tagged templates)
+	-- deviation: rows are already formatted as arrays (because there are no tagged templates)
 	return row
 end
 
 function convertTableToTemplates(table_: Global_Table, headings: Headings): Templates
 	return Array.map(table_, function(row)
 		return Array.reduce(row, function(
-			-- ROBLOX FIXME Luau: should be inferred from reduce's initial value
+			-- FIXME Luau: should be inferred from reduce's initial value
 			acc: Template,
 			value,
 			index

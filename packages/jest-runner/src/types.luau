@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-runner/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-runner/src/types.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -14,7 +14,7 @@ type Error = LuauPolyfill.Error
 type Promise<T> = LuauPolyfill.Promise<T>
 type Set<T> = LuauPolyfill.Set<T>
 
--- ROBLOX deviation: no emittery available
+-- deviation: no emittery available
 type Emittery<T> = any
 local environmentModule = require(Packages.JestEnvironment)
 type JestEnvironment = environmentModule.JestEnvironment
@@ -28,7 +28,7 @@ local typesModule = require(Packages.JestTypes)
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
 type Config_Path = typesModule.Config_Path
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
--- ROBLOX TODO:
+-- TODO:
 -- local jest_runtimeModule = require(Packages.JestRuntime)
 type RuntimeType = any -- jest_runtimeModule.default
 
@@ -43,7 +43,7 @@ export type TestFramework = (
 	config: Config_ProjectConfig,
 	environment: JestEnvironment,
 	runtime: RuntimeType,
-	-- ROBLOX deviation: accept ModuleScript instead of string
+	-- deviation: accept ModuleScript instead of string
 	testPath: ModuleScript,
 	sendMessageToJest: TestFileEvent?
 ) -> Promise<TestResult>

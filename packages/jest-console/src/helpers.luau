@@ -12,7 +12,7 @@
 	* See the License for the specific language governing permissions and
 	* limitations under the License.
 ]]
--- ROBLOX NOTE upstream: Added some utilities to support keeping the upstream code consistent
+-- NOTE upstream: Added some utilities to support keeping the upstream code consistent
 
 local CurrentModule = script.Parent
 local Packages = CurrentModule.Parent

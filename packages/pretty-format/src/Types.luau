@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/types.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -70,7 +70,7 @@ export type OptionsReceived = PrettyFormatOptions
 export type Config = {
 	callToJSON: boolean,
 	compareKeys: CompareKeys,
-	-- ROBLOX deviation: we don't support colors?
+	-- deviation: we don't support colors?
 	colors: Colors?,
 	escapeRegex: boolean,
 	escapeString: boolean,
@@ -100,7 +100,7 @@ type PluginOptions = {
 }
 
 export type OldPlugin = {
-	-- ROBLOX deviation: we don't support colors?
+	-- deviation: we don't support colors?
 	print: (any, Print, Indent, PluginOptions, Colors?) -> string,
 	test: Test,
 }

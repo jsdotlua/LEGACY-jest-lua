@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/types.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -31,13 +31,13 @@ export type TestRunData = Array<{
 	matches: { allTests: number, tests: Array<Test>, total: number?, stats_: Stats? },
 }>
 
--- ROBLOX deviation START: unroll `keyof Stats` as this operation is not supported in Luau
+-- deviation START: unroll `keyof Stats` as this operation is not supported in Luau
 type KeyOfStats = "roots" | "testMatch" | "testPathIgnorePatterns" | "testRegex" | "testPathPattern"
 export type TestPathCases = Array<{
 	stat: KeyOfStats,
 	isMatch: (path: Config_Path) -> boolean,
 }>
--- ROBLOX deviation END
+-- deviation END
 
 export type TestPathCasesWithPathPattern = TestPathCases & { testPathPattern: (path: Config_Path) -> boolean }
 

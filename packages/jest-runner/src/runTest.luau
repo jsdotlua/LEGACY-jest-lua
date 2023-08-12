@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-runner/src/runTest.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-runner/src/runTest.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -16,17 +16,17 @@ local setImmediate = setTimeout
 local Promise = require(Packages.Promise)
 type Promise<T> = LuauPolyfill.Promise<T>
 
--- ROBLOX deviation START: additional function to construct file path from ModuleScript
+-- deviation START: additional function to construct file path from ModuleScript
 local getRelativePath = require(Packages.RobloxShared).getRelativePath
--- ROBLOX deviation END
+-- deviation END
 
 local exports = {}
 
 local chalk = require(Packages.ChalkLua)
--- ROBLOX deviation START: unnecessary variables
+-- deviation START: unnecessary variables
 -- local fs = require(Packages["graceful-fs"])
 -- local sourcemapSupport = require(Packages["source-map-support"])
--- ROBLOX deviation END
+-- deviation END
 local consoleModule = require(Packages.JestConsole)
 local BufferedConsole = consoleModule.BufferedConsole
 type BufferedConsole = consoleModule.BufferedConsole
@@ -42,16 +42,16 @@ type JestEnvironment = environmentModule.JestEnvironment
 local test_resultModule = require(Packages.JestTestResult)
 type TestFileEvent = test_resultModule.TestFileEvent
 type TestResult = test_resultModule.TestResult
--- ROBLOX deviation: unnecessary variable
+-- deviation: unnecessary variable
 -- local createScriptTransformer = require(Packages.JestTransform).createScriptTransformer
 local jestTypesModule = require(Packages.JestTypes)
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
--- ROBLOX deviation: running test based on ModuleScript rather than file
+-- deviation: running test based on ModuleScript rather than file
 type Config_Path = ModuleScript --jestTypesModule.Config_Path
 type Config_ProjectConfig = jestTypesModule.Config_ProjectConfig
 -- local docblock = require(Packages["jest-docblock"])
 -- local LeakDetector = require(Packages["jest-leak-detector"]).default
--- ROBLOX TODO START: implement
+-- TODO START: implement
 -- local formatExecError = require(Packages.JestMessageUtil).formatExecError
 -- local jest_resolveModule = require(Packages["jest-resolve"])
 -- local Resolver = jest_resolveModule.default
@@ -60,10 +60,10 @@ type Resolver = any
 -- local jest_runtimeModule = require(Packages.JestRuntime)
 -- type RuntimeClass = jest_runtimeModule.default
 type RuntimeClass = typeof(require(Packages.JestRuntime))
--- ROBLOX TODO END
+-- TODO END
 local jest_utilModule = require(Packages.JestUtil)
 local ErrorWithStack = jest_utilModule.ErrorWithStack
--- ROBLOX deviation: unnecessary variable
+-- deviation: unnecessary variable
 -- local interopRequireDefault = jest_utilModule.interopRequireDefault
 local setGlobal = jest_utilModule.setGlobal
 local typesModule = require(script.Parent.types)
@@ -107,7 +107,7 @@ end
 -- references to verify if there is a leak, which is not maintainable and error
 -- prone. That's why "runTestInternal" CANNOT be inlined inside "runTest".
 local function runTestInternal(
-	-- ROBLOX deviation: accept ModuleScript instead of string
+	-- deviation: accept ModuleScript instead of string
 	path: ModuleScript,
 	globalConfig: Config_GlobalConfig,
 	config: Config_ProjectConfig,
@@ -117,13 +117,13 @@ local function runTestInternal(
 	loadedModuleFns: Map<ModuleScript, { any }>
 ): Promise<RunTestInternalResult>
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: unnecessary variables
+		-- deviation START: unnecessary variables
 		-- local testSource = fs:readFileSync(path, "utf8")
 		-- local docblockPragmas = docblock:parse(docblock:extract(testSource))
 		-- local customEnvironment = docblockPragmas["jest-environment"]
-		-- ROBLOX deviation END
+		-- deviation END
 		local testEnvironment = config.testEnvironment
-		-- ROBLOX deviation START: no custom environment handling
+		-- deviation START: no custom environment handling
 		-- if customEnvironment ~= nil then
 		-- 	if Array.isArray(customEnvironment) then
 		-- 		error(
@@ -139,34 +139,34 @@ local function runTestInternal(
 		-- 		testEnvironment = customEnvironment,
 		-- 	}))
 		-- end
-		-- ROBLOX deviation END
-		-- ROBLOX deviation START: unnecessary variables
+		-- deviation END
+		-- deviation START: unnecessary variables
 		-- local cacheFS = Map.new({ { path, testSource } })
 		-- local transformer = createScriptTransformer(config, cacheFS):expect()
-		-- ROBLOX deviation END
+		-- deviation END
 		local TestEnvironment: JestEnvironment =
-			-- ROBLOX deviation: need to cast as require doesn't allow to import unknown paths
+			-- deviation: need to cast as require doesn't allow to import unknown paths
 			(require :: any)(testEnvironment)
 		-- transformer:requireAndTranspileModule(testEnvironment):expect()
-		-- ROBLOX deviation START: use only JestCircus runner
+		-- deviation START: use only JestCircus runner
 		local testFramework: TestFramework = require(Packages.JestCircus).runner
 		-- local testFramework: TestFramework = transformer
 		-- 	:requireAndTranspileModule(
 		-- 		if process.env.JEST_JASMINE == "1" then require_:resolve("jest-jasmine2") else config.testRunner
 		-- 	)
 		-- 	:expect()
-		-- ROBLOX deviation END
-		-- ROBLOX deviation START: use only JestRuntime
+		-- deviation END
+		-- deviation START: use only JestRuntime
 		local Runtime: RuntimeClass = require(Packages.JestRuntime)
 		-- interopRequireDefault(
 		-- 	if Boolean.toJSBoolean(config.moduleLoader) then require_(config.moduleLoader) else require_("jest-runtime")
 		-- ).default
-		-- ROBLOX deviation END
+		-- deviation END
 
-		-- ROBLOX deviation START: using writable instead of process.stdout or process.stdin
+		-- deviation START: using writable instead of process.stdout or process.stdin
 		local consoleOut = Writeable.new()
 		-- local consoleOut = if Boolean.toJSBoolean(globalConfig.useStderr) then process.stderr else process.stdout
-		-- ROBLOX deviation END
+		-- deviation END
 		local function consoleFormatter(type_, message: LogMessage)
 			return getConsoleOutput(
 				-- 4 = the console call is buried 4 stack frames deep
@@ -198,22 +198,22 @@ local function runTestInternal(
 					tostring(testEnvironment)
 				)
 			)
-			-- ROBLOX deviation START: no process.exit in Luau
+			-- deviation START: no process.exit in Luau
 			error(1)
 			-- process.exit(1)
-			-- ROBLOX deviation END
+			-- deviation END
 		end
 
-		-- ROBLOX deviation START: no leak detector implemented
+		-- deviation START: no leak detector implemented
 		local leakDetector = nil
 		-- local leakDetector = if config.detectLeaks then LeakDetector.new(environment) else nil
-		-- ROBLOX deviation END
+		-- deviation END
 
 		setGlobal((environment.global :: unknown) :: typeof(_G), "console", testConsole)
 
 		local runtime = Runtime.new(
 			loadedModuleFns
-			-- ROBLOX TODO START: no params to Runtime.new so far
+			-- TODO START: no params to Runtime.new so far
 			-- config, environment, resolver, transformer, cacheFS, {
 			-- 	changedFiles = if typeof(context) == "table" then context.changedFiles else nil,
 			-- 	collectCoverage = globalConfig.collectCoverage,
@@ -224,13 +224,13 @@ local function runTestInternal(
 			-- 		then context.sourcesRelatedToTestsInChangedFiles
 			-- 		else nil,
 			-- }, path
-			-- ROBLOX TODO END
+			-- TODO END
 		)
 
 		local start = DateTime.now().UnixTimestampMillis
 
 		for _, path_ in config.setupFiles do
-			-- ROBLOX deviation START: no esm modules in Lua
+			-- deviation START: no esm modules in Lua
 			runtime:requireModule(path_)
 			-- local esm = runtime:unstable_shouldLoadAsEsm(path)
 			-- if esm ~= nil then
@@ -238,10 +238,10 @@ local function runTestInternal(
 			-- else
 			-- 	runtime:requireModule(path)
 			-- end
-			-- ROBLOX deviation END
+			-- deviation END
 		end
 
-		-- ROBLOX deviation START: no source map supported
+		-- deviation START: no source map supported
 		-- local sourcemapOptions: sourcemapSupport_Options = {
 		-- 	environment = "node",
 		-- 	handleUncaughtExceptions = false,
@@ -271,9 +271,9 @@ local function runTestInternal(
 
 		-- -- For runtime errors
 		-- sourcemapSupport:install(sourcemapOptions)
-		-- ROBLOX deviation END
+		-- deviation END
 
-		-- ROBLOX deviation START: no process.exit in Luau
+		-- deviation START: no process.exit in Luau
 		-- if
 		-- 	Boolean.toJSBoolean(environment.global)
 		-- 	and Boolean.toJSBoolean(environment.global.process)
@@ -295,24 +295,24 @@ local function runTestInternal(
 		-- 		return realExit(table.unpack(args))
 		-- 	end
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
-		-- ROBLOX deviation START: no v8Coverage
+		-- deviation START: no v8Coverage
 		-- -- if we don't have `getVmContext` on the env skip coverage
 		-- local collectV8Coverage = globalConfig.coverageProvider == "v8"
 		-- 	and typeof(environment.getVmContext) == "function"
-		-- ROBLOX deviation END
+		-- deviation END
 
 		local ok, result = pcall(function()
 			environment:setup():expect()
 			local result: TestResult
 
 			local ok_, result_ = pcall(function()
-				-- ROBLOX deviation START: no v8Coverage
+				-- deviation START: no v8Coverage
 				-- if collectV8Coverage then
 				-- 	runtime:collectV8Coverage():expect()
 				-- end
-				-- ROBLOX deviation END
+				-- deviation END
 				result = testFramework(globalConfig, config, environment, runtime, path, sendMessageToJest):expect()
 			end)
 			if not ok_ then
@@ -321,11 +321,11 @@ local function runTestInternal(
 				-- Access stack before uninstalling sourcemaps
 				local _ = err.stack
 			end
-			-- ROBLOX deviation START: no v8Coverage
+			-- deviation START: no v8Coverage
 			-- if collectV8Coverage then
 			-- 	runtime:stopCollectingV8Coverage():expect()
 			-- end
-			-- ROBLOX deviation END
+			-- deviation END
 			if not ok_ then
 				local err = result_
 				error(err)
@@ -352,7 +352,7 @@ local function runTestInternal(
 			result.displayName = config.displayName
 
 			-- #region
-			-- ROBLOX deviation START: no coverage support
+			-- deviation START: no coverage support
 			-- local coverage = runtime:getAllCoverageInfoCopy()
 			-- if Boolean.toJSBoolean(coverage) then
 			-- 	local coverageKeys = Object.keys(coverage)
@@ -360,25 +360,25 @@ local function runTestInternal(
 			-- 		result.coverage = coverage
 			-- 	end
 			-- end
-			-- ROBLOX deviation END
+			-- deviation END
 
-			-- ROBLOX deviation START: no v8Coverage
+			-- deviation START: no v8Coverage
 			-- if collectV8Coverage then
 			-- 	local v8Coverage = runtime:getAllV8CoverageInfoCopy()
 			-- 	if Boolean.toJSBoolean(v8Coverage) and #v8Coverage > 0 then
 			-- 		result.v8Coverage = v8Coverage
 			-- 	end
 			-- end
-			-- ROBLOX deviation END
+			-- deviation END
 
-			-- ROBLOX deviation START: no gc available in Luau
+			-- deviation START: no gc available in Luau
 			-- if globalConfig.logHeapUsage then
 			-- 	if global.gc then
 			-- 		global:gc()
 			-- 	end
 			-- 	result.memoryUsage = process:memoryUsage().heapUsed
 			-- end
-			-- ROBLOX deviation END
+			-- deviation END
 			--#endregion
 			-- Delay the resolution to allow log messages to be output.
 			return Promise.new(function(resolve)
@@ -390,7 +390,7 @@ local function runTestInternal(
 		runtime:teardown()
 		environment:teardown():expect()
 
-		-- ROBLOX deviation: no source map supported
+		-- deviation: no source map supported
 		-- sourcemapSupport:resetRetrieveHandlers()
 
 		if not ok then

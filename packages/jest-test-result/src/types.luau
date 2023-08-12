@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-test-result/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-test-result/src/types.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -13,7 +13,7 @@ type Array<T> = LuauPolyfill.Array<T>
 type Error = LuauPolyfill.Error
 type Record<K, T> = { [K]: T }
 
--- ROBLOX deviation START: collect-v8-coverage package not available
+-- deviation START: collect-v8-coverage package not available
 -- local collect_v8_coverageModule = require(Packages["collect-v8-coverage"])
 -- type V8Coverage = collect_v8_coverageModule.V8Coverage
 -- local istanbul_lib_coverageModule = require(Packages["istanbul-lib-coverage"])
@@ -21,9 +21,9 @@ type Record<K, T> = { [K]: T }
 -- type CoverageMapData = istanbul_lib_coverageModule.CoverageMapData
 type CoverageMap = any
 type CoverageMapData = any
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX TODO: once jest-console package is available
+-- TODO: once jest-console package is available
 -- local consoleModule = require(Packages.JestConsole)
 type ConsoleBuffer = any -- [[ consoleModule.ConsoleBuffer ]]
 
@@ -38,12 +38,12 @@ type TestResult_AssertionResult = typesModule.TestResult_AssertionResult
 type TestResult_Milliseconds = typesModule.TestResult_Milliseconds
 type TransformTypes_TransformResult = typesModule.TransformTypes_TransformResult
 
--- ROBLOX TODO: once jest-haste-map package is available
+-- TODO: once jest-haste-map package is available
 -- local jest_haste_mapModule = require(Packages["jest-haste-map"])
 type HasteFS = any -- [[ jest_haste_mapModule.FS ]]
 type ModuleMap = any -- [[ jest_haste_mapModule.ModuleMap ]]
 
--- ROBLOX TODO: once jest-resolve package is available
+-- TODO: once jest-resolve package is available
 -- local jest_resolveModule = require(Packages["jest-resolve"])
 type Resolver = any -- [[ jest_resolveModule.default ]]
 
@@ -78,18 +78,18 @@ export type Milliseconds = TestResult_Milliseconds
 
 export type AssertionResult = TestResult_AssertionResult
 
--- ROBLOX deviation START: Pick<AssertionResult, "ancestorTitles" | "fullName" | "location" | "status" | "title">
+-- deviation START: Pick<AssertionResult, "ancestorTitles" | "fullName" | "location" | "status" | "title">
 export type FormattedAssertionResult = {
 	ancestorTitles: Array<string>,
 	fullName: string,
 	location: (TestResult_Callsite | nil)?,
 	status: Status,
 	title: string,
-	-- ROBLOX deviation: Added failureMessages directly to object instead of intersection
+	-- deviation: Added failureMessages directly to object instead of intersection
 	failureMessages: Array<string> | nil,
-	-- ROBLOX deviation END
+	-- deviation END
 }
--- ROBLOX deviation END
+-- deviation END
 
 export type AggregatedResultWithoutCoverage = {
 	numFailedTests: number,
@@ -210,11 +210,11 @@ export type Test = { context: Context, duration: number?, path: Config_Path, scr
 
 export type Context = {
 	config: Config_ProjectConfig,
-	-- ROBLOX deviation START: no supported
+	-- deviation START: no supported
 	-- hasteFS: HasteFS,
 	-- moduleMap: ModuleMap,
 	-- resolver: Resolver,
-	-- ROBLOX deviation END
+	-- deviation END
 }
 
 -- Typings for `sendMessageToJest` events
@@ -225,13 +225,13 @@ export type TestEvents = {
 	["test-case-result"]: Array<Config_Path | AssertionResult>,
 }
 
--- ROBLOX deviation START: unroll `keyof TestEvents` as this operation is not supported in Luau
+-- deviation START: unroll `keyof TestEvents` as this operation is not supported in Luau
 type KeyOfTestEvents = "test-file-start" | "test-file-success" | "test-file-failure" | "test-case-result"
 
 export type TestFileEvent<T = KeyOfTestEvents> = (
 	eventName: T,
 	args: any --[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ TestEvents[T] ]]
 ) -> unknown
--- ROBLOX deviation END
+-- deviation END
 
 return {}

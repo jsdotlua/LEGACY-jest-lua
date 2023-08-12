@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/plugins/lib/markup.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/plugins/lib/markup.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -16,14 +16,14 @@ type Record<K, T> = { [K]: T }
 
 local exports = {}
 
--- ROBLOX deviation START: predefine functions
+-- deviation START: predefine functions
 local printProps
 local printChildren
 local printText
 local printComment
 local printElement
 local printElementAsLeaf
--- ROBLOX deviation END
+-- deviation END
 
 local typesModule = require(script.Parent.Parent.Parent.Types)
 type Config = typesModule.Config
@@ -31,7 +31,7 @@ type Printer = typesModule.Printer
 type Refs = typesModule.Refs
 local escapeHTML = require(script.Parent.escapeHTML).default
 
--- ROBLOX deviation START: adding default colors since we don't currently support colors
+-- deviation START: adding default colors since we don't currently support colors
 type Colors = typesModule.Colors
 local DEFAULT_COLORS: Colors = {
 	comment = { close = "", open = "" },
@@ -40,7 +40,7 @@ local DEFAULT_COLORS: Colors = {
 	tag = { close = "", open = "" },
 	value = { close = "", open = "" },
 }
--- ROBLOX deviation END
+-- deviation END
 
 -- Return empty string if keys is empty.
 function printProps(
@@ -54,7 +54,7 @@ function printProps(
 ): string
 	local indentationNext = indentation .. config.indent
 
-	-- ROBLOX deviation: adding default value as we don't support colors
+	-- deviation: adding default value as we don't support colors
 	local colors = config.colors or DEFAULT_COLORS
 	return Array.join(
 		Array.map(keys, function(key: string)
@@ -68,7 +68,7 @@ function printProps(
 				printed = "{" .. printed .. "}"
 			end
 
-			-- ROBLOX deviation: keys can be of type table. eg. when using ReactRoblox.Change
+			-- deviation: keys can be of type table. eg. when using ReactRoblox.Change
 			local key_ = if typeof(key) == "table"
 				then (if key.name then key.name else printer(key, config, indentationNext, depth, refs))
 				else key
@@ -113,19 +113,19 @@ end
 exports.printChildren = printChildren
 
 function printText(text: string, config: Config): string
-	-- ROBLOX deviation START: adding default value as we don't support colors
+	-- deviation START: adding default value as we don't support colors
 	local colors = config.colors or DEFAULT_COLORS
 	local contentColor = colors.content
-	-- ROBLOX deviation END
+	-- deviation END
 	return contentColor.open .. escapeHTML(text) .. contentColor.close
 end
 exports.printText = printText
 
 function printComment(comment: string, config: Config): string
-	-- ROBLOX deviation START: adding default value as we don't support colors
+	-- deviation START: adding default value as we don't support colors
 	local colors = config.colors or DEFAULT_COLORS
 	local commentColor = colors.comment
-	-- ROBLOX deviation END
+	-- deviation END
 	return commentColor.open .. "<!--" .. escapeHTML(comment) .. "-->" .. commentColor.close
 end
 exports.printComment = printComment
@@ -141,10 +141,10 @@ function printElement(
 	config: Config,
 	indentation: string
 ): string
-	-- ROBLOX deviation START: adding default value as we don't support colors
+	-- deviation START: adding default value as we don't support colors
 	local colors = config.colors or DEFAULT_COLORS
 	local tagColor = colors.tag
-	-- ROBLOX deviation END
+	-- deviation END
 	return tagColor.open
 		.. "<"
 		.. type_
@@ -167,10 +167,10 @@ end
 exports.printElement = printElement
 
 function printElementAsLeaf(type_: string, config: Config): string
-	-- ROBLOX deviation START: adding default value as we don't support colors
+	-- deviation START: adding default value as we don't support colors
 	local colors = config.colors or DEFAULT_COLORS
 	local tagColor = colors.tag
-	-- ROBLOX deviation END
+	-- deviation END
 	return tagColor.open .. "<" .. type_ .. tagColor.close .. " …" .. tagColor.open .. " />" .. tagColor.close
 end
 exports.printElementAsLeaf = printElementAsLeaf

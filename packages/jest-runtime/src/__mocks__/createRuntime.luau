@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/jest-runtime/src/__mocks__/createRuntime.js
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/jest-runtime/src/__mocks__/createRuntime.js
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -7,7 +7,7 @@
  ]]
 local Packages = script.Parent.Parent.Parent
 local Promise = require(Packages.Promise)
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local path = require(Packages.path).default
 -- local Map = LuauPolyfill.Map
 -- local JestGlobals = require(Packages.Dev.JestGlobals)
@@ -18,9 +18,9 @@ local Promise = require(Packages.Promise)
 -- local NodeEnvironment = require(Packages["jest-environment-node"]).default
 -- local JestEnvironmentLuau = require(Packages.Dev.JestEnvironmentLuau).default
 -- local tryRealpath = require(Packages.JestUtil).tryRealpath
--- ROBLOX deviation END
+-- deviation END
 local Runtime = require(script.Parent.Parent) -- Copy from jest-config (since we don't want to depend on this package)
--- ROBLOX deviation START: not used
+-- deviation START: not used
 -- local function getCacheDirectory()
 -- 	local getuid = process.getuid
 -- 	local tmpdirPath = Array.join(path, tryRealpath(tmpdir()), "jest") --[[ ROBLOX CHECK: check if 'path' is an Array ]]
@@ -55,15 +55,15 @@ local Runtime = require(script.Parent.Parent) -- Copy from jest-config (since we
 -- 	end
 -- 	return { { "^.+\\.[jt]sx?$", require_:resolve("babel-jest") } }
 -- end
--- ROBLOX deviation END
-return function( -- ROBLOX deviation START: arguments not needed. filename only kept to preserve this createRuntime's call api
+-- deviation END
+return function( -- deviation START: arguments not needed. filename only kept to preserve this createRuntime's call api
 	-- self: any,
 	filename: ModuleScript
 	-- config
-	-- ROBLOX deviation END
+	-- deviation END
 )
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: custom implementation
+		-- deviation START: custom implementation
 		-- local rootDir = path:resolve(path:dirname(filename), "test_root")
 		-- local moduleNameMapper = setupModuleNameMapper(config, rootDir)
 		-- local transform = setupTransform(config, rootDir)
@@ -129,9 +129,9 @@ return function( -- ROBLOX deviation START: arguments not needed. filename only 
 		-- runtime.__mockRootPath = Array.join(path, config.rootDir, "root.js") --[[ ROBLOX CHECK: check if 'path' is an Array ]]
 		-- runtime.__mockSubdirPath = Array.join(path, config.rootDir, "subdir2", "module_dir", "module_dir_module.js") --[[ ROBLOX CHECK: check if 'path' is an Array ]]
 		local runtime = Runtime.new();
-		-- ROBLOX NOTE: this is JS file upstream so no type checking is performed
+		-- NOTE: this is JS file upstream so no type checking is performed
 		(runtime :: any).__mockRootPath = script.Parent.Parent.__tests__.test_root
-		-- ROBLOX deviation END
+		-- deviation END
 		return runtime
 	end)
 end

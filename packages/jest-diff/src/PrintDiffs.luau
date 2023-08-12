@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/printDiffs.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/printDiffs.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *

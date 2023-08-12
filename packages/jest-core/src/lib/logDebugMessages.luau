@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/lib/logDebugMessages.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/lib/logDebugMessages.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -15,17 +15,17 @@ local exports = {}
 local typesModule = require(Packages.JestTypes)
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
--- ROBLOX FIXME START: no version available
+-- FIXME START: no version available
 -- local VERSION = require_("../../package.json").version -- if the output here changes, update `getConfig` in e2e/runJest.ts
 local VERSION = "27.4.7"
--- ROBLOX FIXME END
+-- FIXME END
 
--- ROBLOX deviation START: added missing variables to limit nr deviations
+-- deviation START: added missing variables to limit nr deviations
 local RobloxShared = require(Packages.RobloxShared)
 local nodeUtils = RobloxShared.nodeUtils
 type NodeJS_WriteStream = RobloxShared.NodeJS_WriteStream
 local JSON = nodeUtils.JSON
--- ROBLOX deviation END
+-- deviation END
 
 local function logDebugMessages(
 	globalConfig: Config_GlobalConfig,

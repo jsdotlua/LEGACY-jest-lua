@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/getAlignedDiffs.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/getAlignedDiffs.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -29,7 +29,7 @@ type DiffOptionsColor = Types.DiffOptionsColor
 -- * exclude change strings which have opposite op
 local function concatenateRelevantDiffs(op: number, diffs: Array<Diff>, changeColor: DiffOptionsColor): string
 	return Array.reduce(diffs, function(
-		-- ROBLOX FIXME Luau: should be inferred from reduce's initial value
+		-- FIXME Luau: should be inferred from reduce's initial value
 		reduced: string,
 		diff
 	)
@@ -105,7 +105,7 @@ function ChangeBuffer:align(diff: Diff): ()
 
 	if s:match("\n") then
 		local substrings = s:split("\n")
-		-- ROBLOX deviation: 1-indexing
+		-- deviation: 1-indexing
 		local iLast = #substrings
 		for i, substring in ipairs(substrings) do
 			if i < iLast then
@@ -177,7 +177,7 @@ function CommonBuffer:align(diff: Diff): ()
 
 	if s:match("\n") then
 		local substrings = s:split("\n")
-		-- ROBLOX deviation: 1-indexing
+		-- deviation: 1-indexing
 		local iLast = #substrings
 		for i, substring in ipairs(substrings) do
 			if i == 1 then
@@ -229,7 +229,7 @@ end
 return function(diffs: Array<Diff>, changeColor: DiffOptionsColor): Array<Diff>
 	local deleteBuffer = ChangeBuffer.new(DIFF_DELETE, changeColor)
 	local insertBuffer = ChangeBuffer.new(DIFF_INSERT, changeColor)
-	-- ROBLOX FIXME Luau: another issue with normalization: Property 'deleteBuffer' is not compatible
+	-- FIXME Luau: another issue with normalization: Property 'deleteBuffer' is not compatible
 	local commonBuffer = CommonBuffer.new(deleteBuffer, insertBuffer) :: any
 
 	for _, diff in ipairs(diffs) do

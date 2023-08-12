@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/constants.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/constants.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -8,7 +8,7 @@
 
 local exports = {}
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local path = require(Packages.path)
 -- local NODE_MODULES = tostring(path.sep) .. "node_modules" .. tostring(path.sep)
 -- exports.NODE_MODULES = NODE_MODULES
@@ -18,10 +18,10 @@ local exports = {}
 -- exports.DEFAULT_REPORTER_LABEL = DEFAULT_REPORTER_LABEL
 -- local PACKAGE_JSON = "package.json"
 -- exports.PACKAGE_JSON = PACKAGE_JSON
--- ROBLOX deviation END
+-- deviation END
 local JEST_CONFIG_BASE_NAME = "jest.config"
 exports.JEST_CONFIG_BASE_NAME = JEST_CONFIG_BASE_NAME
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local JEST_CONFIG_EXT_CJS = ".cjs"
 -- exports.JEST_CONFIG_EXT_CJS = JEST_CONFIG_EXT_CJS
 -- local JEST_CONFIG_EXT_MJS = ".mjs"
@@ -40,6 +40,6 @@ exports.JEST_CONFIG_BASE_NAME = JEST_CONFIG_BASE_NAME
 -- 	JEST_CONFIG_EXT_JSON,
 -- })
 -- exports.JEST_CONFIG_EXT_ORDER = JEST_CONFIG_EXT_ORDER
--- ROBLOX deviation END
+-- deviation END
 
 return exports

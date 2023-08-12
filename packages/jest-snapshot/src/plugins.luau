@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/plugins.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/plugins.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -14,16 +14,16 @@ local jestMockSerializer = require(CurrentModule.mockSerializer)
 local prettyFormat = require(Packages.PrettyFormat)
 type PrettyFormatPlugins = prettyFormat.Plugins
 local plugins = require(Packages.PrettyFormat).plugins
--- ROBLOX deviation: omitting DOMCollection, DOMElement, Immutable, ReactElement, ReactTestComponent
+-- deviation: omitting DOMCollection, DOMElement, Immutable, ReactElement, ReactTestComponent
 
--- ROBLOX TODO: ADO-1182 Add more plugins here as we translate them
+-- TODO: ADO-1182 Add more plugins here as we translate them
 local PLUGINS: PrettyFormatPlugins = {
 	jestMockSerializer,
 	plugins.AsymmetricMatcher,
 	-- TODO: Re-enable React support. See: https://github.com/jsdotlua/jest-lua/issues/2
 	-- plugins.ReactElement,
 	plugins.ReactTestComponent,
-	-- ROBLOX deviation: Roblox Instance matchers
+	-- deviation: Roblox Instance matchers
 	plugins.RobloxInstance,
 }
 

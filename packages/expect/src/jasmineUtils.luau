@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/jasmineUtils.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/jasmineUtils.ts
 -- /*
 -- Copyright (c) 2008-2016 Pivotal Labs
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,7 +26,7 @@ local RobloxShared = require(Packages.RobloxShared)
 
 local LuauPolyfill = require(Packages.LuauPolyfill)
 type Array<T> = LuauPolyfill.Array<T>
--- ROBLOX deviation: Tester type defined in file since type imports are not yet
+-- deviation: Tester type defined in file since type imports are not yet
 -- supported
 -- making Tester return type 'any' due to error with type narrowing (CLI-37948)
 
@@ -36,15 +36,15 @@ type Tester = (any, any) -> any
 
 local equals = RobloxShared.expect.equals
 
--- ROBLOX deviation: omitted functionToString since we don't use it
+-- deviation: omitted functionToString since we don't use it
 
--- ROBLOX deviation: moved to RobloxShared to avoid reaching into internals with rotriever workspaces
+-- deviation: moved to RobloxShared to avoid reaching into internals with rotriever workspaces
 -- local isAsymmetric = RobloxShared.expect.isAsymmetric
 -- local asymmetricMatch = RobloxShared.expect.asymmetricMatch
 -- local eq = RobloxShared.expect.eq
 -- local keys = RobloxShared.expect.keys
 
--- ROBLOX deviation: we have no concept of undefined so hasDefinedKey is the same as hasKey
+-- deviation: we have no concept of undefined so hasDefinedKey is the same as hasKey
 -- local hasDefinedKey = RobloxShared.expect.hasDefinedKey
 -- local hasKey = RobloxShared.expect.hasKey
 local isA = RobloxShared.expect.isA
@@ -60,7 +60,7 @@ local isA = RobloxShared.expect.isA
 	end
 --]]
 
--- ROBLOX deviation: Function annotation for func omitted
+-- deviation: Function annotation for func omitted
 local function fnNameFor(func)
 	-- Upstream code omitted for now but translated below:
 	--[[
@@ -69,7 +69,7 @@ local function fnNameFor(func)
 		end
 	]]
 
-	-- ROBLOX TODO: (ADO-1258) Return more advanced function information, if
+	-- TODO: (ADO-1258) Return more advanced function information, if
 	-- possible, by using traceback
 	return "[Function]"
 end

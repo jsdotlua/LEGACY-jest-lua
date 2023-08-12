@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/types.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -36,14 +36,14 @@ export type ExpectationResult = SyncExpectationResult | AsyncExpectationResult
 	original code:
 	export type RawMatcherFn<T extends MatcherState = MatcherState> = {
 ]]
--- ROBLOX FIXME: add Symbol to the definition: [INTERNAL_MATCHER_FLAG]: boolean?
+-- FIXME: add Symbol to the definition: [INTERNAL_MATCHER_FLAG]: boolean?
 export type RawMatcherFn<T> = any
--- ROBLOX FIXME: workaround for defult generic param
+-- FIXME: workaround for defult generic param
 export type RawMatcherFn_ = RawMatcherFn<MatcherState>
--- ROBLOX deviation: currently no way – type the __call metamethod
+-- deviation: currently no way – type the __call metamethod
 -- {
 --   __call: (any, any, any?) -> ExpectationResult,
--- -- ROBLOX deviation: [INTERNAL_MATCHER_FLAG]: boolean?
+-- -- deviation: [INTERNAL_MATCHER_FLAG]: boolean?
 --   [Symbol]: boolean?
 -- }
 
@@ -66,8 +66,8 @@ export type MatcherState = {
 	isNot: boolean,
 	promise: string,
 	suppressedErrors: Array<Error>,
-	testPath: any, -- ROBLOX TODO: Config.Path?,
-	utils: Object, -- ROBLOX deviation: no easy way to port to Lua: typeof jestMatcherUtils & {
+	testPath: any, -- TODO: Config.Path?,
+	utils: Object, -- deviation: no easy way to port to Lua: typeof jestMatcherUtils & {
 	--   iterableEquality: Tester;
 	--   subsetEquality: Tester;
 	-- }
@@ -86,7 +86,7 @@ export type AsymmetricMatcher = {
 	export type MatchersObject<T extends MatcherState = MatcherState> = {
 ]]
 export type MatchersObject<T> = { [string]: RawMatcherFn<T> }
--- ROBLOX FIXME: workaround for defult generic param
+-- FIXME: workaround for defult generic param
 export type MatchersObject_ = MatchersObject<MatcherState>
 export type ExpectedAssertionsErrors = Array<{
 	actual: string | number,
@@ -94,7 +94,7 @@ export type ExpectedAssertionsErrors = Array<{
 	expected: string,
 }>
 
--- ROBLOX deviation start: no Omit utility in Luau
+-- deviation start: no Omit utility in Luau
 type AsymmetricMatchersOmitAnyAndAnything = {
 	arrayContaining: (Array<unknown>) -> AsymmetricMatcher,
 	objectContaining: (Record<string, unknown>) -> AsymmetricMatcher,
@@ -106,7 +106,7 @@ type AsymmetricMatchers = {
 	any: (unknown) -> AsymmetricMatcher,
 	anything: () -> AsymmetricMatcher,
 } & AsymmetricMatchersOmitAnyAndAnything
--- ROBLOX deviation end
+-- deviation end
 
 export type ExpectObj<State = MatcherState> = {
 	-- TODO: this is added by test runners, not `expect` itself
@@ -135,7 +135,7 @@ export type Matchers<R, T> = {
 	-- /**
 	-- * If you know how to test something, `.not` lets you test its opposite.
 	-- */
-	-- ROBLOX deviation: use never instead of not to avoid use of Lua key word
+	-- deviation: use never instead of not to avoid use of Lua key word
 	never: Matchers<R, T>,
 	-- /**
 	-- * Ensure that a mock function is called with specific arguments on an Nth call.
@@ -145,7 +145,7 @@ export type Matchers<R, T> = {
 	-- * Ensure that the nth call to a mock function has returned a specified value.
 	-- */
 	nthReturnedWith: (number, any) -> R,
-	-- ROBLOX TODO: (LUAU) fix types for resolves and rejects
+	-- TODO: (LUAU) fix types for resolves and rejects
 	-- /**
 	-- * Use resolves to unwrap the value of a fulfilled promise so any other
 	-- * matcher can be chained. If the promise is rejected the assertion fails.
@@ -214,9 +214,9 @@ export type Matchers<R, T> = {
 	--  * So use `.toBeNull()` when you want to check that something is null.
 	--  */
 	toBeNull: () -> R,
-	-- ROBLOX deviation START: add Luau specific matcher for nil
+	-- deviation START: add Luau specific matcher for nil
 	toBeNil: () -> R,
-	-- ROBLOX deviation END
+	-- deviation END
 	-- /**
 	--  * Use when you don't care what a value is, you just want to ensure a value
 	--  * is true in a boolean context. In JavaScript, there are six falsy values:
@@ -350,28 +350,28 @@ export type Matchers<R, T> = {
 	 * This ensures that a value matches the most recent snapshot with property matchers.
 	 * Check out [the Snapshot Testing guide](https://jestjs.io/docs/snapshot-testing) for more information.
 	]]
-	-- ROBLOX deviation START: Luau doesn't support method overloads so we need to include only one declaration satifsying all cases
+	-- deviation START: Luau doesn't support method overloads so we need to include only one declaration satifsying all cases
 	-- toMatchSnapshot: (string?) -> R,
-	-- ROBLOX deviation END
+	-- deviation END
 	--[[*
 	 * This ensures that a value matches the most recent snapshot.
 	 * Check out [the Snapshot Testing guide](https://jestjs.io/docs/snapshot-testing) for more information.
 	]]
-	-- ROBLOX deviation START: Luau doesn't support method overloads so we need to include only one declaration satifsying all cases
+	-- deviation START: Luau doesn't support method overloads so we need to include only one declaration satifsying all cases
 	-- toMatchSnapshot: (string?) -> R,
 	--    toMatchSnapshot<T extends {[P in keyof R]: unknown}>(
 	--     propertyMatchers: Partial<T>,
 	--     hint?: string,
 	--   ): R;
 	toMatchSnapshot: <T>(hintOrPropertyMatchers: string? | Partial<T>, hint: string?) -> R,
-	-- ROBLOX deviation END
+	-- deviation END
 
 	-- /**
 	--  * This ensures that a value matches the most recent snapshot with property matchers.
 	--  * Instead of writing the snapshot value to a .snap file, it will be written into the source code automatically.
 	--  * Check out [the Snapshot Testing guide](https://jestjs.io/docs/snapshot-testing) for more information.
 	--  */
-	-- ROBLOX TODO: function generics and function overloads
+	-- TODO: function generics and function overloads
 	-- toMatchInlineSnapshot<T extends {[P in keyof R]: any}>(
 	-- /**
 	--  * This ensures that a value matches the most recent snapshot with property matchers.
@@ -389,27 +389,27 @@ export type Matchers<R, T> = {
 	--  */
 	toThrowErrorMatchingInlineSnapshot: (string?) -> R,
 	-- /* TODO: END snapshot matchers are not from `expect`, the types should not be here */
-	-- ROBLOX deviation START: add Roblox specific matchers
+	-- deviation START: add Roblox specific matchers
 	toMatchInstance: (received: any, expected: any) -> R,
-	-- ROBLOX deviation END
+	-- deviation END
 }
--- ROBLOX FIXME: workaround for defult generic param
+-- FIXME: workaround for defult generic param
 export type Matchers_<R> = Matchers<R, unknown>
 
--- ROBLOX deviation START: had to move the Expect type definition below matchers to fix analyze issues
+-- deviation START: had to move the Expect type definition below matchers to fix analyze issues
 export type Expect<State = MatcherState> =
 	typeof(setmetatable({}, { __call = (function() end :: any) :: <T>(self: any, actual: T) -> Matchers<nil, T> }))
 	& ExpectObj<State>
--- ROBLOX FIXME: workaround for defult generic param
+-- FIXME: workaround for defult generic param
 export type Expect_ =
 	typeof(setmetatable({}, { __call = (function() end :: any) :: <T>(self: any, actual: T) -> Matchers<nil, T> }))
 	& ExpectObj<MatcherState>
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: add additinal type to help with typing extended matchers
+-- deviation START: add additinal type to help with typing extended matchers
 export type ExpectExtended<E, State = MatcherState> =
 	typeof(setmetatable({}, { __call = (function() end :: any) :: <T>(self: any, actual: T) -> Matchers<nil, T> & E }))
 	& ExpectObj<State>
--- ROBLOX deviation END
+-- deviation END
 
 return {}

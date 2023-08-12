@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-environment/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-environment/src/index.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -16,31 +16,31 @@ type NodeModule = Object
 type Record<T, U> = { [T]: U }
 type void = nil
 
--- ROBLOX deviation START: module not available
+-- deviation START: module not available
 -- local vmModule = require(rootWorkspace.vm)
 -- type Context = vmModule.Context
 type Context = Object
--- ROBLOX deviation END
+-- deviation END
 
 local FakeTimersModule = require(Packages.JestFakeTimers)
--- ROBLOX deviation START: no Legacy/Modern timers
+-- deviation START: no Legacy/Modern timers
 -- type LegacyFakeTimers<TimerRef> = FakeTimersModule.LegacyFakeTimers<TimerRef>
 -- type ModernFakeTimers = FakeTimersModule.ModernFakeTimers
 type FakeTimers = FakeTimersModule.FakeTimers
--- ROBLOX deviation END
+-- deviation END
 
 local typesModule = require(Packages.JestTypes)
--- ROBLOX deviation START: Import types with namespace
+-- deviation START: Import types with namespace
 type Circus_EventHandler = typesModule.Circus_EventHandler
 type Config_Path = typesModule.Config_Path
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 type Global_Global = typesModule.Global_Global
--- ROBLOX deviation END
+-- deviation END
 
 local jestMockModule = require(Packages.JestMock)
 local JestMockFn = jestMockModule.fn
 local JestMockMocked = jestMockModule.mocked
--- ROBLOX TODO: spyOn is not implemented
+-- TODO: spyOn is not implemented
 -- local JestMockSpyOn = jestMockModule.spyOn
 
 type ModuleMocker = jestMockModule.ModuleMocker
@@ -48,7 +48,7 @@ type ModuleMocker = jestMockModule.ModuleMocker
 export type EnvironmentContext = {
 	console: Console,
 	-- docblockPragmas: Record<string, string | Array<string>>,
-	-- ROBLOX deviation: accept ModuleScript instead of string
+	-- deviation: accept ModuleScript instead of string
 	testPath: ModuleScript,
 }
 
@@ -67,11 +67,11 @@ export type ModuleWrapper = (
 export type JestEnvironment<Timer = any> = {
 	new: (config: Config_ProjectConfig, context: EnvironmentContext?) -> JestEnvironment<Timer>,
 	global: Global_Global,
-	-- ROBLOX deviation START: no modern/legacy timers
+	-- deviation START: no modern/legacy timers
 	-- fakeTimers: LegacyFakeTimers<Timer> | nil,
 	-- fakeTimersModern: ModernFakeTimers | nil,
 	fakeTimers: FakeTimers | nil,
-	-- ROBLOX deviation END
+	-- deviation END
 	moduleMocker: ModuleMocker | nil,
 	getVmContext: (self: JestEnvironment<Timer>) -> Context | nil,
 	setup: (self: JestEnvironment<Timer>) -> Promise<void>,
@@ -170,7 +170,7 @@ export type Jest = {
 	--[[*
 	* Mocks a module with the provided module factory when it is being imported.
 	]]
-	-- ROBLOX TODO: add default generic. <T = any>
+	-- TODO: add default generic. <T = any>
 	unstable_mockModule: <T>(
 		moduleName: string,
 		moduleFactory: () -> Promise<T> | T,
@@ -282,7 +282,7 @@ export type Jest = {
 	* Note: By default, jest.spyOn also calls the spied method. This is
 	* different behavior from most other test libraries.
 	]]
-	-- ROBLOX TODO: spyOn is not implemented
+	-- TODO: spyOn is not implemented
 	-- spyOn: typeof(JestMockSpyOn),
 	--[[*
 	* Indicates that the module system should never return a mocked version of

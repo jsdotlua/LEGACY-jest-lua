@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/normalize.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/normalize.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -18,28 +18,28 @@ local Promise = require(Packages.Promise)
 
 local exports = {}
 
--- ROBLOX deviation START: predefine functions
+-- deviation START: predefine functions
 local showTestPathPatternError
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: added missing variables to limit nr deviations
+-- deviation START: added missing variables to limit nr deviations
 local RobloxShared = require(Packages.RobloxShared)
 local nodeUtils = RobloxShared.nodeUtils
 local process = nodeUtils.process
 local getRelativePath = RobloxShared.getRelativePath
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local createHash = require(Packages.crypto).createHash
 -- local path = require(Packages.path)
--- ROBLOX deviation END
+-- deviation END
 local chalk = require(Packages.ChalkLua)
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local merge = require(Packages.deepmerge)
 -- local glob = require(Packages.glob).sync
 -- local statSync = require(Packages["graceful-fs"]).statSync
 -- local micromatch = require(Packages.micromatch)
--- ROBLOX deviation END
+-- deviation END
 local typesModule = require(Packages.JestTypes)
 type Config_Argv = typesModule.Config_Argv
 type Config_DisplayName = typesModule.Config_DisplayName
@@ -50,7 +50,7 @@ type Config_InitialOptionsWithRootDir = typesModule.Config_InitialOptionsWithRoo
 type Config_Path = typesModule.Config_Path
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 type Config_ReporterConfig = typesModule.Config_ReporterConfig
--- ROBLOX deviation START: not used
+-- deviation START: not used
 
 -- local replacePathSepForRegex = require(Packages["jest-regex-util"]).replacePathSepForRegex
 local function replacePathSepForRegex(value)
@@ -62,10 +62,10 @@ end
 -- local resolveSequencer = jest_resolveModule.resolveSequencer
 -- local resolveTestEnvironment = jest_resolveModule.resolveTestEnvironment
 -- local resolveWatchPlugin = jest_resolveModule.resolveWatchPlugin
--- ROBLOX deviation END
+-- deviation END
 local jest_utilModule = require(Packages.JestUtil)
 local clearLine = jest_utilModule.clearLine
--- ROBLOX deviation START: not used
+-- deviation START: not used
 
 -- local replacePathSepForGlob = jest_utilModule.replacePathSepForGlob
 local function replacePathSepForGlob(value)
@@ -73,42 +73,42 @@ local function replacePathSepForGlob(value)
 end
 -- local requireOrImportModule = jest_utilModule.requireOrImportModule
 -- local tryRealpath = jest_utilModule.tryRealpath
--- ROBLOX deviation END
+-- deviation END
 local jestValidateModule = require(Packages.JestValidate)
 local ValidationError = jestValidateModule.ValidationError
--- ROBLOX deviation START: not used
+-- deviation START: not used
 -- local validate = jest_validateModule.validate
--- ROBLOX deviation END
+-- deviation END
 local DEFAULT_CONFIG = require(script.Parent.Defaults).default
--- ROBLOX deviation START: not used
+-- deviation START: not used
 -- local DEPRECATED_CONFIG = require(script.Parent.Deprecated).default
 -- local validateReporters = require(script.Parent.ReporterValidationErrors).validateReporters
 -- local VALID_CONFIG = require(script.Parent.ValidConfig).default
--- ROBLOX deviation END
+-- deviation END
 local getDisplayNameColor = require(script.Parent.color).getDisplayNameColor
--- ROBLOX deviation START: not used
+-- deviation START: not used
 -- local constantsModule = require(script.Parent.constants)
 -- local DEFAULT_JS_PATTERN = constantsModule.DEFAULT_JS_PATTERN
 -- local DEFAULT_REPORTER_LABEL = constantsModule.DEFAULT_REPORTER_LABEL
--- ROBLOX deviation END
+-- deviation END
 local getMaxWorkers = require(script.Parent.getMaxWorkers).default
 local setFromArgv = require(script.Parent.setFromArgv).default
 local utilsModule = require(script.Parent.utils)
 local BULLET = utilsModule.BULLET
 local DOCUMENTATION_NOTE = utilsModule.DOCUMENTATION_NOTE
--- ROBLOX deviation START: not used
+-- deviation START: not used
 -- local _replaceRootDirTags = utilsModule._replaceRootDirTags
 -- local escapeGlobCharacters = utilsModule.escapeGlobCharacters
 -- local replaceRootDirInPath = utilsModule.replaceRootDirInPath
 -- local resolve = utilsModule.resolve
--- ROBLOX deviation END
+-- deviation END
 local validatePattern = require(script.Parent.validatePattern).default
 
 local ERROR = ("%sValidation Error"):format(BULLET)
--- ROBLOX deviation START: not used
+-- deviation START: not used
 -- local PRESET_EXTENSIONS = { ".json", ".js", ".cjs", ".mjs" }
 -- local PRESET_NAME = "jest-preset"
--- ROBLOX deviation END
+-- deviation END
 
 type AllOptions = Config_ProjectConfig & Config_GlobalConfig
 
@@ -117,12 +117,12 @@ local function createConfigError(message: string)
 end
 
 local function verifyDirectoryExists(
-	-- ROBLOX deviation START: using Instance instead of Config_Path
+	-- deviation START: using Instance instead of Config_Path
 	path: Instance?,
-	-- ROBLOX deviation END
+	-- deviation END
 	key: string
 )
-	-- ROBLOX deviation START: statSync not necessary as path is an Instance
+	-- deviation START: statSync not necessary as path is an Instance
 	if typeof(path) ~= "Instance" then
 		error(
 			createConfigError(
@@ -165,10 +165,10 @@ local function verifyDirectoryExists(
 	-- 		)
 	-- 	)
 	-- end
-	-- ROBLOX deviation END
+	-- deviation END
 end
 
--- ROBLOX deviation START: not used
+-- deviation START: not used
 -- -- TS 3.5 forces us to split these into 2
 -- local function mergeModuleNameMapperWithPreset(options: Config_InitialOptionsWithRootDir, preset: Config_InitialOptions)
 -- 	if Boolean.toJSBoolean(options["moduleNameMapper"]) and Boolean.toJSBoolean(preset["moduleNameMapper"]) then
@@ -438,10 +438,10 @@ end
 -- 		return replacePathSepForRegex(pattern:replace(RegExp("<rootDir>", "g"), options.rootDir))
 -- 	end)
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 local function normalizePreprocessor(options: Config_InitialOptionsWithRootDir): Config_InitialOptionsWithRootDir
-	-- ROBLOX deviation START: not supported
+	-- deviation START: not supported
 	-- 	if Boolean.toJSBoolean(options.scriptPreprocessor) and Boolean.toJSBoolean(options.transform) then
 	-- 		error(
 	-- 			createConfigError(
@@ -481,20 +481,20 @@ local function normalizePreprocessor(options: Config_InitialOptionsWithRootDir):
 
 	-- 	options.scriptPreprocessor = nil
 	-- 	options.preprocessorIgnorePatterns = nil
-	-- ROBLOX deviation END
+	-- deviation END
 	return options
 end
 
 local function normalizeMissingOptions(
 	options: Config_InitialOptionsWithRootDir,
-	-- ROBLOX deviation START: using ModuleScript instead of Config_Path
+	-- deviation START: using ModuleScript instead of Config_Path
 	configPath: ModuleScript | nil,
-	-- ROBLOX deviation END
+	-- deviation END
 	projectIndex: number
 ): Config_InitialOptionsWithRootDir
 	if not Boolean.toJSBoolean(options.name) then
 		options.name = getRelativePath((options.rootDir :: any) :: Instance, nil)
-		-- ROBLOX deviation START: createHash not supported
+		-- deviation START: createHash not supported
 		-- 	options.name = createHash("md5")
 		-- 		:update(options.rootDir)
 		-- 		-- In case we load config from some path that has the same root dir
@@ -503,7 +503,7 @@ local function normalizeMissingOptions(
 		-- 		)
 		-- 		:update(tostring(projectIndex))
 		-- 		:digest("hex")
-		-- ROBLOX deviation END
+		-- deviation END
 	end
 
 	if options.setupFiles == nil then
@@ -516,14 +516,14 @@ local function normalizeRootDir(options: Config_InitialOptions): Config_InitialO
 	if not Boolean.toJSBoolean(options.rootDir) then
 		error(createConfigError(("  Configuration option %s must be specified."):format(chalk.bold("rootDir"))))
 	end
-	-- ROBLOX deviation START: not necessary as rootDir is an Instance
+	-- deviation START: not necessary as rootDir is an Instance
 	-- options.rootDir = path:normalize(options.rootDir)
 
 	-- xpcall(function()
 	-- 	-- try to resolve windows short paths, ignoring errors (permission errors, mostly)
 	-- 	options.rootDir = tryRealpath(options.rootDir)
 	-- end, function() end)
-	-- ROBLOX deviation END
+	-- deviation END
 
 	verifyDirectoryExists(options.rootDir, "rootDir")
 
@@ -531,7 +531,7 @@ local function normalizeRootDir(options: Config_InitialOptions): Config_InitialO
 end
 
 local function normalizeReporters(options: Config_InitialOptionsWithRootDir)
-	-- ROBLOX deviation START: not supported
+	-- deviation START: not supported
 	-- local reporters = options.reporters
 	-- if not Boolean.toJSBoolean(reporters) or not Array.isArray(reporters) then
 	-- 	return options
@@ -561,7 +561,7 @@ local function normalizeReporters(options: Config_InitialOptionsWithRootDir)
 	-- 	end
 	-- 	return normalizedReporterConfig
 	-- end)
-	-- ROBLOX deviation END
+	-- deviation END
 
 	return options
 end
@@ -578,7 +578,7 @@ local function buildTestPathPattern(argv: Config_Argv): string
 	local function replacePosixSep(pattern: string | number)
 		-- yargs coerces positional args into numbers
 		local patternAsString = tostring(pattern)
-		-- ROBLOX deviation START: no special handling for Windows
+		-- deviation START: no special handling for Windows
 		return patternAsString
 		-- if path.sep == "/" then
 		-- 	return patternAsString
@@ -587,7 +587,7 @@ local function buildTestPathPattern(argv: Config_Argv): string
 		-- 	error("not implemented"), --[[ ROBLOX TODO: Unhandled node for type: RegExpLiteral ]] --[[ /\//g ]]
 		-- 	"\\\\"
 		-- )
-		-- ROBLOX deviation END
+		-- deviation END
 	end
 
 	local testPathPattern = Array.join(Array.map(patterns, replacePosixSep), "|")
@@ -610,7 +610,7 @@ function showTestPathPatternError(testPathPattern: string)
 	)
 end
 
--- ROBLOX deviation START: no esm modules in Luau
+-- deviation START: no esm modules in Luau
 -- local function validateExtensionsToTreatAsEsm(
 -- 	extensionsToTreatAsEsm: typeof((({} :: any) :: Config_InitialOptions).extensionsToTreatAsEsm)
 -- )
@@ -686,19 +686,19 @@ end
 -- 		)
 -- 	end
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 local function normalize(
 	initialOptions: Config_InitialOptions,
 	argv: Config_Argv,
-	-- ROBLOX deviation START: using ModuleScript instead of Config_Path
+	-- deviation START: using ModuleScript instead of Config_Path
 	configPath: (ModuleScript | nil)?,
-	-- ROBLOX deviation END
+	-- deviation END
 	projectIndex_: number?
 ): Promise<{ hasDeprecationWarnings: boolean, options: AllOptions }>
 	local projectIndex = if projectIndex_ ~= nil then projectIndex_ else math.huge
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: no deprecation warnings support
+		-- deviation START: no deprecation warnings support
 		-- local hasDeprecationWarnings = validate(initialOptions, {
 		-- 	comment = DOCUMENTATION_NOTE,
 		-- 	deprecatedConfig = DEPRECATED_CONFIG,
@@ -714,7 +714,7 @@ local function normalize(
 		-- 	},
 		-- }).hasDeprecationWarnings
 		local hasDeprecationWarnings = false
-		-- ROBLOX deviation END
+		-- deviation END
 
 		local options = normalizePreprocessor(
 			normalizeReporters(
@@ -722,7 +722,7 @@ local function normalize(
 			)
 		)
 
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- if Boolean.toJSBoolean(options.preset) then
 		-- 	options = setupPreset(options, options.preset):expect()
 		-- end
@@ -747,9 +747,9 @@ local function normalize(
 		-- 		if Boolean.toJSBoolean(options.setupTestFrameworkScriptFile) then
 		-- 			table.insert(options.setupFilesAfterEnv, options.setupTestFrameworkScriptFile) --[[ ROBLOX CHECK: check if 'options.setupFilesAfterEnv' is an Array ]]
 		-- 		end
-		-- ROBLOX deviation END
+		-- deviation END
 
-		-- ROBLOX deviation START: no need to resolve as this is a ModuleScript
+		-- deviation START: no need to resolve as this is a ModuleScript
 		options.testEnvironment = options.testEnvironment or DEFAULT_CONFIG.testEnvironment
 		-- resolveTestEnvironment({
 		-- 	requireResolveFunction = require_.resolve,
@@ -757,7 +757,7 @@ local function normalize(
 		-- 	testEnvironment = Boolean.toJSBoolean(options.testEnvironment) and options.testEnvironment
 		-- 		or require_:resolve(DEFAULT_CONFIG.testEnvironment),
 		-- })
-		-- ROBLOX deviation END
+		-- deviation END
 
 		if options.roots == nil and options.testPathDirs ~= nil then
 			options.roots = options.testPathDirs
@@ -768,7 +768,7 @@ local function normalize(
 			options.roots = { options.rootDir }
 		end
 
-		-- ROBLOX deviation START: no need to resolve as this is a ModuleScript
+		-- deviation START: no need to resolve as this is a ModuleScript
 		-- if
 		-- 	not Boolean.toJSBoolean(options.testRunner)
 		-- 	or options.testRunner == "circus"
@@ -778,19 +778,19 @@ local function normalize(
 		-- elseif options.testRunner == "jasmine2" then
 		-- 	options.testRunner = require_:resolve("jest-jasmine2")
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- if not Boolean.toJSBoolean(options.coverageDirectory) then
 		-- 	options.coverageDirectory = path:resolve(options.rootDir, "coverage")
 		-- end
 
 		-- setupBabelJest(options)
-		-- ROBLOX deviation END
+		-- deviation END
 		-- TODO: Type this properly
 		local newOptions = (Object.assign({}, DEFAULT_CONFIG) :: unknown) :: AllOptions
 
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- if Boolean.toJSBoolean(options.resolver) then
 		-- 	newOptions.resolver =
 		-- 		resolve(nil, { filePath = options.resolver, key = "resolver", rootDir = options.rootDir })
@@ -801,7 +801,7 @@ local function normalize(
 		-- if options.watchman == nil then
 		-- 	options.watchman = DEFAULT_CONFIG.watchman
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
 		local optionKeys =
 			Object.keys(options) :: Array<string --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Config.InitialOptions ]]>
@@ -818,19 +818,19 @@ local function normalize(
 			-- This is cheating, because it claims that all keys of InitialOptions are Required.
 			-- We only really know it's Required for oldOptions[key], not for oldOptions.someOtherKey,
 			-- so oldOptions[key] is the only way it should be used.
-			-- ROBLOX deviation START: no Required and Pick helpers
+			-- deviation START: no Required and Pick helpers
 			local oldOptions = options :: Config_InitialOptions
 			-- & Required<Pick<Config_InitialOptions, typeof(key)>>
-			-- ROBLOX deviation END
+			-- deviation END
 			local value: any
 			repeat --[[ ROBLOX comment: switch statement conversion ]]
-				-- ROBLOX deviation START: not supported
+				-- deviation START: not supported
 				if false then
 					-- if key == "collectCoverageOnlyFrom" then
 					-- 	value = normalizeCollectCoverageOnlyFrom(oldOptions, key)
 					-- 	break
-					-- ROBLOX deviation END
-					-- ROBLOX deviation START: no need to resolve
+					-- deviation END
+					-- deviation START: no need to resolve
 				elseif key == "setupFiles" or key == "setupFilesAfterEnv" or key == "snapshotSerializers" then
 					do
 						local option = oldOptions[key]
@@ -864,8 +864,8 @@ local function normalize(
 						-- 		else option
 					end
 					break
-					-- ROBLOX deviation END
-					-- ROBLOX deviation START: not supported
+					-- deviation END
+					-- deviation START: not supported
 					-- elseif key == "collectCoverageFrom" then
 					-- 	value = normalizeCollectCoverageFrom(oldOptions, key)
 					-- 	break
@@ -877,8 +877,8 @@ local function normalize(
 					-- 			else option
 					-- 	end
 					-- 	break
-					-- ROBLOX deviation END
-					-- ROBLOX deviation START: no need to resolve
+					-- deviation END
+					-- deviation START: no need to resolve
 					-- elseif
 					-- 	key == "dependencyExtractor"
 					-- 	or key == "globalSetup"
@@ -908,8 +908,8 @@ local function normalize(
 					-- 			else option
 					-- 	end
 					-- 	break
-					-- ROBLOX deviation END
-					-- ROBLOX deviation START: not supported
+					-- deviation END
+					-- deviation START: not supported
 					-- elseif key == "prettierPath" then
 					-- 	do
 					-- 		-- We only want this to throw if "prettierPath" is explicitly passed
@@ -967,7 +967,7 @@ local function normalize(
 					-- 			end) --[[ ROBLOX CHECK: check if 'Object.keys(transform)' is an Array ]]
 					-- 		else transform
 					-- 	break
-					-- ROBLOX deviation END
+					-- deviation END
 				elseif
 					key == "testPathIgnorePatterns"
 					-- or key == "coveragePathIgnorePatterns"
@@ -976,11 +976,11 @@ local function normalize(
 					-- or key == "watchPathIgnorePatterns"
 					-- or key == "unmockedModulePathPatterns"
 				then
-					-- ROBLOX deviation START: subbing rootDir not supported
+					-- deviation START: subbing rootDir not supported
 					value = oldOptions[key]
-					-- ROBLOX deviation END
+					-- deviation END
 					break
-					-- ROBLOX deviation START: no need to resolve
+					-- deviation START: no need to resolve
 					-- elseif key == "haste" then
 					-- 	value = Object.assign({}, oldOptions[key])
 					-- 	if
@@ -994,36 +994,36 @@ local function normalize(
 					-- 		value.hasteImplModulePath = Boolean.toJSBoolean(resolvedHasteImpl) and resolvedHasteImpl or nil
 					-- 	end
 					-- 	break
-					-- ROBLOX deviation END
+					-- deviation END
 				elseif key == "projects" then
 					value = Array.reduce(
 						Array.map(Boolean.toJSBoolean(oldOptions[key]) and oldOptions[key] or {}, function(project)
-							-- ROBLOX deviation START: project is an Instance
+							-- deviation START: project is an Instance
 							return project
 							-- return if typeof(project) == "string"
 							-- 	then _replaceRootDirTags(options.rootDir, project)
 							-- 	else project
-							-- ROBLOX deviation END
+							-- deviation END
 						end),
 						function(projects, project)
 							-- Project can be specified as globs. If a glob matches any files,
 							-- We expand it to these paths. If not, we keep the original path
 							-- for the future resolution.
-							-- ROBLOX deviation START: project is an Instance
+							-- deviation START: project is an Instance
 							local globMatches = {}
 							-- local globMatches = if typeof(project) == "string" then glob(project) else {}
 							return Array.concat(projects, if #globMatches > 0 then globMatches else { project })
-							-- ROBLOX deviation END
+							-- deviation END
 						end,
 						{}
 					)
 					break
 				elseif key == "moduleDirectories" or key == "testMatch" then
 					do
-						-- ROBLOX deviation START: _replaceRootDirTags not supported
+						-- deviation START: _replaceRootDirTags not supported
 						local replacedRootDirTags = oldOptions[key]
 						-- local replacedRootDirTags = _replaceRootDirTags(escapeGlobCharacters(options.rootDir), oldOptions[key])
-						-- ROBLOX deviation END
+						-- deviation END
 						if replacedRootDirTags ~= nil then
 							value = if Array.isArray(replacedRootDirTags)
 								then Array.map(replacedRootDirTags, replacePathSepForGlob)
@@ -1041,7 +1041,7 @@ local function normalize(
 							else {}
 					end
 					break
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- elseif key == "moduleFileExtensions" then
 					-- 	do
 					-- 		value = oldOptions[key]
@@ -1078,7 +1078,7 @@ local function normalize(
 					-- 		end
 					-- 		break
 					-- 	end
-					-- ROBLOX deviation END
+					-- deviation END
 				elseif key == "bail" then
 					do
 						local bail = oldOptions[key]
@@ -1196,7 +1196,7 @@ local function normalize(
 				then
 					value = oldOptions[key]
 					break
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- elseif key == "watchPlugins" then
 					-- 	value = Array.map(
 					-- 		Boolean.toJSBoolean(oldOptions[key]) and oldOptions[key] or {},
@@ -1223,14 +1223,14 @@ local function normalize(
 					-- 		end
 					-- 	)
 					-- 	break
-					-- ROBLOX deviation END
+					-- deviation END
 				end
 			until true
 			-- @ts-expect-error: automock is missing in GlobalConfig, so what
 			newOptions[key] = value
 			return newOptions
 		end, newOptions)
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- if
 		-- 	Boolean.toJSBoolean(options.watchman)
 		-- 	and typeof(options.haste) == "table"
@@ -1244,13 +1244,13 @@ local function normalize(
 		-- 		)
 		-- 	)
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
 		Array.forEach(newOptions.roots, function(root, i)
 			verifyDirectoryExists(root, ("roots[%s]"):format(tostring(i)))
 		end)
 
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- xpcall(function()
 		-- 	-- try to resolve windows short paths, ignoring errors (permission errors, mostly)
 		-- 	newOptions.cwd = tryRealpath(process:cwd())
@@ -1263,26 +1263,26 @@ local function normalize(
 		-- 	requireResolveFunction = require_.resolve,
 		-- 	rootDir = options.rootDir,
 		-- })
-		-- ROBLOX deviation END
+		-- deviation END
 
-		-- ROBLOX deviation START: no need to resolve
+		-- deviation START: no need to resolve
 		-- if newOptions.runner == DEFAULT_CONFIG.runner then
 		-- 	newOptions.runner = require_:resolve(newOptions.runner)
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- local ref = if typeof(argv._) == "table" then argv._.map else nil
 		-- newOptions.nonFlagArgs = if ref ~= nil
 		-- 	then ref(function(arg)
 		-- 		return ("%s"):format(tostring(arg))
 		-- 	end)
 		-- 	else nil
-		-- ROBLOX deviation END
+		-- deviation END
 		newOptions.testPathPattern = buildTestPathPattern(argv)
 		newOptions.json = Boolean.toJSBoolean(argv.json)
 		newOptions.testFailureExitCode = tonumber((newOptions.testFailureExitCode :: unknown) :: string, 10) or 0
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- if
 		-- 	Boolean.toJSBoolean((function()
 		-- 		local ref = Boolean.toJSBoolean(newOptions.lastCommit) and newOptions.lastCommit
@@ -1322,7 +1322,7 @@ local function normalize(
 		-- if newOptions.moduleNameMapper == DEFAULT_CONFIG.moduleNameMapper :: unknown then
 		-- 	newOptions.moduleNameMapper = {}
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
 		newOptions.updateSnapshot = if Boolean.toJSBoolean(argv.ci) and not argv.updateSnapshot
 			then "none"
@@ -1346,7 +1346,7 @@ local function normalize(
 			newOptions.testMatch = {}
 		end
 
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- -- If argv.json is set, coverageReporters shouldn't print a text report.
 		-- if argv.json then
 		-- 	newOptions.coverageReporters = Array.filter(
@@ -1397,13 +1397,13 @@ local function normalize(
 		-- if not Boolean.toJSBoolean(newOptions.findRelatedTests) then
 		-- 	newOptions.findRelatedTests = false
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
 		if not Boolean.toJSBoolean(newOptions.projects) then
 			newOptions.projects = {}
 		end
 
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- if not Boolean.toJSBoolean(newOptions.extraGlobals) then
 		-- 	newOptions.extraGlobals = {}
 		-- end
@@ -1415,7 +1415,7 @@ local function normalize(
 		-- if not Boolean.toJSBoolean(newOptions.logHeapUsage) then
 		-- 	newOptions.logHeapUsage = false
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
 		return { hasDeprecationWarnings = hasDeprecationWarnings, options = newOptions }
 	end)

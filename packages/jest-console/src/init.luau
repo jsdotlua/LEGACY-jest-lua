@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-console/src/index.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-console/src/index.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -10,14 +10,14 @@ local CurrentModule = script
 
 local exports = {}
 
--- ROBLOX deviation START: additional helper / polyfill modules
+-- deviation START: additional helper / polyfill modules
 exports.helpers = require(CurrentModule.helpers)
 
 local ConsoleModule = require(CurrentModule.Console)
 exports.Console = ConsoleModule
 export type Console = ConsoleModule.Console
 export type ConsoleOptions = ConsoleModule.ConsoleOptions
--- ROBLOX deviation END
+-- deviation END
 
 local BufferedConsoleModule = require(CurrentModule.BufferedConsole)
 exports.BufferedConsole = BufferedConsoleModule.default

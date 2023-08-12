@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/specialChars.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/specialChars.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -11,7 +11,7 @@ local exports = {}
 
 -- local UserInputService = game:GetService("UserInputService")
 
--- ROBLOX FIXME: make proper platform check
+-- FIXME: make proper platform check
 -- local isWindows = process.platform == "win32"
 local isWindows = false -- UserInputService:GetPlatform() == 0
 local ARROW = " \u{203A} "

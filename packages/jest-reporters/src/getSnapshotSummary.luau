@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/getSnapshotSummary.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/getSnapshotSummary.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -31,7 +31,7 @@ local formatTestPath = require(CurrentModule.utils).formatTestPath
 local ARROW = " \u{203A} "
 local DOWN_ARROW = " \u{21B3} "
 local DOT = " \u{2022} "
--- ROBLOX deviation START: chalk doesn't support chaining methods. Using nested calls instead
+-- deviation START: chalk doesn't support chaining methods. Using nested calls instead
 local FAIL_COLOR = function(...)
 	return chalk.bold(chalk.red(...))
 end
@@ -49,7 +49,7 @@ local SNAPSHOT_SUMMARY = chalk.bold
 local SNAPSHOT_UPDATED = function(...)
 	return chalk.bold(chalk.green(...))
 end
--- ROBLOX deviation END
+-- deviation END
 
 exports.default = function(snapshots: SnapshotSummary, globalConfig: Config_GlobalConfig, updateCommand: string)
 	local summary = {}

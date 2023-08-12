@@ -20,7 +20,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]
--- ROBLOX comment: mostly ported from https://github.com/browserify/node-util/blob/master/util.js
+-- comment: mostly ported from https://github.com/browserify/node-util/blob/master/util.js
 local Packages = script.Parent.Parent.Parent
 
 local LuauPolyfill = require(Packages.LuauPolyfill)

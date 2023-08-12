@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/cleanupSemantic.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/cleanupSemantic.ts
 -- implementation adapted from:
 -- https://github.com/google/diff-match-patch/blob/858b3812cc02e7d48da4beebb21d4d80dc1d3062/lua/diff_match_patch.lua
 -- /**
@@ -63,7 +63,7 @@ local DIFF_EQUAL = 0
 --  * @param {string} text Text to be deleted, inserted, or retained.
 --  * @constructor
 --  */
--- ROBLOX FIXME Luau: Luau can't represent [1]: number, [2]: string
+-- FIXME Luau: Luau can't represent [1]: number, [2]: string
 export type Diff = Array<any>
 local Diff = {}
 Diff.__index = Diff
@@ -169,7 +169,7 @@ local function _diff_commonOverlap(text1: string, text2: string): number
 		if found == nil then
 			return best
 		end
-		-- ROBLOX FIXME Luau: narrowing/type state should make this cast unnecessary
+		-- FIXME Luau: narrowing/type state should make this cast unnecessary
 		length += (found :: number - 1)
 		if found == 1 or strsub(text1, text_length - length + 1) == strsub(text2, 1, length) then
 			best = length
@@ -398,7 +398,7 @@ _diff_cleanupSemanticLossless = function(diffs: Array<Diff>)
 	end
 end
 
--- ROBLOX deviation: no need for regex patterns
+-- deviation: no need for regex patterns
 
 _diff_cleanupMerge = function(diffs: Array<Diff>)
 	diffs[#diffs + 1] = Diff.new(DIFF_EQUAL, "") -- Add a dummy entry at the end.

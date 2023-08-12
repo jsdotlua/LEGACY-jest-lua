@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/getSnapshotStatus.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/getSnapshotStatus.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -24,7 +24,7 @@ local pluralize = require(Packages.JestUtil).pluralize
 
 local ARROW = " \u{203A} "
 local DOT = " \u{2022} "
--- ROBLOX deviation START: chalk doesn't support chaining methods. Using nested calls instead
+-- deviation START: chalk doesn't support chaining methods. Using nested calls instead
 local FAIL_COLOR = function(...)
 	return chalk.bold(chalk.red(...))
 end
@@ -37,7 +37,7 @@ end
 local SNAPSHOT_OUTDATED = function(...)
 	return chalk.bold(chalk.yellow(...))
 end
--- ROBLOX deviation END
+-- deviation END
 
 exports.default = function(snapshot: Snapshot, afterUpdate: boolean): Array<string>
 	local statuses = {}

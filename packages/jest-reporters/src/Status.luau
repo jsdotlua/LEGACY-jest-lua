@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/Status.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/Status.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -47,7 +47,7 @@ local wrapAnsiString = utilsModule.wrapAnsiString
 local RUNNING_TEXT = " RUNS "
 local RUNNING = chalk.reset(chalk.inverse(chalk.yellow(chalk.bold(RUNNING_TEXT)))) .. " "
 
--- ROBLOX deviation: There is no console width since we only have log fn
+-- deviation: There is no console width since we only have log fn
 local CONSOLE_WIDTH = 0
 
 --[[*
@@ -230,11 +230,11 @@ function Status:get(): Cache
 				then tostring(printDisplayName(config)) .. " "
 				else ""
 			local prefix = RUNNING .. projectDisplayName
-			-- ROBLOX deviation START: assert prefixLen is a valid number
+			-- deviation START: assert prefixLen is a valid number
 			local prefixLen = stringLength(prefix)
 			assert(prefixLen ~= nil)
 			content ..= wrapAnsiString(prefix .. trimAndFormatPath(prefixLen, config, testPath, width), width) .. "\n"
-			-- ROBLOX deviation END
+			-- deviation END
 		end
 	end)
 	if self._showStatus and Boolean.toJSBoolean(self._aggregatedResults) then
@@ -247,17 +247,17 @@ function Status:get(): Cache
 	end
 	local height = 0
 	local i = 0
-	-- ROBLOX deviation START - Check if utf8.len doesn't return nil because of invalid chars
+	-- deviation START - Check if utf8.len doesn't return nil because of invalid chars
 	local contentLength = utf8.len(content)
 	assert(contentLength ~= nil)
 	while i < contentLength do
-		-- ROBLOX deviation END
+		-- deviation END
 		if (String.charCodeAt(content, i) :: any) == "\n" then
 			height += 1
 		end
 		i += 1
 	end
-	-- ROBLOX deviation: We don't have an operation to actually clear console
+	-- deviation: We don't have an operation to actually clear console
 	local clear = ("\n"):rep(height)
 	self._cache = { clear = clear, content = content }
 	return self._cache

@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/bind.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/bind.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -34,12 +34,12 @@ local extractValidTemplateHeadings = validationModule.extractValidTemplateHeadin
 local validateArrayTable = validationModule.validateArrayTable
 local validateTemplateTableArguments = validationModule.validateTemplateTableArguments
 
--- ROBLOX deviation: add function to handle unavailable methods
+-- deviation: add function to handle unavailable methods
 local unavailableFn: GlobalCallback = function()
 	error("Method unavailable")
 end
 
--- ROBLOX deviation: predefine variables
+-- deviation: predefine variables
 local isArrayTable, buildArrayTests, buildTemplateTests, getHeadingKeys, applyArguments
 
 export type EachTests = Array<{
@@ -53,7 +53,7 @@ type GlobalCallback = GlobalCallbackFn | typeof(setmetatable({}, {
 	__call = function(_, testName: string, fn: Global_ConcurrentTestFn, timeout: number?): () end,
 }))
 
--- ROBLOX TODO: add type constraint <EachCallback extends Global.TestCallback>
+-- TODO: add type constraint <EachCallback extends Global.TestCallback>
 local function default<EachCallback>(cb_: GlobalCallback?, supportsDone_: boolean?)
 	local supportsDone = if supportsDone_ ~= nil then supportsDone_ else true
 	local cb = cb_ or unavailableFn
@@ -70,7 +70,7 @@ local function default<EachCallback>(cb_: GlobalCallback?, supportsDone_: boolea
 					else buildTemplateTests(title, table_, taggedTemplateData)
 
 				return Array.forEach(tests, function(row)
-					-- ROBLOX FIXME Luau: supports done is known to be a boolean at this point
+					-- FIXME Luau: supports done is known to be a boolean at this point
 					return (cb :: GlobalCallbackFn)(
 						row.title,
 						applyArguments(supportsDone, row.arguments, test),
@@ -103,10 +103,10 @@ function buildArrayTests(title: string, table_: Global_EachTable): EachTests
 end
 
 function buildTemplateTests(title: string, table_: Global_EachTable, taggedTemplateData: Global_TemplateData): EachTests
-	-- ROBLOX deviation START: API change support Array<string> or string as header
+	-- deviation START: API change support Array<string> or string as header
 	local headingString = if Array.isArray(table_) then (table_ :: Array<string>)[1] :: string else table_ :: string
 	local headings = getHeadingKeys(headingString)
-	-- ROBLOX deviation END
+	-- deviation END
 	validateTemplateTableArguments(headings, taggedTemplateData)
 	return convertTemplateTable(title, headings, taggedTemplateData)
 end
@@ -115,7 +115,7 @@ function getHeadingKeys(headings: string): Array<string>
 	return String.split(extractValidTemplateHeadings(headings):gsub("%s+", ""), "|")
 end
 
--- ROBLOX TODO: add generic type constraints <EachCallback extends Global.TestCallback>
+-- TODO: add generic type constraints <EachCallback extends Global.TestCallback>
 function applyArguments<EachCallback>(
 	supportsDone: boolean,
 	params: Array<any>,
@@ -125,10 +125,10 @@ function applyArguments<EachCallback>(
 	if typeof(test) == "function" then
 		argumentCount = debug.info(test, "a")
 	else
-		argumentCount = 0 -- ROBLOX CHECK: jest.fn()?
+		argumentCount = 0 -- CHECK: jest.fn()?
 	end
 
-	-- ROBLOX deviation START: add logic to unpack and convert NIL placeholders
+	-- deviation START: add logic to unpack and convert NIL placeholders
 	local replaceNilPlaceholders
 	function replaceNilPlaceholders(val: any): any
 		if val == NIL then
@@ -155,7 +155,7 @@ function applyArguments<EachCallback>(
 		end
 		return unpackTable(obj, i - 1, replaceNilPlaceholders(obj[i]), ...)
 	end
-	-- ROBLOX deviation END
+	-- deviation END
 
 	return if supportsDone and #params < argumentCount
 		then function(done: Global_DoneFn)

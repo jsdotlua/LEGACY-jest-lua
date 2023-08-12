@@ -12,7 +12,7 @@
 	* See the License for the specific language governing permissions and
 	* limitations under the License.
 ]]
--- ROBLOX upstream: no upstream
+-- upstream: no upstream
 local function stripAnsi(text: string)
 	local res = string.gsub(text, "[\27\155][][()#;?%d]*[A-PRZcf-ntqry=><~]", "")
 	return res

@@ -1,5 +1,5 @@
--- ROBLOX upstream: https://github.com/ForbesLindesay/throat/blob/6.0.1/index.js
--- ROBLOX upstream types: https://github.com/ForbesLindesay/throat/blob/6.0.1/index.d.ts
+-- upstream: https://github.com/ForbesLindesay/throat/blob/6.0.1/index.js
+-- upstream types: https://github.com/ForbesLindesay/throat/blob/6.0.1/index.d.ts
 --[[
 	Copyright (c) 2013 Forbes Lindesay
 
@@ -33,12 +33,12 @@ local TypeError = Error
 
 local exports = {}
 
--- ROBLOX deviation START: predeclare classes
+-- deviation START: predeclare classes
 local Delayed = {} :: Delayed
 local Queue: Queue
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: additional types for Luau
+-- deviation START: additional types for Luau
 type ThroatFn<TResult, TArgs> = (...TArgs) -> Promise<TResult>
 
 type ThroatFnOrCallableFn<TResult, TArgs> = ThroatFn<TResult, TArgs> | typeof(setmetatable({}, {
@@ -50,7 +50,7 @@ export type ThroatLateBound<TResult, TArgs> = (
 	...TArgs
 ) -> Promise<TResult>
 export type ThroatEarlyBound<TResult, TArgs> = (...TArgs) -> Promise<TResult>
--- ROBLOX deviation END
+-- deviation END
 
 --[[
 	ROBLOX deviation START:
@@ -64,15 +64,15 @@ local function isCallable(f: any): boolean
 			and typeof(getmetatable(f).__call) == "function"
 		)
 end
--- ROBLOX deviation END
+-- deviation END
 
 local function throatInternal(size: number)
-	-- ROBLOX deviation START: hoist functions declarations
+	-- deviation START: hoist functions declarations
 	local runDelayed
 	local onFulfill
 	local onReject
 	local release
-	-- ROBLOX deviation END
+	-- deviation END
 
 	local queue = Queue.new()
 	local s = bit32.bor(size, 0)
@@ -134,7 +134,7 @@ local function lateBound<TResult, TArgs>(size: number): ThroatLateBound<TResult,
 	local run = throatInternal(bit32.bor(size, 0))
 	return function(fn, ...)
 		local arguments = { fn :: any, ... }
-		-- ROBLOX deviation: using isCallable to allow for callable tables being passed
+		-- deviation: using isCallable to allow for callable tables being passed
 		if not isCallable(fn) then
 			error(TypeError.new("Expected throat fn to be a function but got " .. tostring(typeof(fn))))
 		end
@@ -150,7 +150,7 @@ exports.default = function<TResult, TArgs>(
 	size: number,
 	fn: ((...TArgs) -> Promise<TResult>)?
 ): ((...TArgs) -> Promise<TResult>) | ((fn: (...TArgs) -> Promise<TResult>, ...TArgs) -> Promise<TResult>)
-	-- ROBLOX deviation: using isCallable to allow for callable tables being passed
+	-- deviation: using isCallable to allow for callable tables being passed
 	if isCallable(size) then
 		local temp = fn
 		fn = (size :: any) :: (...TArgs) -> Promise<TResult>
@@ -159,11 +159,11 @@ exports.default = function<TResult, TArgs>(
 	if typeof(size) ~= "number" then
 		error(TypeError.new("Expected throat size to be a number but got " .. tostring(typeof(size))))
 	end
-	-- ROBLOX deviation: using isCallable to allow for callable tables being passed
+	-- deviation: using isCallable to allow for callable tables being passed
 	if fn ~= nil and not isCallable(fn) then
 		error(TypeError.new("Expected throat fn to be a function but got " .. tostring(typeof(fn))))
 	end
-	-- ROBLOX deviation: using isCallable to allow for callable tables being passed
+	-- deviation: using isCallable to allow for callable tables being passed
 	if fn ~= nil and isCallable(fn) then
 		return earlyBound(bit32.bor(size, 0), fn)
 	else
@@ -171,7 +171,7 @@ exports.default = function<TResult, TArgs>(
 	end
 end
 
--- ROBLOX deviation: only exporting as default
+-- deviation: only exporting as default
 -- module.exports.default = module.exports;
 
 type Delayed = {

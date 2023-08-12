@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/index.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/index.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -17,9 +17,9 @@ exports.createDirectory = require(script.createDirectory).default
 local ErrorWithStackModule = require(script.ErrorWithStack)
 exports.ErrorWithStack = ErrorWithStackModule.default
 export type ErrorWithStack = ErrorWithStackModule.ErrorWithStack
--- ROBLOX deviation: need to execute the module explicitly
+-- deviation: need to execute the module explicitly
 exports.installCommonGlobals = require(script.installCommonGlobals)().default
--- ROBLOX deviation not ported as it doesn't seem necessary in Lua
+-- deviation not ported as it doesn't seem necessary in Lua
 -- exports.interopRequireDefault = require(script.interopRequireDefault).default
 exports.isInteractive = require(script.isInteractive).default
 exports.isPromise = require(script.isPromise).default
@@ -29,25 +29,25 @@ exports.convertDescriptorToString = require(script.convertDescriptorToString).de
 local specialCharsModule = require(script.specialChars)
 Object.assign(exports, specialCharsModule)
 exports.specialChars = specialCharsModule
--- ROBLOX deviation START: additional assignments for Lua type inferrence to work
+-- deviation START: additional assignments for Lua type inferrence to work
 exports.ARROW = specialCharsModule.ARROW
 exports.ICONS = specialCharsModule.ICONS
 exports.CLEAR = specialCharsModule.CLEAR
--- ROBLOX deviation END
--- ROBLOX deviation: not ported as it doesn't seem necessary in Lua
+-- deviation END
+-- deviation: not ported as it doesn't seem necessary in Lua
 -- exports.replacePathSepForGlob = require(script.replacePathSepForGlob).default
 exports.testPathPatternToRegExp = require(script.testPathPatternToRegExp).default
 exports.globsToMatcher = require(script.globsToMatcher).default
 local preRunMessageModule = require(script.preRunMessage)
 exports.preRunMessage = preRunMessageModule
--- ROBLOX deviation START: additional assignments for Lua type inferrence to work
+-- deviation START: additional assignments for Lua type inferrence to work
 exports.print = preRunMessageModule.print
 exports.remove = preRunMessageModule.remove
--- ROBLOX deviation END
+-- deviation END
 exports.pluralize = require(script.pluralize).default
 exports.formatTime = require(script.formatTime).default
--- ROBLOX deviation START: not ported as it doesn't seem necessary in Lua
+-- deviation START: not ported as it doesn't seem necessary in Lua
 -- exports.tryRealpath = require(script.tryRealpath).default
 -- exports.requireOrImportModule = require(script.requireOrImportModule).default
--- ROBLOX deviation END
+-- deviation END
 return exports

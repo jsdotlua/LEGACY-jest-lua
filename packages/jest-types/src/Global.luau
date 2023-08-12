@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-types/src/Global.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-types/src/Global.ts
 --[[*
 * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 *
@@ -18,13 +18,13 @@ type Record<T, U> = { [T]: U }
 type ReturnType<T> = any
 type TemplateStringsArray = Array<string>
 
--- ROBLOX FIXME: can't express void when defined outside of a function type
+-- FIXME: can't express void when defined outside of a function type
 type void = nil
 
--- ROBLOX deviation START: Package not available, setting type to object
+-- deviation START: Package not available, setting type to object
 -- local istanbul_lib_coverageModule = require(rootWorkspace["istanbul-lib-coverage"])
 type CoverageMapData = Object
--- ROBLOX deviation END
+-- deviation END
 
 export type ValidTestReturnValues = void | nil
 type TestReturnValuePromise = Promise<any>
@@ -54,18 +54,18 @@ export type ArrayTable = Table | Row
 export type TemplateTable = TemplateStringsArray
 export type TemplateData = Array<any>
 
--- ROBLOX deviation: Template literals are represented as a string
+-- deviation: Template literals are represented as a string
 export type EachTable = ArrayTable | TemplateTable | string
 
 export type TestCallback = BlockFn | TestFn | ConcurrentTestFn
 
--- ROBLOX FIXME: add type constraint <EachCallback extends TestCallback>
+-- FIXME: add type constraint <EachCallback extends TestCallback>
 export type EachTestFn<EachCallback> = (...any) -> ReturnType<EachCallback>
 
 -- TODO: Get rid of this at some point
 type Jasmine = { _DEFAULT_TIMEOUT_INTERVAL: number?, addMatchers: (matchers: Record<string, any>) -> () }
 
--- ROBLOX FIXME: add type constraint <EachCallback extends TestCallback>
+-- FIXME: add type constraint <EachCallback extends TestCallback>
 type Each<EachCallback> =
 	((table: EachTable, ...any) -> (title: string, test: EachTestFn<EachCallback>, timeout: number?) -> ())
 	| (() -> () -> ())
@@ -84,13 +84,13 @@ export type ItConcurrentBase = typeof(setmetatable({} :: { each: Each<Concurrent
 
 export type ItConcurrentExtended = ItConcurrentBase & { only: ItConcurrentBase, skip: ItConcurrentBase }
 
--- ROBLOX FIXME START Luau: inline It to make Luau analyze happy
+-- FIXME START Luau: inline It to make Luau analyze happy
 export type ItConcurrent =
 	ItBase
 	& { only: ItBase, skip: ItBase, todo: (testName: TestName) -> () }
 	& { concurrent: ItConcurrentExtended }
 -- export type ItConcurrent = It & { concurrent: ItConcurrentExtended }
--- ROBLOX FIXME END
+-- FIXME END
 
 export type DescribeBase = typeof(setmetatable({} :: { each: Each<BlockFn> }, {
 	__call = function(_, blockName: BlockName, blockFn: BlockFn): () end,
@@ -122,7 +122,7 @@ export type GlobalAdditions = TestFrameworkGlobals & {
 	spyOnProperty: () -> (),
 }
 
--- ROBLOX FIXME: should intersect with Omit<typeof globalThis, keyof GlobalAdditions>
+-- FIXME: should intersect with Omit<typeof globalThis, keyof GlobalAdditions>
 export type Global = GlobalAdditions & { [string]: any }
 
 return {}

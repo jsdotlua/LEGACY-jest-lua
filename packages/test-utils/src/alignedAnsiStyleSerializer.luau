@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/test-utils/src/alignedAnsiStyleSerializer.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/test-utils/src/alignedAnsiStyleSerializer.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -10,9 +10,9 @@ local CurrentModule = script.Parent
 local Packages = CurrentModule.Parent
 
 local ansiRegex = require(Packages.PrettyFormat).plugins.ConvertAnsi.ansiRegex
--- ROBLOX deviation: imported chalk instead of ansi-styles
+-- deviation: imported chalk instead of ansi-styles
 local chalk = require(Packages.ChalkLua)
--- ROBLOX deviation: omitting prettyFormat import
+-- deviation: omitting prettyFormat import
 
 local function serialize(val: string): string
 	-- Return the string itself, not escaped nor enclosed in double quote marks.

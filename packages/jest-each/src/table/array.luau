@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/table/array.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/table/array.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -18,10 +18,10 @@ local RegExp = require(Packages.RegExp)
 
 local exports = {}
 
--- ROBLOX deviation START: package not available using local implementation
+-- deviation START: package not available using local implementation
 -- local util = require(Packages.util)
 local format = require(script.Parent.format)
--- ROBLOX deviation END
+-- deviation END
 
 local typesModule = require(Packages.JestTypes)
 type Global_ArrayTable = typesModule.Global_ArrayTable
@@ -30,7 +30,7 @@ type Global_Row = typesModule.Global_Row
 type Global_Table = typesModule.Global_Table
 local pretty = require(Packages.PrettyFormat).format
 
--- ROBLOX devation: Circular dependency, inline type
+-- devation: Circular dependency, inline type
 -- local bindModule = require(script.Parent.Parent.bind)
 -- type EachTests = bindModule.EachTests
 type EachTests = Array<{
@@ -54,9 +54,9 @@ local PLACEHOLDER_PREFIX = "%%"
 local ESCAPED_PLACEHOLDER_PREFIX = "%%"
 local ESCAPED_PLACEHOLDER_PREFIX_PATTERN = "%%%%"
 local JEST_EACH_PLACEHOLDER_ESCAPE = "@@__JEST_EACH_PLACEHOLDER_ESCAPE__@@"
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation: predeclare variables
+-- deviation: predeclare variables
 local isTemplates, normaliseTable, formatTitle, interpolateEscapedPlaceholders, isTable, colToRow, normalisePlaceholderValue, getMatchingPlaceholders, interpolatePrettyPlaceholder, interpolateTitleIndex
 
 local function default(title: string, arrayTable: Global_ArrayTable): EachTests
@@ -135,7 +135,7 @@ function normalisePlaceholderValue(value: any)
 end
 
 function getMatchingPlaceholders(title: string): Array<string>
-	-- ROBLOX deviation START: js .match with /g flag and :gmatch are used in a different way
+	-- deviation START: js .match with /g flag and :gmatch are used in a different way
 	local ref
 	for match in title:gmatch(SUPPORTED_PLACEHOLDERS_PATTERN) do
 		if ref == nil then
@@ -143,7 +143,7 @@ function getMatchingPlaceholders(title: string): Array<string>
 		end
 		table.insert(ref, match)
 	end
-	-- ROBLOX deviation END
+	-- deviation END
 	return ref or {}
 end
 

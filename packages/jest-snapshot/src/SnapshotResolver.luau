@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/SnapshotResolver.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/SnapshotResolver.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -17,19 +17,19 @@ local Promise = require(Packages.Promise)
 
 local exports = {}
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local path = require(Packages.path)
 -- local chalk = require(Packages.ChalkLua)
 -- local createTranspilingRequire = require(Packages["@jest"].transform).createTranspilingRequire
--- ROBLOX deviation END
+-- deviation END
 local typesModule = require(Packages.JestTypes)
 type Config_Path = typesModule.Config_Path
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local interopRequireDefault = require(Packages.JestUtil).interopRequireDefault
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: additinal dependencies
+-- deviation START: additinal dependencies
 local utils = require(script.Parent.utils)
 local getParent = utils.robloxGetParent
 
@@ -41,17 +41,17 @@ local function getCoreScriptSyncService()
 	return success and result or nil
 end
 local CoreScriptSyncService = nil
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: predefine functions
+-- deviation START: predefine functions
 local createSnapshotResolver
 local createDefaultSnapshotResolver
---- ROBLOX deviation END
+--- deviation END
 export type SnapshotResolver = {
-	-- ROBLOX deviation START: not supported
+	-- deviation START: not supported
 	-- testPathForConsistencyCheck: string,
-	-- ROBLOX deviation END
-	-- ROBLOX deviation START: custom return value. We need to be able to resolve both snapshot instance and path
+	-- deviation END
+	-- deviation START: custom return value. We need to be able to resolve both snapshot instance and path
 	resolveSnapshotPath: (
 		self: SnapshotResolver,
 		testPath: ModuleScript,
@@ -60,10 +60,10 @@ export type SnapshotResolver = {
 		getInstance: () -> ModuleScript?,
 		getPath: () -> string,
 	},
-	-- ROBLOX deviation END
-	-- ROBLOX deviation START: not supported
+	-- deviation END
+	-- deviation START: not supported
 	-- resolveTestPath: (self: any, snapshotPath: Config_Path, extension: string?) -> Config_Path,
-	-- ROBLOX deviation END
+	-- deviation END
 }
 local EXTENSION = "snap"
 exports.EXTENSION = EXTENSION
@@ -80,24 +80,24 @@ type LocalRequire = (module: string) -> unknown
 
 local function buildSnapshotResolver(
 	config: Config_ProjectConfig,
-	-- ROBLOX deviation: not supported
+	-- deviation: not supported
 	_localRequire: (Promise<LocalRequire> | LocalRequire)?
-	-- ROBLOX deviation END
+	-- deviation END
 ): Promise<SnapshotResolver>
-	-- ROBLOX deviation: not supported
+	-- deviation: not supported
 	-- if localRequire == nil then
 	-- 	localRequire = createTranspilingRequire(config)
 	-- end
-	-- ROBLOX deviation END
+	-- deviation END
 	return Promise.resolve():andThen(function()
 		local key = config.rootDir
 		local ref = cache:get(key)
 		local resolver = if ref ~= nil
 			then ref
 			else createSnapshotResolver(
-				-- ROBLOX deviation: not supported
+				-- deviation: not supported
 				-- localRequire:expect(), config.snapshotResolver
-				-- ROBLOX deviation END
+				-- deviation END
 			):expect()
 		cache:set(key, resolver)
 		return resolver
@@ -110,12 +110,12 @@ function createSnapshotResolver(--[[ ROBLOX deviation: not supported ]]--[[
 	snapshotResolverPath: (Config_Path | nil)?
 ]]--[[ ROBLOX deviation END ]]): Promise<SnapshotResolver>
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: only support default snapshot resolver
+		-- deviation START: only support default snapshot resolver
 		-- return if typeof(snapshotResolverPath) == "string"
 		-- 	then createCustomSnapshotResolver(snapshotResolverPath, localRequire):expect()
 		-- 	else createDefaultSnapshotResolver()
 		return createDefaultSnapshotResolver()
-		-- ROBLOX deviation END
+		-- deviation END
 	end)
 end
 
@@ -123,11 +123,11 @@ function createDefaultSnapshotResolver(): SnapshotResolver
 	return {
 		resolveSnapshotPath = function(
 			_self: SnapshotResolver,
-			-- ROBLOX deviation START: using ModuleScript instead of Config_Path
+			-- deviation START: using ModuleScript instead of Config_Path
 			testPath: ModuleScript
-			-- ROBLOX deviation END
+			-- deviation END
 		)
-			-- ROBLOX deviation START: custom implementation
+			-- deviation START: custom implementation
 			return {
 				getInstance = function()
 					local testFileName = testPath.Name
@@ -183,14 +183,14 @@ function createDefaultSnapshotResolver(): SnapshotResolver
 					return ("%s/__snapshots__/%s"):format(parentPath, snapshotFileName)
 				end,
 			}
-			-- ROBLOX deviation END
+			-- deviation END
 		end,
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- resolveTestPath = function(snapshotPath: Config_Path)
 		-- 	return path:resolve(path:dirname(snapshotPath), "..", path:basename(snapshotPath, DOT_EXTENSION))
 		-- end,
 		-- testPathForConsistencyCheck = path.posix.join("consistency_check", "__tests__", "example.test.js"),
-		-- ROBLOX deviation END
+		-- deviation END
 	}
 end
 

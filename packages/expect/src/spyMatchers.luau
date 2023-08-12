@@ -1,5 +1,5 @@
 --!nonstrict
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/spyMatchers.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/spyMatchers.ts
 -- /**
 -- * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 -- *
@@ -35,7 +35,7 @@ local printWithType = JestMatcherUtils.printWithType
 local stringify = JestMatcherUtils.stringify
 
 type Array<T> = LuauPolyfill.Array<T>
--- ROBLOX deviation: omitted type imports from types file and defined MatcherState as any for now
+-- deviation: omitted type imports from types file and defined MatcherState as any for now
 type MatcherHintOptions = JestMatcherUtils.MatcherHintOptions
 type MatcherState = any
 type SyncExpectationResult = (any, any, any) -> {
@@ -147,7 +147,7 @@ function getRightAlignedPrinter(label: string): PrintLabel
 	end
 end
 
--- ROBLOX deviation: IndexedCall annotated as any for now since we don't have tuple support in luau
+-- deviation: IndexedCall annotated as any for now since we don't have tuple support in luau
 type IndexedCall = any
 
 function printReceivedCallsNegative(
@@ -344,7 +344,7 @@ function isLineDiffableArg(expected: any, received: any): boolean
 		return false
 	end
 
-	-- ROBLOX TODO: Change this and other similar indexing as part of ADO-1372
+	-- TODO: Change this and other similar indexing as part of ADO-1372
 	if expectedType == "table" and typeof(expected.asymmetricMatch) == "function" then
 		return false
 	end
@@ -356,7 +356,7 @@ function isLineDiffableArg(expected: any, received: any): boolean
 	return true
 end
 
--- ROBLOX deviation: IndexedResult annotated as any for now since we don't have tuple support in luau
+-- deviation: IndexedResult annotated as any for now since we don't have tuple support in luau
 type IndexedResult = any
 
 function printResult(result: any, expected: any)
@@ -394,7 +394,7 @@ function printReceivedResults(
 
 	local printAligned = getRightAlignedPrinter(label)
 
-	-- ROBLOX TODO: the following (label:find(':') or 1) can be changed to label:find(':') if
+	-- TODO: the following (label:find(':') or 1) can be changed to label:find(':') if
 	-- roblox-cli eventually won't complain?
 	local colonIndex = label:find(":") or 1
 
@@ -650,7 +650,7 @@ local function createToBeCalledWithMatcher(matcherName: string): SyncExpectation
 		local expected = { ... }
 		local expectedLength = select("#", ...)
 		for i = 1, expectedLength do
-			-- ROBLOX deviation: We add this if statement to deal with our internal symbol
+			-- deviation: We add this if statement to deal with our internal symbol
 			-- that represents nil
 			if expected[i] == nil then
 				expected[i] = Symbol.for_("$$nil")
@@ -805,7 +805,7 @@ local function createLastCalledWithMatcher(matcherName: string): SyncExpectation
 		local expected: Array<any> = { ... }
 		local expectedLength = select("#", ...)
 		for i = 1, expectedLength do
-			-- ROBLOX deviation: We add this if statement to deal with our internal symbol
+			-- deviation: We add this if statement to deal with our internal symbol
 			-- that represents nil
 			if expected[i] == nil then
 				expected[i] = Symbol.for_("$$nil")
@@ -988,7 +988,7 @@ local function createNthCalledWithMatcher(matcherName: string): SyncExpectationR
 		local expected = { ... }
 		local expectedLength = select("#", ...)
 		for i = 1, expectedLength do
-			-- ROBLOX deviation: We add this if statement to deal with our internal symbol
+			-- deviation: We add this if statement to deal with our internal symbol
 			-- that represents nil
 			if expected[i] == nil then
 				expected[i] = Symbol.for_("$$nil")
@@ -1007,7 +1007,7 @@ local function createNthCalledWithMatcher(matcherName: string): SyncExpectationR
 		ensureMockOrSpy(received, matcherName, expectedArgument, options)
 
 		if not Number.isSafeInteger(nth) or nth < 1 then
-			-- ROBLOX deviation: we don't use the Error polyfill because we encounter an error with TestEZ
+			-- deviation: we don't use the Error polyfill because we encounter an error with TestEZ
 			error(
 				Error(
 					matcherErrorMessage(
@@ -1154,7 +1154,7 @@ local function createNthReturnedWithMatcher(matcherName: string): SyncExpectatio
 		ensureMock(received, matcherName, expectedArgument, options)
 
 		if not Number.isSafeInteger(nth) or nth < 1 then
-			-- ROBLOX deviation: we don't use the Error polyfill because we encounter an error with TestEZ
+			-- deviation: we don't use the Error polyfill because we encounter an error with TestEZ
 			error(
 				Error(
 					matcherErrorMessage(
@@ -1273,7 +1273,7 @@ local function createNthReturnedWithMatcher(matcherName: string): SyncExpectatio
 	end
 end
 
--- ROBLOX deviation: matchersObject annotated as { [string]: any } for now rather than { [string]: RawMatcherFn }
+-- deviation: matchersObject annotated as { [string]: any } for now rather than { [string]: RawMatcherFn }
 -- because we cannot currently express RawMatcherFn as tuple
 type MatchersObject = { [string]: any }
 
@@ -1312,7 +1312,7 @@ function isSpy(received: any)
 		and typeof(received.calls.count) == "function"
 end
 
--- ROBLOX deviation: we don't use the Error polyfill because we encounter an error with TestEZ
+-- deviation: we don't use the Error polyfill because we encounter an error with TestEZ
 function ensureMockOrSpy(
 	received: any,
 	matcherName: string,
@@ -1332,7 +1332,7 @@ function ensureMockOrSpy(
 	end
 end
 
--- ROBLOX deviation: we don't use the Error polyfill because we encounter an error with TestEZ
+-- deviation: we don't use the Error polyfill because we encounter an error with TestEZ
 function ensureMock(
 	received: any,
 	matcherName: string,

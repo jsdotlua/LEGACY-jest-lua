@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/extractExpectedAssertionsErrors.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/extractExpectedAssertionsErrors.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -24,9 +24,9 @@ local typesModule = require(script.Parent.types)
 type Expect = typesModule.Expect
 type ExpectedAssertionsErrors = typesModule.ExpectedAssertionsErrors
 local function resetAssertionsLocalState()
-	-- ROBLOX deviation START: Using Object.None instead of nil to actually clear the expect assertions number
+	-- deviation START: Using Object.None instead of nil to actually clear the expect assertions number
 	setState({ assertionCalls = 0, expectedAssertionsNumber = Object.None, isExpectingAssertions = false })
-	-- ROBLOX deviation END
+	-- deviation END
 end
 -- Create and format all errors related to the mismatched number of `expect`
 -- calls and reset the matcher's state.
@@ -55,11 +55,11 @@ function extractExpectedAssertionsErrors()
 				RECEIVED_COLOR(pluralize("assertion call", Boolean.toJSBoolean(assertionCalls) and assertionCalls or 0))
 			)
 			.. "."
-		-- ROBLOX deviation START: add call to Error.__recalculateStacktrace until Error polyfill calculates the stacktrace on first access to the property
+		-- deviation START: add call to Error.__recalculateStacktrace until Error polyfill calculates the stacktrace on first access to the property
 		if typeof(Error.__recalculateStacktrace) == "function" then
 			Error.__recalculateStacktrace(expectedAssertionsNumberError)
 		end
-		-- ROBLOX deviation END
+		-- deviation END
 		table.insert(result, {
 			actual = tostring(assertionCalls),
 			error = expectedAssertionsNumberError :: any,
@@ -72,11 +72,11 @@ function extractExpectedAssertionsErrors()
 		(isExpectingAssertionsError :: any).message = tostring(
 			matcherHint(".hasAssertions", "", "", { isDirectExpectCall = true })
 		) .. "\n\n" .. ("Expected %s to be called but %s."):format(tostring(expected), tostring(received))
-		-- ROBLOX deviation START: add call to Error.__recalculateStacktrace until Error polyfill calculates the stacktrace on first access to the property
+		-- deviation START: add call to Error.__recalculateStacktrace until Error polyfill calculates the stacktrace on first access to the property
 		if typeof(Error.__recalculateStacktrace) == "function" then
 			Error.__recalculateStacktrace(isExpectingAssertionsError)
 		end
-		-- ROBLOX deviation END
+		-- deviation END
 		table.insert(result, {
 			actual = "none",
 			error = isExpectingAssertionsError :: any,

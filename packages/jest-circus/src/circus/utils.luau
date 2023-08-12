@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/utils.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -18,19 +18,19 @@ type Promise<T> = LuauPolyfill.Promise<T>
 
 local Promise = require(Packages.Promise)
 
--- ROBLOX deviation START: predefine variables
+-- deviation START: predefine variables
 local makeTestResults
 local getTestID
 local _getError
 local getErrorStack
 local invariant
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: add additional imports
+-- deviation START: add additional imports
 local RegExp = require(Packages.RegExp)
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: add function to extract bare string message from stacktrace line
+-- deviation START: add function to extract bare string message from stacktrace line
 local function separateMessageFromStack(content: string): { message: string, stack: string }
 	if not content then
 		return { message = "", stack = "" }
@@ -45,21 +45,21 @@ local function separateMessageFromStack(content: string): { message: string, sta
 	end
 	return { message = message, stack = stack }
 end
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX FIXME START: added types and objects that do not exist in Luau
+-- FIXME START: added types and objects that do not exist in Luau
 type NodeJS_Timeout = LuauPolyfill.Timeout
--- ROBLOX FIXME END
+-- FIXME END
 
 local exports = {}
 
--- ROBLOX deviation START: not using path and co dependencies
+-- deviation START: not using path and co dependencies
 -- local path = require(Packages.path)
 -- local co = require(Packages.co).default
--- ROBLOX deviation END
--- ROBLOX deviation: use dedent implementation from graphql-lua
+-- deviation END
+-- deviation: use dedent implementation from graphql-lua
 local dedent = require(Packages.RobloxShared).dedent
--- ROBLOX deviation: generator functions are not supported in Lua
+-- deviation: generator functions are not supported in Lua
 -- local isGeneratorFn = require(Packages["is-generator-fn"]).default
 --[[
 	ROBLOX deviation:
@@ -95,15 +95,15 @@ local ErrorWithStack = jestUtilModule.ErrorWithStack
 local convertDescriptorToString = jestUtilModule.convertDescriptorToString
 local formatTime = jestUtilModule.formatTime
 local prettyFormat = require(Packages.PrettyFormat).format
--- ROBLOX deviation: move to `state_.lua` to avoid cyclic dependency
+-- deviation: move to `state_.lua` to avoid cyclic dependency
 local stateModule = require(script.Parent.state_)
 local ROOT_DESCRIBE_BLOCK_NAME = stateModule.ROOT_DESCRIBE_BLOCK_NAME
 local getState = stateModule.getState
 
--- ROBLOX deviation START: not using slash and stack-utils dependencies
+-- deviation START: not using slash and stack-utils dependencies
 -- local stackUtils = StackUtils.new({ cwd = "A path that does not exist" })
 -- local jestEachBuildDir = slash(path:dirname(require:resolve("jest-each")))
--- ROBLOX deviation END
+-- deviation END
 
 local function takesDoneCallback(
 	fn: Circus_AsyncFn
@@ -111,7 +111,7 @@ local function takesDoneCallback(
 	return debug.info(fn, "a") > 1
 end
 
--- ROBLOX deviation START: generator functions are not supported in Lua
+-- deviation START: generator functions are not supported in Lua
 local function isGeneratorFunction(
 	_fn: Global_PromiseReturningTestFn | Global_GeneratorReturningTestFn
 ): boolean --[[ ROBLOX FIXME: change to TSTypePredicate equivalent if supported ]] --[[ fn is Global.GeneratorReturningTestFn ]]
@@ -121,7 +121,7 @@ local function isGeneratorFunction(
 		return isGeneratorFn(fn);
 	]]
 	return false
-	-- ROBLOX deviation END
+	-- deviation END
 end
 
 local function makeDescribe(
@@ -139,7 +139,7 @@ local function makeDescribe(
 		type = "describeBlock", -- eslint-disable-next-line sort-keys
 		children = {},
 		hooks = {},
-		-- ROBLOX FIXME Luau: if statement above should narrow the type to non-nil
+		-- FIXME Luau: if statement above should narrow the type to non-nil
 		mode = _mode :: Circus_BlockMode,
 		name = convertDescriptorToString(name),
 		parent = parent,
@@ -263,7 +263,7 @@ end
 
 -- Global values can be overwritten by mocks or tests. We'll capture
 -- the original values in the variables before we require any files.
--- ROBLOX deviation: using LuauPolyfill instead of global
+-- deviation: using LuauPolyfill instead of global
 local setTimeout, clearTimeout = LuauPolyfill.setTimeout, LuauPolyfill.clearTimeout
 
 local function checkIsError(
@@ -308,15 +308,15 @@ local function callAsyncCircusFn(
 					reject(errorAtDone)
 					error(errorAtDone)
 				else
-					-- ROBLOX FIXME Luau: both Circus_TestEntry and Circus_Hook have this field but Luau analyze still complains
+					-- FIXME Luau: both Circus_TestEntry and Circus_Hook have this field but Luau analyze still complains
 					(testOrHook :: any).seenDone = true
 				end
 
 				-- Use `Promise.resolve` to allow the event loop to go a single tick in case `done` is called synchronously
-				-- ROBLOX deviation: using Promise.delay instead of Promise.resolve as the latter resolves synchronously in Lua implementation
+				-- deviation: using Promise.delay instead of Promise.resolve as the latter resolves synchronously in Lua implementation
 				Promise.delay(0):andThen(function()
 					if returnedValue ~= nil then
-						-- ROBLOX CHECK: dedent with tagged templates might be implemented differently
+						-- CHECK: dedent with tagged templates might be implemented differently
 						asyncError.message = dedent(([[
 
       Test functions cannot both take a 'done' callback and return something. Either use a 'done' callback, or return a promise.
@@ -329,7 +329,7 @@ local function callAsyncCircusFn(
 
 					local errorAsErrorObject: Error
 					if checkIsError(reason) then
-						-- ROBLOX FIXME: Luau doesn't support type assertions with a function
+						-- FIXME: Luau doesn't support type assertions with a function
 						errorAsErrorObject = reason :: Error
 					else
 						errorAsErrorObject = errorAtDone
@@ -348,21 +348,21 @@ local function callAsyncCircusFn(
 				end)
 			end
 
-			-- ROBLOX FIXME Luau: roblox cli doesn't allow to call when type is a union of functions
+			-- FIXME Luau: roblox cli doesn't allow to call when type is a union of functions
 			returnedValue = (fn :: any)(testContext, done)
 
 			return
 		end
 
 		local returnedValue: Global_TestReturnValue
-		-- ROBLOX FIXME Luau: seems like a false negative for type conversion
+		-- FIXME Luau: seems like a false negative for type conversion
 		if isGeneratorFunction(fn :: any) then
-			-- ROBLOX deviation START: generator functions are not supported in Lua
+			-- deviation START: generator functions are not supported in Lua
 			error("Generator functions are not supported in Lua")
 			-- returnedValue = co:wrap(fn)({})
-			-- ROBLOX deviation END
+			-- deviation END
 		else
-			-- ROBLOX FIXME Luau: pcall should accept variadic number of params
+			-- FIXME Luau: pcall should accept variadic number of params
 			local ok, result = (pcall :: any)(fn, testContext)
 			if not ok then
 				local error_ = result
@@ -386,7 +386,7 @@ local function callAsyncCircusFn(
 		end
 
 		if not isHook and returnedValue ~= nil then
-			-- ROBLOX CHECK: dedent with tagged templates might be implemented differently
+			-- CHECK: dedent with tagged templates might be implemented differently
 			reject((dedent(([[
 
 test functions can only return Promise or undefined.
@@ -405,16 +405,16 @@ test functions can only return Promise or undefined.
 			completed = true
 			-- If timeout is not cleared/unrefed the node process won't exit until
 			-- it's resolved.
-			-- ROBLOX deviation: no need to unref the timeoutID in Lua
+			-- deviation: no need to unref the timeoutID in Lua
 			-- timeoutID.unref?.()
 			clearTimeout(timeoutID)
 		end)
 		:catch(function(error_)
 			completed = true
-			-- ROBLOX deviation: no need to unref the timeoutID in Lua
+			-- deviation: no need to unref the timeoutID in Lua
 			-- timeoutID.unref?.()
 			clearTimeout(timeoutID)
-			-- ROBLOX deviation START: add special handling for bare strings getting thrown as Promise chain will make them unusable otherwise
+			-- deviation START: add special handling for bare strings getting thrown as Promise chain will make them unusable otherwise
 			if typeof(error_) == "string" then
 				local separated = separateMessageFromStack(error_)
 				local wrappedError = Error.new(separated.message);
@@ -422,7 +422,7 @@ test functions can only return Promise or undefined.
 				Error.__recalculateStacktrace(wrappedError)
 				error(wrappedError)
 			end
-			-- ROBLOX deviation END
+			-- deviation END
 			error(error_)
 		end)
 end
@@ -463,7 +463,7 @@ local function makeSingleTestResult(test: Circus_TestEntry): Circus_TestResult
 	until parent == nil
 
 	local location = nil
-	-- ROBLOX TODO START: uncomment when implemented relevant pieces of stackUtils
+	-- TODO START: uncomment when implemented relevant pieces of stackUtils
 	-- if includeTestLocationInResult then
 	-- 	local stackLines = String.split(test.asyncError.stack, "\n")
 	-- 	local stackLine = stackLines[2]
@@ -483,7 +483,7 @@ local function makeSingleTestResult(test: Circus_TestEntry): Circus_TestResult
 	-- 		}
 	-- 	end
 	-- end
-	-- ROBLOX TODO END
+	-- TODO END
 
 	local errorsDetailed = Array.map(test.errors, _getError)
 
@@ -493,7 +493,7 @@ local function makeSingleTestResult(test: Circus_TestEntry): Circus_TestResult
 		errorsDetailed = errorsDetailed,
 		invocations = test.invocations,
 		location = location,
-		-- ROBLOX FIXME Luau: assert above should narrow the type to non-nil
+		-- FIXME Luau: assert above should narrow the type to non-nil
 		status = status :: Circus_TestStatus,
 		testPath = Array.from(testPath),
 	}
@@ -541,11 +541,11 @@ function _getError(errors: (Circus_Exception | Array<Circus_Exception | nil | Ci
 	local asyncError: Circus_Exception
 
 	if Array.isArray(errors) then
-		-- ROBLOX FIXME START: Luau doesn't support type assertions with a function
+		-- FIXME START: Luau doesn't support type assertions with a function
 		local errors_ = errors :: Array<Circus_Exception | nil | Circus_Exception>
 		error_ = errors_[1]
 		asyncError = errors_[2]
-		-- ROBLOX FIXME END
+		-- FIXME END
 	else
 		error_ = errors
 		asyncError = Error.new()
@@ -571,7 +571,7 @@ local function addErrorToEachTestUnderDescribe(
 ): ()
 	for _, child in ipairs(describeBlock.children) do
 		if child.type == "describeBlock" then
-			-- ROBLOX FIXME Luau: analyze should narrow the child type here
+			-- FIXME Luau: analyze should narrow the child type here
 			addErrorToEachTestUnderDescribe(child :: Circus_DescribeBlock, error_, asyncError)
 		elseif child.type == "test" then
 			table.insert(child.errors, { error_, asyncError })

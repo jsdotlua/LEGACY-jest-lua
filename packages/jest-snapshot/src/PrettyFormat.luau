@@ -12,8 +12,8 @@
 	* See the License for the specific language governing permissions and
 	* limitations under the License.
 ]]
--- ROBLOX NOTE: no upstream
--- ROBLOX TODO: fix PrettyFormat types imports
+-- NOTE: no upstream
+-- TODO: fix PrettyFormat types imports
 
 type CompareKeys = ((a: string, b: string) -> number) | nil
 

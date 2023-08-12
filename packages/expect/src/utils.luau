@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/utils.ts
 -- /**
 -- * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 -- *
@@ -19,16 +19,16 @@ local RegExp = require(Packages.RegExp)
 
 local RobloxShared = require(Packages.RobloxShared)
 
--- ROBLOX deviation: omitted isPrimitive import
+-- deviation: omitted isPrimitive import
 local jasmineUtils = require(CurrentModule.jasmineUtils)
 local equals = jasmineUtils.equals
--- ROBLOX deviation: omitted isA, isImmutableUnorderedKeyed, isImmutableUnorderedSet
+-- deviation: omitted isA, isImmutableUnorderedKeyed, isImmutableUnorderedSet
 
 type Array<T> = LuauPolyfill.Array<T>
 
--- ROBLOX deviation start: predefine variables
+-- deviation start: predefine variables
 local pathAsArray
--- ROBLOX deviation end
+-- deviation end
 
 type GetPath = {
 	hasEndProp: boolean?,
@@ -37,7 +37,7 @@ type GetPath = {
 	value: any?,
 }
 
--- ROBLOX deviation: helper function moved to RobloxShared and no longer needed here
+-- deviation: helper function moved to RobloxShared and no longer needed here
 -- local hasPropertyInObject = RobloxShared.expect.hasPropertyInObject
 
 local function getPath(object: { [string]: any }, propertyPath): GetPath
@@ -94,12 +94,12 @@ local function getPath(object: { [string]: any }, propertyPath): GetPath
 	}
 end
 
--- ROBLOX deviation: moved to RobloxShared to avoid reaching into internals with rotriever workspaces
+-- deviation: moved to RobloxShared to avoid reaching into internals with rotriever workspaces
 local getObjectSubset = RobloxShared.expect.getObjectSubset
 
--- ROBLOX deviation: omitted IteratorSymbol
+-- deviation: omitted IteratorSymbol
 
--- ROBLOX deviation: currently unused so we comment out hasIterator
+-- deviation: currently unused so we comment out hasIterator
 -- local function hasIterator(object: any): boolean
 -- 	-- technically just the typeof(object) == table check would be sufficient
 -- 	-- but to be more accurate we should return true for all types that can be
@@ -109,7 +109,7 @@ local getObjectSubset = RobloxShared.expect.getObjectSubset
 
 local iterableEquality = RobloxShared.expect.iterableEquality
 
--- ROBLOX deviation: helper function moved to RobloxShared and no longer needed here
+-- deviation: helper function moved to RobloxShared and no longer needed here
 -- local isObject = RobloxShared.expect.isObject
 -- local isObjectWithKeys = RobloxShared.expect.isObjectWithKeys
 
@@ -141,7 +141,7 @@ local function typeEquality(a: any, b: any): boolean | nil
 	return false
 end
 
--- ROBLOX deviation START: skipped as Lua doesn't support ArrayBuffer
+-- deviation START: skipped as Lua doesn't support ArrayBuffer
 
 -- local function arrayBufferEquality(
 -- 	a: unknown,
@@ -173,7 +173,7 @@ end
 -- 	end
 -- 	return true
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 local function sparseArrayEquality(a: any, b: any): boolean | nil
 	if not Array.isArray(a) or not Array.isArray(b) then
@@ -203,7 +203,7 @@ end
 
 function pathAsArray(propertyPath: string): Array<any>
 	-- will match everything that's not a dot or a bracket, and "" for consecutive dots.
-	local pattern = RegExp("[^.[\\]]+|(?=(?:\\.)(?:\\.|$))") -- ROBLOX TODO: add 'g' flag when supported
+	local pattern = RegExp("[^.[\\]]+|(?=(?:\\.)(?:\\.|$))") -- TODO: add 'g' flag when supported
 	local properties: Array<string | number> = {}
 
 	-- Because the regex won't match a dot in the beginning of the path, if present.
@@ -228,7 +228,7 @@ function pathAsArray(propertyPath: string): Array<any>
 		local matchIndex = totalLength + match.index
 		local prevChar = propertyPath:sub(matchIndex - 1, matchIndex - 1)
 
-		-- ROBLOX NOTE: for `[digit]` syntax we need to parse to number so that array indexing works correctly in Lua
+		-- NOTE: for `[digit]` syntax we need to parse to number so that array indexing works correctly in Lua
 		if prevChar == "[" then
 			local matchNumber = tonumber(wholeMatch, 10)
 			if matchNumber then
@@ -244,16 +244,16 @@ function pathAsArray(propertyPath: string): Array<any>
 		propertyPath_ = propertyPath_:sub(wholeMatchEnd + 1)
 		match = pattern:exec(propertyPath_)
 	end
-	-- ROBLOX deviation END
+	-- deviation END
 
 	return properties
 end
 
--- ROBLOX deviation START: Custom implementation
+-- deviation START: Custom implementation
 local function isError(value: any): any
 	return instanceof(value, Error)
 end
--- ROBLOX deviation END
+-- deviation END
 
 local function emptyObject(obj: any): boolean
 	return typeof(obj) == "table" and #Object.keys(obj) == 0 or false
@@ -276,11 +276,11 @@ return {
 	getObjectSubset = getObjectSubset,
 	iterableEquality = iterableEquality,
 	subsetEquality = subsetEquality,
-	-- ROBLOX deviation: Roblox Instance matchers
-	-- ROBLOX TODO: uncomment when implementing snapshot property matchers on Instances
+	-- deviation: Roblox Instance matchers
+	-- TODO: uncomment when implementing snapshot property matchers on Instances
 	-- instanceSubsetEquality = RobloxShared.RobloxInstance.instanceSubsetEquality,
 	typeEquality = typeEquality,
-	-- ROBLOX deviation: skipped as Lua doesn't support ArrayBuffer
+	-- deviation: skipped as Lua doesn't support ArrayBuffer
 	-- arrayBufferEquality = arrayBufferEquality,
 	sparseArrayEquality = sparseArrayEquality,
 	partition = partition,

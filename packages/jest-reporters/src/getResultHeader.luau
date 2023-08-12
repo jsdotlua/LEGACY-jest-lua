@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/getResultHeader.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/getResultHeader.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -16,7 +16,7 @@ local exports = {}
 
 local chalk = require(Packages.ChalkLua)
 
--- ROBLOX deviation: Makes urls clickable in the terminal. Not able to support
+-- deviation: Makes urls clickable in the terminal. Not able to support
 -- local terminalLink = require(Packages["terminal-link"])
 local testResultModule = require(Packages.JestTestResult)
 type TestResult = testResultModule.TestResult
@@ -31,7 +31,7 @@ local utilsModule = require(CurrentModule.utils)
 local formatTestPath = utilsModule.formatTestPath
 local printDisplayName = utilsModule.printDisplayName
 
--- ROBLOX deviation START chalk_chainable: Lua Chalk doesn't support chainable calls. Using nested calls instead
+-- deviation START chalk_chainable: Lua Chalk doesn't support chainable calls. Using nested calls instead
 -- Explicitly reset for these messages since they can get written out in the
 -- middle of error logging
 local LONG_TEST_COLOR = function(...)
@@ -51,15 +51,15 @@ local FAIL = if chalk.supportsColor == nil or chalk.supportsColor == true
 local PASS = if chalk.supportsColor == nil or chalk.supportsColor == true
 	then chalk.reset(chalk.inverse(chalk.bold(chalk.green(string.format(" %s ", PASS_TEXT)))))
 	else PASS_TEXT
--- ROBLOX deviation END chalk_supportsColor
--- ROBLOX deviation END chalk_chainable
+-- deviation END chalk_supportsColor
+-- deviation END chalk_chainable
 
 exports.default = function(result: TestResult, globalConfig: Config_GlobalConfig, projectConfig: Config_ProjectConfig?)
 	local testPath = result.testFilePath
 	local formattedTestPath = formatTestPath(projectConfig or globalConfig, testPath)
-	-- ROBLOX deviation START: no terminal-link package available just use the path
+	-- deviation START: no terminal-link package available just use the path
 	local fileLink = formattedTestPath
-	-- ROBLOX deviation END
+	-- deviation END
 	if result.numFailingTests == nil then
 		result.numFailingTests = 0
 	end

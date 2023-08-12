@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/SearchSource.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/SearchSource.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -10,11 +10,11 @@ local Packages = script.Parent.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local Error = LuauPolyfill.Error
 -- local Object = LuauPolyfill.Object
 -- local Set = LuauPolyfill.Set
--- ROBLOX deviation END
+-- deviation END
 type Array<T> = LuauPolyfill.Array<T>
 type Promise<T> = LuauPolyfill.Promise<T>
 type Set<T> = LuauPolyfill.Set<T>
@@ -23,30 +23,30 @@ local RegExp = require(Packages.RegExp)
 
 local exports = {}
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local os_ = require(Packages.os)
 -- local path = require(Packages.path)
 -- local micromatch = require(Packages.micromatch)
--- ROBLOX deviation END
+-- deviation END
 local test_resultModule = require(Packages.JestTestResult)
 type Test = test_resultModule.Test
 local jestTypesModule = require(Packages.JestTypes)
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
 type Config_Path = jestTypesModule.Config_Path
 type Config_ProjectConfig = jestTypesModule.Config_ProjectConfig
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local jest_changed_filesModule = require(Packages["jest-changed-files"])
 -- type ChangedFiles = jest_changed_filesModule.ChangedFiles
 type ChangedFiles = nil
 -- local replaceRootDirInPath = require(Packages["jest-config"]).replaceRootDirInPath
 -- local escapePathForRegex = require(Packages["jest-regex-util"]).escapePathForRegex
 -- local DependencyResolver = require(Packages["jest-resolve-dependencies"]).DependencyResolver
--- ROBLOX deviation END
+-- deviation END
 local jest_runtimeModule = require(Packages.JestRuntime)
 type Context = jest_runtimeModule.Context
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local buildSnapshotResolver = require(Packages.JestSnapshot).buildSnapshotResolver
--- ROBLOX deviation END
+-- deviation END
 local jest_utilModule = require(Packages.JestUtil)
 local globsToMatcher = jest_utilModule.globsToMatcher
 local testPathPatternToRegExp = jest_utilModule.testPathPatternToRegExp
@@ -55,7 +55,7 @@ type Filter = typesModule.Filter
 type Stats = typesModule.Stats
 type TestPathCases = typesModule.TestPathCases
 
--- ROBLOX deviation START: custom implementation for getting all files
+-- deviation START: custom implementation for getting all files
 type FileInfo = { path: Config_Path, script: ModuleScript }
 
 local getRelativePath = require(Packages.RobloxShared).getRelativePath
@@ -71,14 +71,14 @@ local function getAllFiles(context: Context): Array<FileInfo>
 		end
 	)
 end
--- ROBLOX deviation END
+-- deviation END
 
 export type SearchResult = {
-	-- ROBLOX deviation START: not supported
+	-- deviation START: not supported
 	-- noSCM: boolean?,
 	stats: Stats?,
 	-- collectCoverageFrom: Set<string>?,
-	-- ROBLOX deviation END
+	-- deviation END
 	tests: Array<Test>,
 	total: number?,
 }
@@ -111,9 +111,9 @@ end
 
 local function toTests(
 	context: Context,
-	-- ROBLOX deviation START: custom FileInfo type instead of Config_Path
+	-- deviation START: custom FileInfo type instead of Config_Path
 	tests: Array<FileInfo>
-	-- ROBLOX deviation END
+	-- deviation END
 ): Array<Test>
 	return Array.map(tests, function(test)
 		return {
@@ -125,7 +125,7 @@ local function toTests(
 	end)
 end
 
--- ROBLOX deviation START: not ported
+-- deviation START: not ported
 -- local function hasSCM(changedFilesInfo: ChangedFiles)
 -- 	local repos = changedFilesInfo.repos
 -- 	-- no SCM (git/hg/...) is found in any of the roots.
@@ -134,12 +134,12 @@ end
 -- 	end)
 -- 	return not Boolean.toJSBoolean(noSCM)
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 export type SearchSource = {
 	isTestFilePath: (self: SearchSource, path: Config_Path) -> boolean,
 	findMatchingTests: (self: SearchSource, testPathPattern: string?) -> SearchResult,
-	-- ROBLOX deviation START: not ported
+	-- deviation START: not ported
 	-- findRelatedTests: (
 	-- 	self: SearchSource,
 	-- 	allPaths: Set<Config_Path>,
@@ -157,30 +157,30 @@ export type SearchSource = {
 	-- 	collectCoverage: boolean
 	-- ) -> Promise<SearchResult>,
 	-- filterPathsWin32: (self: SearchSource, paths: Array<string>) -> Array<string>,
-	-- ROBLOX deviation END
+	-- deviation END
 	getTestPaths: (
 		self: SearchSource,
 		globalConfig: Config_GlobalConfig,
 		changedFiles: ChangedFiles | nil,
 		filter: Filter?
 	) -> Promise<SearchResult>,
-	-- ROBLOX deviation START: not ported
+	-- deviation START: not ported
 	-- findRelatedSourcesFromTestsInChangedFiles: (
 	-- 	self: SearchSource,
 	-- 	changedFilesInfo: ChangedFiles
 	-- ) -> Promise<Array<string>>,
-	-- ROBLOX deviation END
+	-- deviation END
 }
 
 type SearchSourcePrivate = {
 	_context: Context,
-	-- ROBLOX deviation START: not ported
+	-- deviation START: not ported
 	--  _dependencyResolver: DependencyResolver | nil;
-	-- ROBLOX deviation END
+	-- deviation END
 	_testPathCases: TestPathCases,
-	-- ROBLOX deviation START: not ported
+	-- deviation START: not ported
 	-- _getOrBuildDependencyResolver: (self: SearchSourcePrivate) -> Promise<DependencyResolver>,
-	-- ROBLOX deviation END
+	-- deviation END
 	_filterTestPathsWithStats: (
 		self: SearchSourcePrivate,
 		allPaths: Array<Test>,
@@ -195,7 +195,7 @@ type SearchSourcePrivate = {
 
 	isTestFilePath: (self: SearchSourcePrivate, path: Config_Path) -> boolean,
 	findMatchingTests: (self: SearchSourcePrivate, testPathPattern: string?) -> SearchResult,
-	-- ROBLOX deviation START: not ported
+	-- deviation START: not ported
 	-- findRelatedTests: (
 	-- 	self: SearchSourcePrivate,
 	-- 	allPaths: Set<Config_Path>,
@@ -213,19 +213,19 @@ type SearchSourcePrivate = {
 	-- 	collectCoverage: boolean
 	-- ) -> Promise<SearchResult>,
 	-- filterPathsWin32: (self: SearchSourcePrivate, paths: Array<string>) -> Array<string>,
-	-- ROBLOX deviation END
+	-- deviation END
 	getTestPaths: (
 		self: SearchSourcePrivate,
 		globalConfig: Config_GlobalConfig,
 		changedFiles: ChangedFiles | nil,
 		filter: Filter?
 	) -> Promise<SearchResult>,
-	-- ROBLOX deviation START: not ported
+	-- deviation START: not ported
 	-- findRelatedSourcesFromTestsInChangedFiles: (
 	-- 	self: SearchSourcePrivate,
 	-- 	changedFilesInfo: ChangedFiles
 	-- ) -> Promise<Array<string>>,
-	-- ROBLOX deviation END
+	-- deviation END
 }
 
 type SearchSource_statics = {
@@ -242,7 +242,7 @@ function SearchSource.new(context: Context): SearchSource
 	self._context = context
 	self._dependencyResolver = nil
 
-	-- ROBLOX deviation START: not needed
+	-- deviation START: not needed
 	-- local rootPattern = RegExp(Array.join(
 	-- 	Array.map(config.roots, function(dir)
 	-- 		return escapePathForRegex(dir .. path.sep)
@@ -255,7 +255,7 @@ function SearchSource.new(context: Context): SearchSource
 	-- 	end,
 	-- 	stat = "roots",
 	-- })
-	-- ROBLOX deviation END
+	-- deviation END
 
 	if #config.testMatch > 0 then
 		table.insert(self._testPathCases, { isMatch = globsToMatcher(config.testMatch), stat = "testMatch" })
@@ -278,7 +278,7 @@ function SearchSource.new(context: Context): SearchSource
 	return (self :: any) :: SearchSource
 end
 
--- ROBLOX deviation START: not ported
+-- deviation START: not ported
 -- function SearchSource:_getOrBuildDependencyResolver(): Promise<DependencyResolver>
 -- 	return Promise.resolve():andThen(function()
 -- 		if not self._dependencyResolver then
@@ -291,7 +291,7 @@ end
 -- 		return self._dependencyResolver
 -- 	end)
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 function SearchSource:_filterTestPathsWithStats(allPaths: Array<Test>, testPathPattern: string?): SearchResult
 	local data: { stats: Stats, tests: Array<Test>, total: number } = {
@@ -300,7 +300,7 @@ function SearchSource:_filterTestPathsWithStats(allPaths: Array<Test>, testPathP
 		total = #allPaths,
 	}
 
-	-- ROBLOX FIXME Luau: should be inferred from passed param
+	-- FIXME Luau: should be inferred from passed param
 	local testCases = Array.from(self._testPathCases) :: typeof(self._testPathCases) -- clone
 	if testPathPattern ~= nil and Boolean.toJSBoolean(testPathPattern) then
 		local regex = testPathPatternToRegExp(testPathPattern)
@@ -318,10 +318,10 @@ function SearchSource:_filterTestPathsWithStats(allPaths: Array<Test>, testPathP
 		for _, ref in testCases do
 			local isMatch, stat = ref.isMatch, ref.stat
 			if isMatch(test.path) then
-				-- ROBLOX deviation START: make sure data.stats[stat] is not `nil` before adding 1
+				-- deviation START: make sure data.stats[stat] is not `nil` before adding 1
 				data.stats[stat] = data.stats[stat] or 0
-				-- ROBLOX deviation END
-				-- ROBLOX FIXME Luau: stat is typed as a union of Stat type keys so this should be infered as number?
+				-- deviation END
+				-- FIXME Luau: stat is typed as a union of Stat type keys so this should be infered as number?
 				(data.stats :: { [string]: number })[stat] += 1
 			else
 				filterResult = false
@@ -337,9 +337,9 @@ function SearchSource:_getAllTestPaths(testPathPattern: string?): SearchResult
 	return self:_filterTestPathsWithStats(
 		toTests(
 			self._context,
-			-- ROBLOX deviation START: custom logic for getting all files
+			-- deviation START: custom logic for getting all files
 			getAllFiles(self._context)
-			-- ROBLOX devation END
+			-- devation END
 		),
 		testPathPattern
 	)
@@ -355,7 +355,7 @@ function SearchSource:findMatchingTests(testPathPattern: string?): SearchResult
 	return self:_getAllTestPaths(testPathPattern)
 end
 
--- ROBLOX deviation START: not ported
+-- deviation START: not ported
 -- function SearchSource:findRelatedTests(allPaths: Set<Config_Path>, collectCoverage: boolean): Promise<SearchResult>
 -- 	return Promise.resolve():andThen(function()
 -- 		local dependencyResolver = self:_getOrBuildDependencyResolver():expect()
@@ -459,14 +459,14 @@ end
 -- 		return self:findRelatedTests(changedFiles, collectCoverage)
 -- 	end)
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 function SearchSource:_getTestPaths(
 	globalConfig: Config_GlobalConfig,
 	_changedFiles: ChangedFiles?
 ): Promise<SearchResult>
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: not supported yet
+		-- deviation START: not supported yet
 		-- if globalConfig.onlyChanged then
 		-- 	if not changedFiles then
 		-- 		error(Error.new("Changed files must be set when running with -o."))
@@ -486,7 +486,7 @@ function SearchSource:_getTestPaths(
 		-- elseif globalConfig.findRelatedTests and paths and #paths > 0 then
 		-- 	return self:findRelatedTestsFromPattern(paths, globalConfig.collectCoverage)
 		-- elseif globalConfig.testPathPattern ~= nil then
-		-- ROBLOX deviation END
+		-- deviation END
 		if globalConfig.testPathPattern ~= nil then
 			return self:findMatchingTests(globalConfig.testPathPattern)
 		else
@@ -495,7 +495,7 @@ function SearchSource:_getTestPaths(
 	end)
 end
 
--- ROBLOX deviation START: not ported
+-- deviation START: not ported
 -- function SearchSource:filterPathsWin32(paths: Array<string>): Array<string>
 -- 	local allFiles = self._context.hasteFS:getAllFiles()
 -- 	local options = { nocase = true, windows = false }
@@ -523,7 +523,7 @@ end
 -- 	)
 -- 	return paths
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 function SearchSource:getTestPaths(
 	globalConfig: Config_GlobalConfig,
@@ -531,15 +531,15 @@ function SearchSource:getTestPaths(
 	filter: Filter?
 ): Promise<SearchResult>
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: custom implementation
+		-- deviation START: custom implementation
 		local searchResult = self:_getTestPaths(globalConfig, changedFiles):expect()
-		-- ROBLOX deviation END
+		-- deviation END
 
 		return searchResult
 	end)
 end
 
--- ROBLOX deviation START: not ported
+-- deviation START: not ported
 -- function SearchSource:findRelatedSourcesFromTestsInChangedFiles(changedFilesInfo: ChangedFiles): Promise<Array<string>>
 -- 	return Promise.resolve():andThen(function()
 -- 		if not hasSCM(changedFilesInfo) then
@@ -562,7 +562,7 @@ end
 -- 		return Array.from(relatedSourcesSet)
 -- 	end)
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 exports.default = SearchSource :: SearchSource & SearchSource_statics
 

@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/installCommonGlobals.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/installCommonGlobals.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -7,7 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
--- ROBLOX deviation: returning a function to be able to re-execute the module in tests
+-- deviation: returning a function to be able to re-execute the module in tests
 return function()
 	local CurrentModule = script.Parent
 	local Packages = CurrentModule.Parent
@@ -21,7 +21,7 @@ return function()
 
 	local exports = {}
 
-	-- ROBLOX deviation: fs not necessary
+	-- deviation: fs not necessary
 	-- local fs = require(Packages["graceful-fs"])
 	local typesModule = require(Packages.JestTypes)
 	type Config_ConfigGlobals = typesModule.Config_ConfigGlobals
@@ -36,17 +36,17 @@ return function()
 		globalObject: typeof(_G),
 		globals: Config_ConfigGlobals
 	): typeof(_G) & Config_ConfigGlobals
-		-- ROBLOX deviation: added self to be able to bind DTRACE functions
+		-- deviation: added self to be able to bind DTRACE functions
 		local self = globalObject
 		globalObject.process = createProcessObject()
 		-- Keep a reference to some globals that Jest needs
 		Object.assign(globalObject, {
-			-- ROBLOX deviation START: not making props readonly
-			-- ROBLOX FIXME: have to cast element to `any` to avoid type narrowing issue
+			-- deviation START: not making props readonly
+			-- FIXME: have to cast element to `any` to avoid type narrowing issue
 			[Symbol.for_("jest-native-promise")] = Promise :: any,
 			[Symbol.for_("jest-native-now")] = DateTime.now,
-			-- ROBLOX deviation END
-			-- ROBLOX deviation START: skipped fs related globals
+			-- deviation END
+			-- deviation START: skipped fs related globals
 			-- [Symbol.for_("jest-native-read-file")] = {
 			-- 	enumerable = false,
 			-- 	value = fs.readFileSync:bind(fs),
@@ -62,10 +62,10 @@ return function()
 			-- 	value = fs.existsSync:bind(fs),
 			-- 	writable = false,
 			-- },
-			-- ROBLOX deviation END
-			-- ROBLOX deviation START: not making props readonly
+			-- deviation END
+			-- deviation START: not making props readonly
 			["jest-symbol-do-not-touch"] = Symbol,
-			-- ROBLOX deviation END
+			-- deviation END
 		})
 
 		-- Forward some APIs.

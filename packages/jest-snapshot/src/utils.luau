@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/utils.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -6,7 +6,7 @@
 --  * LICENSE file in the root directory of this source tree.
 --  */
 
--- ROBLOX deviation: for now we have ported a very limited subset of utils that
+-- deviation: for now we have ported a very limited subset of utils that
 -- corresponds to the functions needed by the other translated files. We plan
 -- on filling the rest of utils out as we continue with the jest-snapshot file.
 
@@ -32,7 +32,7 @@ type Array<T> = LuauPolyfill.Array<T>
 
 -- local chalk = require(Packages.ChalkLua)
 
--- ROBLOX TODO: ADO-1633 fix Jest Types imports
+-- TODO: ADO-1633 fix Jest Types imports
 -- local Config = require(Packages.JestTypes).Config
 type ConfigPath = string
 type ConfigSnapshotUpdateState = string
@@ -40,7 +40,7 @@ type ConfigSnapshotUpdateState = string
 local PrettyFormat = require(Packages.PrettyFormat)
 local PrettyFormat_ = require(CurrentModule.PrettyFormat)
 
--- ROBLOX TODO: fix PrettyFormat types imports
+-- TODO: fix PrettyFormat types imports
 type PrettyFormatOptions = PrettyFormat_.OptionsReceived
 local prettyFormat = PrettyFormat.format
 local getSerializers = require(CurrentModule.plugins).getSerializers
@@ -63,7 +63,7 @@ local function writeSnapshotVersion()
 	return "-- Jest Roblox Snapshot v" .. SNAPSHOT_VERSION .. ", " .. SNAPSHOT_GUIDE_LINK
 end
 
--- ROBLOX TODO: ADO-1587, add snapshot version validation
+-- TODO: ADO-1587, add snapshot version validation
 -- local function validateSnapshotVersion(snapshotContents: { [string]: string)
 -- local version = snapshotContents:match(SNAPSHOT_VERSION_REGEXP)
 
@@ -127,19 +127,19 @@ local function keyToTestName(key: string): string
 end
 
 local function getSnapshotData(
-	-- ROBLOX deviation START: using ModuleScript instead of Config_Path
+	-- deviation START: using ModuleScript instead of Config_Path
 	snapshotPath: ModuleScript?,
-	-- ROBLOX deviation END
+	-- deviation END
 	update: ConfigSnapshotUpdateState
 ): { data: SnapshotData, dirty: boolean }
 	local data = {}
 	local dirty = false
 
-	-- ROBLOX deviation: snapshots in Jest Roblox are ModuleScripts, so we require them to load them
+	-- deviation: snapshots in Jest Roblox are ModuleScripts, so we require them to load them
 	pcall(function()
 		data = require(snapshotPath) :: any
 	end)
-	-- ROBLOX deviation: omitted validateSnapshotVersion for now since we will have our own
+	-- deviation: omitted validateSnapshotVersion for now since we will have our own
 	-- snapshot versioning
 	-- local validationResult = validateSnapshotVersion(data)
 	local isInvalid = false -- data and validationResult
@@ -213,19 +213,19 @@ local function deserializeString(stringified: string): string
 	return stringified
 end
 
--- ROBLOX deviation: we don't escape any characters since multiline literals don't
+-- deviation: we don't escape any characters since multiline literals don't
 -- consume escape sequences
 local function escapeBacktickString(str: string): string
 	return str
 end
 
--- ROBLOX deviation: we change from backtick to our literal string delimiter [=[ and ]=]
+-- deviation: we change from backtick to our literal string delimiter [=[ and ]=]
 local function printBacktickString(str: string): string
 	return "[=[\n" .. str .. "]=]"
 end
 
 local function ensureDirectoryExists(filePath: string)
-	-- ROBLOX deviation: gets path of parent directory, GetScriptFilePath can only be called on ModuleScripts
+	-- deviation: gets path of parent directory, GetScriptFilePath can only be called on ModuleScripts
 	local pathComponents = filePath:split("/")
 	pathComponents = table.pack(table.unpack(pathComponents, 1, #pathComponents - 1))
 	local path = table.concat(pathComponents, "/")
@@ -251,7 +251,7 @@ function normalizeNewLines(string_: string)
 	return result
 end
 
--- ROBLOX deviation: taken from http://notebook.kulchenko.com/algorithms/alphanumeric-natural-sorting-for-humans-in-lua
+-- deviation: taken from http://notebook.kulchenko.com/algorithms/alphanumeric-natural-sorting-for-humans-in-lua
 -- as an approximation of naturalCompare for now
 local function alphanumsort(o)
 	local function padnum(d)
@@ -263,7 +263,7 @@ local function alphanumsort(o)
 	return o
 end
 
--- ROBLOX deviation: saves a valid Roblox ModuleScript
+-- deviation: saves a valid Roblox ModuleScript
 local function saveSnapshotFile(snapshotData: SnapshotData, snapshotPath: ConfigPath)
 	local snapshots = {
 		writeSnapshotVersion(),
@@ -274,21 +274,21 @@ local function saveSnapshotFile(snapshotData: SnapshotData, snapshotPath: Config
 		table.insert(
 			snapshots,
 			"exports[ [=["
-				-- ROBLOX deviation: we don't call printBacktickString here since we inline the
+				-- deviation: we don't call printBacktickString here since we inline the
 				-- multiline literal
 				.. escapeBacktickString(key)
 				.. "]=] ] = "
 				.. printBacktickString(normalizeNewLines(snapshotData[key]))
 				.. "\n"
 		)
-		-- ROBLOX deviation: we don't append a semicolon
+		-- deviation: we don't append a semicolon
 	end
 	table.insert(snapshots, "return exports")
 
 	if FileSystemService == nil then
 		FileSystemService = getFileSystemService() or false
 	end
-	-- ROBLOX deviation: error when FileSystemService doesn't exist
+	-- deviation: error when FileSystemService doesn't exist
 	if not FileSystemService then
 		error(Error("Attempting to save snapshots in an environment where FileSystemService is inaccessible."))
 	end
@@ -297,7 +297,7 @@ local function saveSnapshotFile(snapshotData: SnapshotData, snapshotPath: Config
 end
 
 local function deepMergeArray(target: Array<any>, source: Array<any>)
-	-- ROBLOX FIXME Luau: should be inferred from reduce's initial value
+	-- FIXME Luau: should be inferred from reduce's initial value
 	local mergedOutput = Array.from(target) :: typeof(target)
 
 	for index, sourceElement in ipairs(source) do
@@ -343,7 +343,7 @@ function deepMerge(target: any, source: any): any
 	return target
 end
 
--- ROBLOX deviation: added to handle file paths in snapshot/State
+-- deviation: added to handle file paths in snapshot/State
 local function robloxGetParent(path: string, level_: number?): string
 	local level = if level_ then level_ else 0
 
@@ -376,6 +376,6 @@ return {
 	escapeBacktickString = escapeBacktickString,
 	saveSnapshotFile = saveSnapshotFile,
 	deepMerge = deepMerge,
-	-- ROBLOX deviation: not in upstream
+	-- deviation: not in upstream
 	robloxGetParent = robloxGetParent,
 }

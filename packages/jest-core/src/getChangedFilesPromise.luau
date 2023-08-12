@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/getChangedFilesPromise.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/getChangedFilesPromise.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -13,12 +13,12 @@ type Promise<T> = LuauPolyfill.Promise<T>
 
 local exports = {}
 
--- ROBLOX deviation START: skipped unnecessary imports
+-- deviation START: skipped unnecessary imports
 local typesModule = require(Packages.JestTypes)
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 type ChangedFilesPromise = Promise<nil>
--- ROBLOX deviation END
+-- deviation END
 exports.default = function(
 	_globalConfig: Config_GlobalConfig,
 	_configs: Array<Config_ProjectConfig>

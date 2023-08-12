@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/BaseReporter.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/BaseReporter.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -50,13 +50,13 @@ BaseReporter.__index = BaseReporter
 
 function BaseReporter.new(_process: any): BaseReporter
 	local self = setmetatable({}, BaseReporter)
-	-- ROBLOX deviation START: Replace process.stdout/stderr
+	-- deviation START: Replace process.stdout/stderr
 	self._process = Object.assign({}, {
 		env = {},
 		stdout = Writeable.new(),
 		stderr = Writeable.new(),
 	}, _process or {})
-	-- ROBLOX deviation END
+	-- deviation END
 	return (self :: any) :: BaseReporter
 end
 

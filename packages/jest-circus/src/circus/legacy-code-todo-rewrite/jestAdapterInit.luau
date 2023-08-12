@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/legacy-code-todo-rewrite/jestAdapterInit.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/legacy-code-todo-rewrite/jestAdapterInit.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -15,9 +15,9 @@ type Array<T> = LuauPolyfill.Array<T>
 type Promise<T> = LuauPolyfill.Promise<T>
 local Promise = require(Packages.Promise)
 
--- ROBLOX FIXME START: added types and objects that do not exist in Luau
+-- FIXME START: added types and objects that do not exist in Luau
 type NodeJS_Process = any
--- ROBLOX FIXME END
+-- FIXME END
 
 local exports = {}
 
@@ -42,12 +42,12 @@ type Config_Path = typesModule.Config_Path
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 type Global_ConcurrentTestFn = typesModule.Global_ConcurrentTestFn
 type Global_TestFrameworkGlobals = typesModule.Global_TestFrameworkGlobals
--- ROBLOX deviation START: additional types
+-- deviation START: additional types
 type Global_ItBase = typesModule.Global_ItBase
 type Global_ItConcurrentBase = typesModule.Global_ItConcurrentBase
 type Global_ItConcurrent = typesModule.Global_ItConcurrent
 type Global_ItConcurrentExtended = typesModule.Global_ItConcurrentExtended
--- ROBLOX deviation END
+-- deviation END
 local expectModule = require(Packages.Expect)
 local extractExpectedAssertionsErrors = expectModule.extractExpectedAssertionsErrors
 local getState = expectModule.getState
@@ -78,28 +78,28 @@ type Process = NodeJS_Process
 
 type JestGlobals = Global_TestFrameworkGlobals & { expect: Expect, expectExtended: any }
 
--- ROBLOX deviation START: additional deps
+-- deviation START: additional deps
 local RobloxShared = require(Packages.RobloxShared)
 local getRelativePath = RobloxShared.getRelativePath
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: predeclare variables
+-- deviation START: predeclare variables
 local handleSnapshotStateAfterRetry
 local eventHandler
 local _addExpectedAssertionErrors
 local _addSuppressedErrors
--- ROBLOX deviation END
+-- deviation END
 
 local function initialize(
 	ref: {
 		config: Config_ProjectConfig,
 		environment: JestEnvironment,
 		globalConfig: Config_GlobalConfig,
-		-- ROBLOX deviation: no default param
+		-- deviation: no default param
 		localRequire: <T>(path: Config_Path) -> T,
-		-- ROBLOX deviation START: use ModuleScript instead of string
+		-- deviation START: use ModuleScript instead of string
 		testPath: ModuleScript,
-		-- ROBLOX deviation END
+		-- deviation END
 		parentProcess: Process,
 		sendMessageToJest: TestFileEvent?,
 		setGlobalsForRuntime: (globals: JestGlobals) -> (),
@@ -132,7 +132,7 @@ local function initialize(
 		})
 
 		globalsObject.test.concurrent = (function(
-			-- ROBLOX FIXME Luau: this type should be inferred
+			-- FIXME Luau: this type should be inferred
 			test: Global_ItConcurrent
 		): Global_ItConcurrentExtended
 			local function concurrent_(testName: string, testFn: Global_ConcurrentTestFn, timeout: number?)
@@ -148,7 +148,7 @@ local function initialize(
 				-- Avoid triggering the uncaught promise rejection handler in case the test errors before
 				-- being awaited on.
 				promise:catch(function() end);
-				-- ROBLOX FIXME Luau: analyze shouldn't need this cast to Global_ItBase
+				-- FIXME Luau: analyze shouldn't need this cast to Global_ItBase
 				(globalsObject.test :: Global_ItBase)(testName, function()
 					return promise
 				end, timeout)
@@ -232,7 +232,7 @@ local function initialize(
 				type ConfigSnapshotUpdateState = string
 				type SnapshotStateOptions = {
 					updateSnapshot: ConfigSnapshotUpdateState,
-					-- ROBLOX deviation: the function return is defined as any instead of null | Prettier
+					-- deviation: the function return is defined as any instead of null | Prettier
 					-- prettierPath: ConfigPath;
 					expand: boolean?,
 					snapshotFormat: PrettyFormatOptions,
@@ -240,10 +240,10 @@ local function initialize(
 			]]
 			{
 				expand = expand,
-				-- ROBLOX deviation START: not supported
+				-- deviation START: not supported
 				-- prettierPath = config.prettierPath,
 				-- snapshotFormat = config.snapshotFormat,
-				-- ROBLOX deviation END
+				-- deviation END
 				updateSnapshot = updateSnapshot,
 			} :: any
 		)
@@ -316,7 +316,7 @@ local function runAndTransformResultsToJestFormat(ref: {
 		local failureMessage = formatResultsErrors(
 			assertionResults,
 			config,
-			-- ROBLOX FIXME Luau: Config_GlobalConfig contains noStackTrace and noCodeFrame is optional in StackTraceOptions so it should be fine
+			-- FIXME Luau: Config_GlobalConfig contains noStackTrace and noCodeFrame is optional in StackTraceOptions so it should be fine
 			(globalConfig :: any) :: { noStackTrace: boolean, noCodeFrame: boolean? },
 			testPath
 		)
@@ -334,7 +334,7 @@ local function runAndTransformResultsToJestFormat(ref: {
 						return formatExecError(
 							err,
 							config,
-							-- ROBLOX FIXME Luau: Config_GlobalConfig contains noStackTrace and noCodeFrame is optional in StackTraceOptions so it should be fine
+							-- FIXME Luau: Config_GlobalConfig contains noStackTrace and noCodeFrame is optional in StackTraceOptions so it should be fine
 							(globalConfig :: any) :: { noStackTrace: boolean, noCodeFrame: boolean? }
 						)
 					end),

@@ -12,9 +12,9 @@
 	* See the License for the specific language governing permissions and
 	* limitations under the License.
 ]]
--- ROBLOX upstream: no upstream
+-- upstream: no upstream
 
--- ROBLOX Comment: nil value placeholder
+-- Comment: nil value placeholder
 local NIL = newproxy(true)
 local mt = getmetatable(NIL)
 mt.__tostring = function()

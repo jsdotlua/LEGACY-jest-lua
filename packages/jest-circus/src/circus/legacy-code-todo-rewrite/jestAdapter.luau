@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/legacy-code-todo-rewrite/jestAdapter.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/legacy-code-todo-rewrite/jestAdapter.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -23,23 +23,23 @@ type Config_GlobalConfig = typesModule.Config_GlobalConfig
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 local jest_runtimeModule = require(Packages.JestRuntime)
 type Runtime = jest_runtimeModule.Runtime
--- ROBLOX TODO START: not implemented yet
+-- TODO START: not implemented yet
 -- local jest_snapshotModule = require(Packages.JestSnapshot)
 type SnapshotStateType = any -- jest_snapshotModule.SnapshotStateType
--- ROBLOX TODO END
+-- TODO END
 local deepCyclicCopy = require(Packages.JestUtil).deepCyclicCopy
 local FRAMEWORK_INITIALIZER = script.Parent.jestAdapterInit
 
--- ROBLOX deviation START: predeclare variables
+-- deviation START: predeclare variables
 local _addSnapshotData
--- ROBLOX deviation END
+-- deviation END
 
 local function jestAdapter(
 	globalConfig: Config_GlobalConfig,
 	config: Config_ProjectConfig,
 	environment: JestEnvironment,
 	runtime: Runtime,
-	-- ROBLOX deviation: accept ModuleScript instead of string
+	-- deviation: accept ModuleScript instead of string
 	testPath: ModuleScript,
 	sendMessageToJest: TestFileEvent?
 ): Promise<TestResult>
@@ -54,7 +54,7 @@ local function jestAdapter(
 			localRequire = function(...)
 				return runtime:requireModule(...)
 			end,
-			-- ROBLOX TODO: do we need this?
+			-- TODO: do we need this?
 			-- parentProcess = process,
 			sendMessageToJest = sendMessageToJest,
 			setGlobalsForRuntime = function(...)
@@ -64,7 +64,7 @@ local function jestAdapter(
 		}):expect()
 		local globals, snapshotState = ref_.globals, ref_.snapshotState;
 
-		-- ROBLOX deviation START: no modern/legacy timers
+		-- deviation START: no modern/legacy timers
 		(environment.fakeTimers :: any):useFakeTimers()
 		-- if config.timers == "fake" or config.timers == "modern" then
 		-- 	-- during setup, this cannot be null (and it's fine to explode if it is)
@@ -72,7 +72,7 @@ local function jestAdapter(
 		-- elseif config.timers == "legacy" then
 		-- 	(environment.fakeTimers :: any):useFakeTimers()
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
 		globals.beforeEach(function()
 			if config.resetModules then
@@ -94,7 +94,7 @@ local function jestAdapter(
 		end)
 
 		for _, path in config.setupFilesAfterEnv do
-			-- ROBLOX deviation START: no esm modules in Lua
+			-- deviation START: no esm modules in Lua
 			runtime:requireModule(path, nil, nil, nil, true)
 			-- local esm = runtime:unstable_shouldLoadAsEsm(path)
 			-- if esm then
@@ -102,9 +102,9 @@ local function jestAdapter(
 			-- else
 			-- 	runtime:requireModule(path)
 			-- end
-			-- ROBLOX deviation END
+			-- deviation END
 		end
-		-- ROBLOX deviation START: no esm modules in Lua
+		-- deviation START: no esm modules in Lua
 		runtime:requireModule(testPath, nil, nil, nil, true)
 		-- 	local esm = runtime:unstable_shouldLoadAsEsm(testPath)
 
@@ -113,7 +113,7 @@ local function jestAdapter(
 		-- else
 		-- 	runtime:requireModule(testPath)
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
 		local results = runAndTransformResultsToJestFormat({
 			config = config,

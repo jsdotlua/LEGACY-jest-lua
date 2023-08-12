@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/color.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/color.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -11,7 +11,7 @@ local LuauPolyfill = require(Packages.LuauPolyfill)
 type Array<T> = LuauPolyfill.Array<T>
 local exports = {}
 -- local createHash = require(Packages.crypto).createHash
--- ROBLOX deviation START: inline as ChalkLua doesn't export this type
+-- deviation START: inline as ChalkLua doesn't export this type
 -- local chalkModule = require(Packages.chalk)
 type ForegroundColor =
 	"black"
@@ -32,7 +32,7 @@ type ForegroundColor =
 	| "magentaBright"
 	| "cyanBright"
 	| "whiteBright"
--- ROBLOX deviation END
+-- deviation END
 type Color = ForegroundColor
 
 local colors: Array<Color> = { "red", "green", "yellow", "blue", "magenta", "cyan", "white" }
@@ -42,13 +42,13 @@ local function getDisplayNameColor(seed: string?): Color
 		return "white"
 	end
 
-	-- ROBLOX deviation START: randomize color using math.random
+	-- deviation START: randomize color using math.random
 	-- local hash = createHash("sha256")
 	-- hash:update(seed)
 	-- local num = hash:digest():readUInt32LE(0)
 	local num = math.random(#colors)
 	return colors[num]
-	-- ROBLOX deviation END
+	-- deviation END
 end
 exports.getDisplayNameColor = getDisplayNameColor
 

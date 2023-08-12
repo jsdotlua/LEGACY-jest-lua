@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/createProcessObject.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/createProcessObject.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -18,14 +18,14 @@ return {
 	end,
 }
 
--- -- ROBLOX FIXME START: added types and objects that do not exist in Luau
+-- -- FIXME START: added types and objects that do not exist in Luau
 -- type NodeJS_ProcessEnv = any
 -- type NodeJS_Process = any
 
 -- local process = {
 -- 	env = {},
 -- }
--- -- ROBLOX FIXME END
+-- -- FIXME END
 
 -- local CurrentModule = script.Parent
 -- local Packages = CurrentModule.Parent
@@ -41,7 +41,7 @@ return {
 -- local deepCyclicCopy = require(script.Parent.deepCyclicCopy).default
 
 -- local BLACKLIST = Set.new({ "env", "mainModule", "_events" })
--- -- ROBLOX FIXME: make proper platform check
+-- -- FIXME: make proper platform check
 -- -- local isWin32 = process.platform == "win32"
 -- local isWin32 = false -- UserInputService:GetPlatform() == 0
 -- local proto: Record<string, unknown> = Object.getPrototypeOf(process.env)
@@ -99,7 +99,7 @@ return {
 -- 		end
 -- 	end
 
--- 	-- ROBLOX CHECK: what was the intent of the proxy
+-- 	-- CHECK: what was the intent of the proxy
 -- 	local proxy = setmetatable({
 -- 		deleteProperty = (function()
 -- 			if Boolean.toJSBoolean(isWin32) then

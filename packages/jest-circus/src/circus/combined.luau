@@ -1,6 +1,6 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/globalErrorHandlers.ts
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/state.ts
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/eventHandler.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/globalErrorHandlers.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/state.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/eventHandler.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -17,14 +17,14 @@ local Packages = CurrentModule.Parent.Parent
 local typesModule = require(Packages.JestTypes)
 type Circus_EventHandler = typesModule.Circus_EventHandler
 
--- ROBLOX deviation START: predefine common variables
+-- deviation START: predefine common variables
 local dispatchSync
 local eventHandler: Circus_EventHandler
 local injectGlobalErrorHandlers
 local restoreGlobalErrorHandlers
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX FILE START: eventHandler.ts
+-- FILE START: eventHandler.ts
 do
 	local LuauPolyfill = require(Packages.LuauPolyfill)
 	local Array = LuauPolyfill.Array
@@ -48,9 +48,9 @@ do
 		  restoreGlobalErrorHandlers,
 		} from './globalErrorHandlers';
 	]]
-	-- ROBLOX FIXME: resolve cyclic dep
+	-- FIXME: resolve cyclic dep
 	local TEST_TIMEOUT_SYMBOL = require(script.Parent.types).TEST_TIMEOUT_SYMBOL
-	-- ROBLOX FIXME: resolve cyclic dep
+	-- FIXME: resolve cyclic dep
 	local utilsModule = require(script.Parent.utils)
 	local addErrorToEachTestUnderDescribe = utilsModule.addErrorToEachTestUnderDescribe
 	local describeBlockHasTests = utilsModule.describeBlockHasTests
@@ -69,7 +69,7 @@ do
 				event.hook.seenDone = false
 				break
 			elseif event.name == "start_describe_definition" then
-				-- ROBLOX FIXME Luau: requires "type states" feature. need to explicitely type as Circus_BlockMode as Luau doesn't correctly infer the union of singleton types
+				-- FIXME Luau: requires "type states" feature. need to explicitely type as Circus_BlockMode as Luau doesn't correctly infer the union of singleton types
 				local blockName, mode: Circus_BlockMode = event.blockName, event.mode
 				local currentDescribeBlock, currentlyRunningTest =
 					state.currentDescribeBlock, state.currentlyRunningTest
@@ -176,7 +176,7 @@ do
 			elseif event.name == "add_test" then
 				local currentDescribeBlock, currentlyRunningTest, hasStarted =
 					state.currentDescribeBlock, state.currentlyRunningTest, state.hasStarted
-				-- ROBLOX FIXME Luau: requires "type states" feature. need to explicitely type as Circus_BlockMode as Luau doesn't correctly infer the union of singleton types.
+				-- FIXME Luau: requires "type states" feature. need to explicitely type as Circus_BlockMode as Luau doesn't correctly infer the union of singleton types.
 				local asyncError, fn, mode: Circus_BlockMode, name, timeout =
 					event.asyncError, event.fn, event.mode, event.testName, event.timeout
 
@@ -214,7 +214,7 @@ do
 
 				if type == "beforeAll" then
 					invariant(describeBlock, "always present for `*All` hooks")
-					-- ROBLOX FIXME Luau: invariant should assert that describeBlock is not nil
+					-- FIXME Luau: invariant should assert that describeBlock is not nil
 					addErrorToEachTestUnderDescribe(describeBlock :: Circus_DescribeBlock, error_, asyncError)
 				elseif type == "afterAll" then
 					-- Attaching `afterAll` errors to each test makes execution flow
@@ -222,7 +222,7 @@ do
 					table.insert(state.unhandledErrors, { error_, asyncError })
 				else
 					invariant(test, "always present for `*Each` hooks")
-					-- ROBLOX FIXME Luau: invariant should assert that test is not nil
+					-- FIXME Luau: invariant should assert that test is not nil
 					table.insert((test :: Circus_TestEntry).errors, { error_, asyncError })
 				end
 				break
@@ -267,21 +267,21 @@ do
 				-- function to the parent process and register handlers there instead, but
 				-- i'm not sure if this is works. For now i just replicated whatever
 				-- jasmine was doing -- dabramov
-				-- ROBLOX deviation START: no access to parent process and global error handlers in Luau
+				-- deviation START: no access to parent process and global error handlers in Luau
 				-- state.parentProcess = event.parentProcess
 				-- invariant(state.parentProcess)
 				-- state.originalGlobalErrorHandlers = injectGlobalErrorHandlers(state.parentProcess)
-				-- ROBLOX deviation END
+				-- deviation END
 				if Boolean.toJSBoolean(event.testNamePattern) then
 					state.testNamePattern = RegExp(event.testNamePattern, "i")
 				end
 				break
 			elseif event.name == "teardown" then
-				-- ROBLOX deviation START: no access to parent process and global error handlers in Luau
+				-- deviation START: no access to parent process and global error handlers in Luau
 				-- invariant(state.originalGlobalErrorHandlers)
 				-- invariant(state.parentProcess)
 				-- restoreGlobalErrorHandlers(state.parentProcess, state.originalGlobalErrorHandlers)
-				-- ROBLOX deviation END
+				-- deviation END
 				break
 			elseif event.name == "error" then
 				-- It's very likely for long-running async tests to throw errors. In this
@@ -302,14 +302,14 @@ do
 	end
 	exports.eventHandler = eventHandler
 end
--- ROBLOX FILE END
+-- FILE END
 
--- ROBLOX FILE START: globalErrorHandlers.ts
+-- FILE START: globalErrorHandlers.ts
 do
 	local LuauPolyfill = require(Packages.LuauPolyfill)
 	local Array = LuauPolyfill.Array
 
-	-- ROBLOX FIXME START: added types and objects that do not exist in Luau
+	-- FIXME START: added types and objects that do not exist in Luau
 	type NodeJS_UncaughtExceptionListener = any
 	type NodeJS_UnhandledRejectionListener = any
 	type NodeJS_Process = any
@@ -318,7 +318,7 @@ do
 			return {}
 		end,
 	}
-	-- ROBLOX FIXME END
+	-- FIXME END
 	type Circus_GlobalErrorHandlers = typesModule.Circus_GlobalErrorHandlers
 	--[[
 		ROBLOX deviation: merged into this file to avoid circular dependencies
@@ -357,9 +357,9 @@ do
 	end
 	exports.restoreGlobalErrorHandlers = restoreGlobalErrorHandlers
 end
--- ROBLOX FILE END
+-- FILE END
 
--- ROBLOX FILE START: state.ts
+-- FILE START: state.ts
 do
 	local LuauPolyfill = require(Packages.LuauPolyfill)
 	type Array<T> = LuauPolyfill.Array<T>
@@ -376,16 +376,16 @@ do
 		original code:
 		import eventHandler from './eventHandler';
 	]]
-	-- ROBLOX FIXME: resolve cyclic dep
+	-- FIXME: resolve cyclic dep
 	local formatNodeAssertErrors = require(script.Parent.formatNodeAssertErrors).default
-	-- ROBLOX FIXME: resolve cyclic dep
+	-- FIXME: resolve cyclic dep
 	local STATE_SYM = require(script.Parent.types).STATE_SYM
 	local makeDescribe = require(script.Parent.utils).makeDescribe
 	local eventHandlers: Array<Circus_EventHandler> = { eventHandler, formatNodeAssertErrors }
-	-- ROBLOX deviation START: move to `state_.lua` to avoid cyclic dependency
+	-- deviation START: move to `state_.lua` to avoid cyclic dependency
 	local stateCommonModule = require(script.Parent.state_)
 	local ROOT_DESCRIBE_BLOCK_NAME = stateCommonModule.ROOT_DESCRIBE_BLOCK_NAME
-	-- ROBLOX deviation END
+	-- deviation END
 	exports.ROOT_DESCRIBE_BLOCK_NAME = ROOT_DESCRIBE_BLOCK_NAME
 	local function createState(): Circus_State
 		local ROOT_DESCRIBE_BLOCK = makeDescribe(ROOT_DESCRIBE_BLOCK_NAME)
@@ -408,9 +408,9 @@ do
 	end
 	exports.resetState = resetState
 	resetState()
-	-- ROBLOX deviation START: move to `state_.lua` to avoid cyclic dependency
+	-- deviation START: move to `state_.lua` to avoid cyclic dependency
 	local getState = stateCommonModule.getState
-	-- ROBLOX deviation END
+	-- deviation END
 	exports.getState = getState
 	local function setState(state: Circus_State): Circus_State
 		_G[STATE_SYM] = state
@@ -420,22 +420,22 @@ do
 	local function dispatch(event: Circus_AsyncEvent): Promise<nil>
 		return Promise.resolve():andThen(function()
 			for _, handler in ipairs(eventHandlers) do
-				-- ROBLOX deviation START: need to check if value returned is a Promise, otherwise we can't run `:expect()`
-				-- ROBLOX FIXME Luau: need to cast handler explicitely as Luau can't infer from type union properly
+				-- deviation START: need to check if value returned is a Promise, otherwise we can't run `:expect()`
+				-- FIXME Luau: need to cast handler explicitely as Luau can't infer from type union properly
 				local result = (
 					handler :: (self: any, event: Circus_AsyncEvent, state: Circus_State) -> nil | Promise<nil>
 				)(nil, event, getState())
 				if result ~= nil then
 					result:expect()
 				end
-				-- ROBLOX deviation END
+				-- deviation END
 			end
 		end)
 	end
 	exports.dispatch = dispatch
 	function dispatchSync(event: Circus_SyncEvent): ()
 		for _, handler in ipairs(eventHandlers) do
-			-- ROBLOX FIXME Luau: need to cast handler explicitely as Luau can't infer from type union properly
+			-- FIXME Luau: need to cast handler explicitely as Luau can't infer from type union properly
 			(handler :: (self: any, event: Circus_SyncEvent, state: Circus_State) -> ())(nil, event, getState())
 		end
 	end
@@ -445,6 +445,6 @@ do
 	end
 	exports.addEventHandler = addEventHandler
 end
--- ROBLOX FILE END
+-- FILE END
 
 return exports

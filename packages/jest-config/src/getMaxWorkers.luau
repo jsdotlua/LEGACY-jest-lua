@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/getMaxWorkers.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/getMaxWorkers.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -8,29 +8,29 @@
 
 local Packages = script.Parent.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
--- ROBLOX deviation START: no needed
+-- deviation START: no needed
 -- local Boolean = LuauPolyfill.Boolean
--- ROBLOX deviation END
+-- deviation END
 type Object = LuauPolyfill.Object
 
 local exports = {}
 
--- ROBLOX deviation START: no needed
+-- deviation START: no needed
 -- local cpus = require(Packages.os).cpus
--- ROBLOX deviation END
+-- deviation END
 local typesModule = require(Packages.JestTypes)
 type Config_Argv = typesModule.Config_Argv
 
--- ROBLOX deviation START: additional types
+-- deviation START: additional types
 type Partial<U> = Object
 type Pick<U, V> = Object
--- ROBLOX deviation END
+-- deviation END
 
 local function getMaxWorkers(
 	argv: Partial<Pick<Config_Argv, "maxWorkers" | "runInBand" | "watch" | "watchAll">>,
 	defaultOptions: Partial<Pick<Config_Argv, "maxWorkers">>?
 ): number
-	-- ROBLOX deviation START: no concurrent run allowed
+	-- deviation START: no concurrent run allowed
 	return 1
 	-- if Boolean.toJSBoolean(argv.runInBand) then
 	-- 	return 1
@@ -55,11 +55,11 @@ local function getMaxWorkers(
 	-- 		1
 	-- 	)
 	-- end
-	-- ROBLOX deviation END
+	-- deviation END
 end
 exports.default = getMaxWorkers
 
--- ROBLOX deviation START: no needed
+-- deviation START: no needed
 -- local function parseWorkers(maxWorkers: string | number): number
 -- 	local parsed = tonumber(tostring(maxWorkers), 10)
 -- 	if
@@ -83,6 +83,6 @@ exports.default = getMaxWorkers
 -- 	end
 -- 	return if parsed > 0 then parsed else 1
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 return exports

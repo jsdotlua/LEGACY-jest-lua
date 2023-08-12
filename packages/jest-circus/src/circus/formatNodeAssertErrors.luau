@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/formatNodeAssertErrors.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/formatNodeAssertErrors.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -13,12 +13,12 @@ local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 local instanceof = LuauPolyfill.instanceof
 
--- ROBLOX deviation START: additional dependencies
+-- deviation START: additional dependencies
 local RobloxShared = require(Packages.RobloxShared)
 local escapePatternCharacters = RobloxShared.escapePatternCharacters
 local normalizePromiseError = RobloxShared.normalizePromiseError
 local Error = LuauPolyfill.Error
--- ROBLOX deviation END
+-- deviation END
 
 type Record<K, T> = { [K]: T }
 
@@ -37,7 +37,7 @@ local printExpected = jestMatcherUtilsModule.printExpected
 local printReceived = jestMatcherUtilsModule.printReceived
 local prettyFormat = require(Packages.PrettyFormat).format
 
--- ROBLOX deviation START: predefine variables
+-- deviation START: predefine variables
 local formatNodeAssertErrors
 local getOperatorName
 local operatorMessage
@@ -46,7 +46,7 @@ local assertMatcherHint
 local assertionErrorMessage
 local isAssertionError
 local buildHintString
--- ROBLOX deviation END
+-- deviation END
 
 type AssertionErrorWithStack = AssertionError & { stack: string }
 
@@ -77,19 +77,19 @@ function formatNodeAssertErrors(_self: any, event: Circus_Event, state: Circus_S
 
 				if originalError == nil then
 					error_ = asyncError
-					-- ROBLOX deviation START: additional logic to handle Promise library error
+					-- deviation START: additional logic to handle Promise library error
 				elseif originalError.kind == "ExecutionError" then
 					error_ = normalizePromiseError(originalError)
-					-- ROBLOX deviation END
+					-- deviation END
 				elseif not Boolean.toJSBoolean(originalError.stack) then
 					error_ = asyncError
 
 					error_.message = if Boolean.toJSBoolean(originalError.message)
 						then originalError.message
 						else ("thrown: %s"):format(prettyFormat(originalError, { maxDepth = 3 }))
-					-- ROBLOX deviation START: add __recalculateStacktrace after message has been altered
+					-- deviation START: add __recalculateStacktrace after message has been altered
 					Error.__recalculateStacktrace(error_)
-					-- ROBLOX deviation END
+					-- deviation END
 				else
 					error_ = originalError
 				end
@@ -160,12 +160,12 @@ function assertionErrorMessage(error_, options: DiffOptions)
 	local diffString = diff(expected, actual, options)
 	local hasCustomMessage = not Boolean.toJSBoolean(generatedMessage)
 	local operatorName = getOperatorName(operator, stack)
-	-- ROBLOX deviation START: adjust replace pattern to work with gsub
+	-- deviation START: adjust replace pattern to work with gsub
 	local escapedMessage = escapePatternCharacters(message)
 	local rep1 = stack:gsub(escapedMessage, "", 1)
 	local rep2 = rep1:gsub("^AssertionError([^\n]*)", "")
 	local trimmedStack = rep2:gsub("^Error([^\n]*)", "")
-	-- ROBLOX deviation END
+	-- deviation END
 
 	if operatorName == "doesNotThrow" then
 		return buildHintString(assertThrowingMatcherHint(operatorName))

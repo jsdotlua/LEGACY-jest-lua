@@ -12,7 +12,7 @@
 	* See the License for the specific language governing permissions and
 	* limitations under the License.
 ]]
--- ROBLOX NOTE: no upstream
+-- NOTE: no upstream
 local srcWorkspace = script.Parent
 local rootWorkspace = srcWorkspace.Parent
 local Packages = rootWorkspace

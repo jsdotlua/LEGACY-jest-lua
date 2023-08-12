@@ -1,5 +1,5 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/__tests__/matchers.test.js
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/__tests__/matchers.test.js
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/utils.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -23,17 +23,17 @@ type Array<T> = LuauPolyfill.Array<T>
 type Table = { [any]: any }
 type Tester = (any, any) -> any
 
--- ROBLOX MOVED: expect/jasmineUtils.lua
+-- MOVED: expect/jasmineUtils.lua
 local function hasKey(obj: any, key: string)
 	return rawget(obj, key) ~= nil
 end
 
--- ROBLOX MOVED: expect/jasmineUtils.lua
+-- MOVED: expect/jasmineUtils.lua
 local function hasDefinedKey(obj: any, key: string)
 	return hasKey(obj, key)
 end
 
--- ROBLOX MOVED: expect/jasmineUtils.lua
+-- MOVED: expect/jasmineUtils.lua
 local function keys(obj: Table, _hasKey: (Table, string) -> boolean)
 	local keys_ = {}
 	for key in pairs(obj) do
@@ -42,7 +42,7 @@ local function keys(obj: Table, _hasKey: (Table, string) -> boolean)
 		end
 	end
 
-	-- ROBLOX deviation: code omitted for adding 'extraKeys' since we don't have
+	-- deviation: code omitted for adding 'extraKeys' since we don't have
 	-- similar concerns of overlooking symbols and non-numeric properties for
 	-- arrays
 
@@ -51,12 +51,12 @@ local function keys(obj: Table, _hasKey: (Table, string) -> boolean)
 	return keys_
 end
 
--- ROBLOX MOVED: expect/jasmineUtils.lua
+-- MOVED: expect/jasmineUtils.lua
 local function isA(typeName: string, value: any)
 	return getType(value) == typeName
 end
 
--- ROBLOX MOVED: expect/jasmineUtils.lua
+-- MOVED: expect/jasmineUtils.lua
 local function isAsymmetric(obj: any)
 	if toJSBoolean(obj) and typeof(obj) == "table" then
 		local ok, val = pcall(function()
@@ -69,7 +69,7 @@ local function isAsymmetric(obj: any)
 	return false
 end
 
--- ROBLOX MOVED: expect/jasmineUtils.lua
+-- MOVED: expect/jasmineUtils.lua
 local function asymmetricMatch(a: any, b: any)
 	local asymmetricA = isAsymmetric(a)
 	local asymmetricB = isAsymmetric(b)
@@ -89,7 +89,7 @@ local function asymmetricMatch(a: any, b: any)
 	return nil
 end
 
--- ROBLOX MOVED: expect/jasmineUtils.lua
+-- MOVED: expect/jasmineUtils.lua
 -- Equality function lovingly adapted from isEqual in
 --   [Underscore](http://underscorejs.org)
 local function eq(
@@ -114,17 +114,17 @@ local function eq(
 		end
 	end
 
-	-- ROBLOX deviation: code omitted because there are no error objects in Lua
+	-- deviation: code omitted because there are no error objects in Lua
 
 	if Object.is(a, b) then
 		return true
 	end
 
-	-- ROBLOX deviation: code omitted that does strict comparison because we don't
+	-- deviation: code omitted that does strict comparison because we don't
 	-- have similar concerns in Lua where there are no distinct 'null' and
 	-- 'undefined' types
 
-	-- ROBLOX deviation: as part of the upstream className check, a type difference of
+	-- deviation: as part of the upstream className check, a type difference of
 	-- array/non-array would be detected so we add this in manually
 	local className = getType(a)
 	if className ~= getType(b) then
@@ -133,7 +133,7 @@ local function eq(
 		return false
 	end
 
-	-- ROBLOX deviation: code omitted for elseif case with regular expressions since
+	-- deviation: code omitted for elseif case with regular expressions since
 	-- Lua doesn't have a built in regular expression type
 
 	if className == "boolean" or className == "string" or className == "number" or className == "userdata" then
@@ -210,14 +210,14 @@ local function eq(
 	return result
 end
 
--- ROBLOX MOVED: expect/jasmineUtils.lua
+-- MOVED: expect/jasmineUtils.lua
 local function equals(a: any, b: any, customTesters: Array<Tester>?, strictCheck: boolean?): boolean
 	customTesters = customTesters or {}
 	strictCheck = strictCheck or false
 	return eq(a, b, {}, {}, customTesters :: Array<Tester>, strictCheck and hasKey or hasDefinedKey)
 end
 
--- ROBLOX MOVED: expect/utils.lua
+-- MOVED: expect/utils.lua
 local function hasPropertyInObject(object: any, key: string): boolean
 	-- We don't have to deal with the complexities around prototype chains in
 	-- javascript since a simple key access will look up the
@@ -231,17 +231,17 @@ local function hasPropertyInObject(object: any, key: string): boolean
 	return object[key] ~= nil
 end
 
--- ROBLOX MOVED: expect/utils.lua
+-- MOVED: expect/utils.lua
 local function isObject(a: any)
 	return a ~= nil and typeof(a) == "table"
 end
 
--- ROBLOX MOVED: expect/utils.lua
+-- MOVED: expect/utils.lua
 local function isObjectWithKeys(a: any)
 	return isObject(a) and (next(a) == nil or not Array.isArray(a))
 end
 
--- ROBLOX MOVED: expect/utils.lua
+-- MOVED: expect/utils.lua
 local function iterableEquality(a: any, b: any, aStack_: Array<any>?, bStack_: Array<any>?): boolean | nil
 	local aStack = (aStack_ or {}) :: Array<any>
 	local bStack = (bStack_ or {}) :: Array<any>
@@ -250,7 +250,7 @@ local function iterableEquality(a: any, b: any, aStack_: Array<any>?, bStack_: A
 		return nil
 	end
 
-	-- ROBLOX deviation: omitting constructor check
+	-- deviation: omitting constructor check
 
 	local length = #aStack
 	while length > 0 do
@@ -262,7 +262,7 @@ local function iterableEquality(a: any, b: any, aStack_: Array<any>?, bStack_: A
 			return bStack[length] == b
 		end
 
-		-- ROBLOX deviation: this if check is not included in upstream
+		-- deviation: this if check is not included in upstream
 		-- if bStack[length] == b then
 		-- 	return aStack[length] == a
 		-- end
@@ -277,7 +277,7 @@ local function iterableEquality(a: any, b: any, aStack_: Array<any>?, bStack_: A
 		return iterableEquality(localA, localB, { unpack(aStack) }, { unpack(bStack) })
 	end
 
-	-- ROBLOX TODO: (ADO-1217) If we eventually have a Map polyfill, we can
+	-- TODO: (ADO-1217) If we eventually have a Map polyfill, we can
 	-- expand this to include the Map case as well
 	if a.size ~= nil then
 		if a.size ~= b.size then
@@ -308,11 +308,11 @@ local function iterableEquality(a: any, b: any, aStack_: Array<any>?, bStack_: A
 
 	return nil
 
-	-- ROBLOX deviation: omitted section of code for handling the case of a different
+	-- deviation: omitted section of code for handling the case of a different
 	-- kind of iterable not covered by the above Set case
 end
 
--- ROBLOX MOVED: expect/utils.lua
+-- MOVED: expect/utils.lua
 local function subsetEquality(object: any, subset: any): boolean | nil
 	-- subsetEquality needs to keep track of the references
 	-- it has already visited to avoid infinite loops in case
@@ -365,8 +365,8 @@ local function subsetEquality(object: any, subset: any): boolean | nil
 	return subsetEqualityWithContext()(object, subset)
 end
 
--- ROBLOX MOVED: expect/utils.lua
--- ROBLOX TODO: (LUAU) Add seenReferences type annotation once Luau can
+-- MOVED: expect/utils.lua
+-- TODO: (LUAU) Add seenReferences type annotation once Luau can
 -- recognize that the seenReferences or {} is sufficient to make seenReferences
 -- non-nil
 local function getObjectSubset(object: any, subset: any, seenReferences_: { [Object]: boolean }?): any

@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/jestMatchersObject.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/jestMatchersObject.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -24,7 +24,7 @@ type MatchersObject<T> = Types.MatchersObject<T>
 local jestMatchersObject_extracted = require(CurrentModule.jestMatchersObject_extracted)
 -- Global matchers object holds the list of available matchers and
 -- the state, that can hold matcher specific values that change over time.
--- ROBLOX deviation: extracted JEST_MATCHERS_OBJECT to jestMatchersObject_extracted to avoid circular dependency
+-- deviation: extracted JEST_MATCHERS_OBJECT to jestMatchersObject_extracted to avoid circular dependency
 local JEST_MATCHERS_OBJECT = jestMatchersObject_extracted.JEST_MATCHERS_OBJECT
 
 -- Notes a built-in/internal Jest matcher.
@@ -45,7 +45,7 @@ if not _G[JEST_MATCHERS_OBJECT] then
 	}
 end
 
--- ROBLOX deviation: extracted getState to jestMatchersObject_extracted to avoid circular dependency
+-- deviation: extracted getState to jestMatchersObject_extracted to avoid circular dependency
 local getState = jestMatchersObject_extracted.getState
 
 --[[
@@ -68,7 +68,7 @@ local function getMatchers<State>(): MatchersObject<State>
 	return _G[JEST_MATCHERS_OBJECT].matchers
 end
 
--- ROBLOX deviation: matchers does not have MatchersObject type annotation and expect
+-- deviation: matchers does not have MatchersObject type annotation and expect
 -- does not have Expect type annotation
 --[[
 	ROBLOX TODO: add default generic param when possible
@@ -77,7 +77,7 @@ end
 ]]
 local function setMatchers<State>(matchers: MatchersObject<State>, isInternal: boolean, expect: Expect): ()
 	for key, matcher in pairs(matchers) do
-		-- ROBLOX TODO: assign INTERNAL_MATCHER_FLAG to matchers
+		-- TODO: assign INTERNAL_MATCHER_FLAG to matchers
 		if not isInternal then
 			local CustomMatcher = {}
 			CustomMatcher.__index = CustomMatcher
@@ -119,7 +119,7 @@ local function setMatchers<State>(matchers: MatchersObject<State>, isInternal: b
 				return string.format("%s<%s>", self:toString(), printval)
 			end;
 
-			-- ROBLOX deviation start: there is not Object.defineProperty equivalent in Lua
+			-- deviation start: there is not Object.defineProperty equivalent in Lua
 			(expect :: any)[key] = function(...)
 				return CustomMatcher.new(false, ...)
 			end
@@ -129,7 +129,7 @@ local function setMatchers<State>(matchers: MatchersObject<State>, isInternal: b
 			expect.never[key] = function(...)
 				return CustomMatcher.new(true, ...)
 			end
-			-- ROBLOX deviation end
+			-- deviation end
 		end
 	end
 

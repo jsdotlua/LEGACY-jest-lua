@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/index.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -54,7 +54,7 @@ local function install(
 	test.skip = bind(if g.test then g.test.skip else nil)(table_, table.unpack(data))
 	test.only = bind(if g.test then g.test.only else nil)(table_, table.unpack(data))
 
-	-- ROBLOX TODO: concurrent not available
+	-- TODO: concurrent not available
 	-- local testConcurrent = setmetatable({
 	-- }, {
 	-- 	__call = function(_self, title: string, test: Global_EachTestFn<Global_TestFn>, timeout: number?)
@@ -74,7 +74,7 @@ local function install(
 	it.skip = bind(if g.it then g.it.skip else nil)(table_, table.unpack(data))
 	it.only = bind(if g.it then g.it.only else nil)(table_, table.unpack(data))
 
-	-- ROBLOX TODO: concurrent not available
+	-- TODO: concurrent not available
 	-- it.concurrent = testConcurrent;
 
 	local xit = bind(g.xit)(table_, table.unpack(data))
@@ -93,14 +93,14 @@ local function install(
 	local fdescribe = bind(g.fdescribe, false)(table_, table.unpack(data))
 	local xdescribe = bind(g.xdescribe, false)(table_, table.unpack(data))
 
-	-- ROBLOX deviation START: support testEZ methods
+	-- deviation START: support testEZ methods
 	local testSKIP = bind(g.testSKIP)(table_, table.unpack(data))
 	local testFOCUS = bind(g.testFOCUS)(table_, table.unpack(data))
 	local itSKIP = bind(g.itSKIP)(table_, table.unpack(data))
 	local itFOCUS = bind(g.itFOCUS)(table_, table.unpack(data))
 	local describeSKIP = bind(g.describeSKIP, false)(table_, table.unpack(data))
 	local describeFOCUS = bind(g.describeFOCUS, false)(table_, table.unpack(data))
-	-- ROBLOX deviation END
+	-- deviation END
 
 	return {
 		describe = describe,
@@ -111,18 +111,18 @@ local function install(
 		xdescribe = xdescribe,
 		xit = xit,
 		xtest = xtest,
-		-- ROBLOX deviation START: support TestEZ methods
+		-- deviation START: support TestEZ methods
 		describeSKIP = describeSKIP,
 		describeFOCUS = describeFOCUS,
 		itSKIP = itSKIP,
 		itFOCUS = itFOCUS,
 		testSKIP = testSKIP,
 		testFOCUS = testFOCUS,
-		-- ROBLOX deviation END
+		-- deviation END
 	}
 end
 
--- ROBLOX deviation START: handle template data
+-- deviation START: handle template data
 local function maybeHandleTemplateString(table_: any): Global_EachTable
 	if typeof(table_) == "string" then
 		local templateString = table_ :: string
@@ -164,9 +164,9 @@ local function maybeHandleTemplateString(table_: any): Global_EachTable
 		return table_
 	end
 end
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation: wrap in function to pass jests methods (it, describe, etc)
+-- deviation: wrap in function to pass jests methods (it, describe, etc)
 local each = function(jestMethods_: Object?)
 	local jestMethods = (if jestMethods_ ~= nil then jestMethods_ else {}) :: Object
 	--[[
@@ -183,7 +183,7 @@ local each = function(jestMethods_: Object?)
 			})
 			else maybeMethod
 	end)
-	-- ROBLOX deviation END
+	-- deviation END
 	return setmetatable({
 		withGlobal = function(g: Global)
 			return function(table_: Global_EachTable, ...)
@@ -192,7 +192,7 @@ local each = function(jestMethods_: Object?)
 		end,
 	}, {
 		__call = function(_self, table_: Global_EachTable, ...): ReturnType<typeof(install)>
-			-- ROBLOX deviation: jestMethods, are passed as parameters, not taken from global
+			-- deviation: jestMethods, are passed as parameters, not taken from global
 			return install(jestMethods :: Global, maybeHandleTemplateString(table_), ...)
 		end,
 	})

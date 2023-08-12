@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-console/src/CustomConsole.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-console/src/CustomConsole.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -18,7 +18,7 @@ local Boolean = LuauPolyfill.Boolean
 local inspect = LuauPolyfill.util.inspect
 type Error = LuauPolyfill.Error
 
--- ROBLOX deviation START: use custom implementations instead of unavailable node API
+-- deviation START: use custom implementations instead of unavailable node API
 local helpersModule = require(CurrentModule.helpers)
 local format = helpersModule.format
 local formatWithOptions = helpersModule.formatWithOptions
@@ -27,7 +27,7 @@ local RobloxShared = require(Packages.RobloxShared)
 type Writeable = RobloxShared.Writeable
 type NodeJS_WriteStream = RobloxShared.NodeJS_WriteStream
 
--- ROBLOX deviation END
+-- deviation END
 
 local chalk = require(Packages.ChalkLua)
 
@@ -77,7 +77,7 @@ type CustomConsolePrivate = CustomConsole & {
 	_write: (self: CustomConsole, type: string, value: string) -> (),
 }
 
--- ROBLOX FIXME LUAU: Casting to any to prevent unwanted type narrowing
+-- FIXME LUAU: Casting to any to prevent unwanted type narrowing
 local CustomConsole = setmetatable({}, { __index = Console }) :: any
 CustomConsole.__index = CustomConsole
 
@@ -109,13 +109,13 @@ end
 
 function CustomConsole._log(self: CustomConsolePrivate, type: LogType, message: string)
 	clearLine(self._stdout);
-	-- ROBLOX FIXME: Find a better way to handle super calls
+	-- FIXME: Find a better way to handle super calls
 	(Console.log :: any)(self, self._formatBuffer(type, ("  "):rep(self._groupDepth) .. message))
 end
 
 function CustomConsole._logError(self: CustomConsolePrivate, type: LogType, message: string)
 	clearLine(self._stderr);
-	-- ROBLOX FIXME: Find a better way to handle super calls
+	-- FIXME: Find a better way to handle super calls
 	(Console.error :: any)(self, self._formatBuffer(type, ("  "):rep(self._groupDepth) .. message))
 end
 

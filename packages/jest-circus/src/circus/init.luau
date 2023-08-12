@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/index.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -9,17 +9,17 @@
 local CurrentModule = script
 local Packages = CurrentModule.Parent.Parent
 
--- ROBLOX FIXME
+-- FIXME
 type FIXME_ANALYZE = any
 
--- ROBLOX deviation START: predefine variables
+-- deviation START: predefine variables
 local _dispatchDescribe: (
 	blockFn: Circus_BlockFn,
 	blockName: Circus_BlockName,
 	describeFn: DescribeFn,
 	mode: Circus_BlockMode?
 ) -> ()
--- ROBLOX deviation END
+-- deviation END
 local exports = {}
 local typesModule = require(Packages.JestTypes)
 type Circus_HookFn = typesModule.Circus_HookFn
@@ -72,18 +72,18 @@ local describe = (function()
 	})
 
 	describe.each = bindEach(
-		-- ROBLOX FIXME: callable table can't be converted to a function
+		-- FIXME: callable table can't be converted to a function
 		describe :: FIXME_ANALYZE,
 		false
 	)
 
 	only.each = bindEach(
-		-- ROBLOX FIXME: callable table can't be converted to a function
+		-- FIXME: callable table can't be converted to a function
 		only :: FIXME_ANALYZE,
 		false
 	)
 	skip.each = bindEach(
-		-- ROBLOX FIXME: callable table can't be converted to a function
+		-- FIXME: callable table can't be converted to a function
 		skip :: FIXME_ANALYZE,
 		false
 	)
@@ -98,12 +98,12 @@ function _dispatchDescribe(
 	blockFn: Circus_BlockFn,
 	blockName: Circus_BlockName,
 	describeFn: DescribeFn,
-	-- ROBLOX FIXME Luau: can't type it properly as `Circus_BlockMode` because for some reason it conflicts with a predefined value type.
+	-- FIXME Luau: can't type it properly as `Circus_BlockMode` because for some reason it conflicts with a predefined value type.
 	mode: any?
 ): ()
 	local asyncError = ErrorWithStack.new(
 		nil,
-		-- ROBLOX FIXME: callable table can't be converted to a function
+		-- FIXME: callable table can't be converted to a function
 		describeFn :: FIXME_ANALYZE
 	)
 	if blockFn == nil then
@@ -120,18 +120,18 @@ function _dispatchDescribe(
 		mode = mode,
 		name = "start_describe_definition",
 	})
-	-- ROBLOX deviation: casting to any as this is runtime check that is not allowed by type
+	-- deviation: casting to any as this is runtime check that is not allowed by type
 	local describeReturn = blockFn() :: any
 	if isPromise(describeReturn) then
 		error(ErrorWithStack.new(
 			'Returning a Promise from "describe" is not supported. Tests must be defined synchronously.',
-			-- ROBLOX FIXME: callable table can't be converted to a function
+			-- FIXME: callable table can't be converted to a function
 			describeFn :: FIXME_ANALYZE
 		))
 	elseif describeReturn ~= nil then
 		error(ErrorWithStack.new(
 			'A "describe" callback must not return a value.',
-			-- ROBLOX FIXME: callable table can't be converted to a function
+			-- FIXME: callable table can't be converted to a function
 			describeFn :: FIXME_ANALYZE
 		))
 	end
@@ -172,7 +172,7 @@ function afterAll(fn, timeout)
 end
 
 local test: Global_It = (function()
-	-- ROBLOX deviation START: predefine variables
+	-- deviation START: predefine variables
 	local _addTest: (
 		testName: Circus_TestName,
 		mode: Circus_TestMode,
@@ -180,7 +180,7 @@ local test: Global_It = (function()
 		testFn: (testName: Circus_TestName, fn: Circus_TestFn, timeout: number?) -> (),
 		timeout: number?
 	) -> ()
-	-- ROBLOX deviation END
+	-- deviation END
 	local test: FIXME_ANALYZE
 	test = setmetatable({}, {
 		__call = function(_self: any, testName: Circus_TestName, fn: Circus_TestFn, timeout: number?): ()
@@ -218,7 +218,7 @@ local test: Global_It = (function()
 		local asyncError = ErrorWithStack.new(nil, testFn)
 		if typeof(testName) ~= "string" then
 			asyncError.message = ("Invalid first argument, %s. It must be a string."):format(
-				-- ROBLOX deviation: using prettyFormat to output useful error information
+				-- deviation: using prettyFormat to output useful error information
 				prettyFormat(testName)
 			)
 			error(asyncError)
@@ -236,7 +236,7 @@ local test: Global_It = (function()
 			asyncError = asyncError,
 			fn = fn,
 			mode = mode,
-			-- ROBLOX FIXME Luau: roblox-cli doesn't recognize this type as one of the SyncEvent union members
+			-- FIXME Luau: roblox-cli doesn't recognize this type as one of the SyncEvent union members
 			name = "add_test" :: any,
 			testName = testName,
 			timeout = timeout,
@@ -249,7 +249,7 @@ local test: Global_It = (function()
 	test.skip = skip
 	return test
 end)()
--- ROBLOX FIXME Luau: Argument #4 type is not compatible. Type '(string | string | string)?' could not be converted into '("only" | "skip" | "todo")?'
+-- FIXME Luau: Argument #4 type is not compatible. Type '(string | string | string)?' could not be converted into '("only" | "skip" | "todo")?'
 local it: Global_It = test :: FIXME_ANALYZE
 export type Event = Circus_Event
 export type State = Circus_State

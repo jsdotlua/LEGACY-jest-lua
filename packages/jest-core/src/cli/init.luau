@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/cli/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/cli/index.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -19,11 +19,11 @@ local Promise = require(Packages.Promise)
 local exports = {}
 
 local chalk = require(Packages.ChalkLua)
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local exit = require(Packages.exit)
 -- local rimraf = require(Packages.rimraf)
 -- local CustomConsole = require(Packages.JestConsole).CustomConsole
--- ROBLOX deviation END
+-- deviation END
 local test_resultModule = require(Packages.JestTestResult)
 type AggregatedResult = test_resultModule.AggregatedResult
 local jestTypesModule = require(Packages.JestTypes)
@@ -31,7 +31,7 @@ type Config_Argv = jestTypesModule.Config_Argv
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
 type Config_Path = jestTypesModule.Config_Path
 type Config_ProjectConfig = jestTypesModule.Config_ProjectConfig
--- ROBLOX deviation START: not used
+-- deviation START: not used
 -- local jest_changed_filesModule = require(Packages["jest-changed-files"])
 -- type ChangedFilesPromise = jest_changed_filesModule.ChangedFilesPromise
 type ChangedFilesPromise = Promise<any>
@@ -39,13 +39,13 @@ local readConfigs = require(Packages.JestConfig).readConfigs
 -- local jest_haste_mapModule = require(Packages["jest-haste-map"])
 -- type HasteMap = jest_haste_mapModule.default
 type HasteMap = any
--- ROBLOX deviation END
+-- deviation END
 local Runtime = require(Packages.JestRuntime)
 type Context = Runtime.Context
 local jest_utilModule = require(Packages.JestUtil)
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local createDirectory = jest_utilModule.createDirectory
--- ROBLOX deviation END
+-- deviation END
 local preRunMessage = jest_utilModule.preRunMessage
 local TestWatcher = require(script.Parent.TestWatcher).default
 local formatHandleErrors = require(script.Parent.collectHandles).formatHandleErrors
@@ -54,38 +54,38 @@ local getConfigsOfProjectsToRun = require(script.Parent.getConfigsOfProjectsToRu
 local getProjectNamesMissingWarning = require(script.Parent.getProjectNamesMissingWarning).default
 local getSelectProjectsMessage = require(script.Parent.getSelectProjectsMessage).default
 local createContext = require(script.Parent.lib.createContext).default
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local handleDeprecationWarnings = require(script.Parent.lib.handleDeprecationWarnings).default
--- ROBLOX deviation END
+-- deviation END
 local logDebugMessages = require(script.Parent.lib.logDebugMessages).default
 local pluralize = require(script.Parent.pluralize).default
 local runJest = require(script.Parent.runJest).default
 local typesModule = require(script.Parent.types)
 type Filter = typesModule.Filter
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local watch = require(script.Parent.watch).default
--- ROBLOX deviation END
+-- deviation END
 local preRunMessagePrint = preRunMessage.print
 
 type OnCompleteCallback = (results: AggregatedResult) -> ...nil
 
--- ROBLOX deviation START: added missing variables to limit nr deviations
+-- deviation START: added missing variables to limit nr deviations
 local RobloxShared = require(Packages.RobloxShared)
 local nodeUtils = RobloxShared.nodeUtils
 local process = nodeUtils.process
 local exit = nodeUtils.exit
 type NodeJS_WriteStream = RobloxShared.NodeJS_WriteStream
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: predefine functions
+-- deviation START: predefine functions
 local _run10000
 local runWithoutWatch
--- ROBLOX deviation END
+-- deviation END
 
 local function runCLI(
 	cwdInstance: Instance,
 	argv: Config_Argv,
-	-- ROBLOX deviation: using Instance instead of Config_Path
+	-- deviation: using Instance instead of Config_Path
 	projects: Array<Instance>
 ): Promise<{ results: AggregatedResult, globalConfig: Config_GlobalConfig }>
 	return Promise.resolve():andThen(function()
@@ -109,7 +109,7 @@ local function runCLI(
 			exit(0)
 		end
 
-		-- ROBLOX deviation START: no cache support
+		-- deviation START: no cache support
 		-- if argv.clearCache then
 		-- 	Array.forEach(configs, function(config)
 		-- 		rimraf:sync(config.cacheDirectory)
@@ -118,7 +118,7 @@ local function runCLI(
 		--
 		-- 	exit(0)
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 
 		local configsOfProjectsToRun = configs
 		if Boolean.toJSBoolean(argv.selectProjects) then
@@ -172,7 +172,7 @@ local function buildContextsAndHasteMaps(
 	_outputStream: NodeJS_WriteStream
 )
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: no haste maps support
+		-- deviation START: no haste maps support
 		-- local hasteMapInstances = {}
 		local contexts = Promise.all(Array.map(configs, function(config, index)
 			return Promise.resolve():andThen(function()
@@ -192,7 +192,7 @@ local function buildContextsAndHasteMaps(
 			contexts = contexts,
 			-- hasteMapInstances = hasteMapInstances,
 		}
-		-- ROBLOX deviation END
+		-- deviation END
 	end)
 end
 
@@ -212,7 +212,7 @@ function _run10000(
 		local filter: Filter | nil
 		if Boolean.toJSBoolean(globalConfig.filter) and not globalConfig.skipFilter then
 			local rawFilter =
-				-- ROBLOX deviation: need to cast as require doesn't allow to import unknown paths
+				-- deviation: need to cast as require doesn't allow to import unknown paths
 				(require :: any)(globalConfig.filter)
 			local filterSetupPromise: Promise<unknown | nil> | nil
 			if Boolean.toJSBoolean(rawFilter.setup) then
@@ -245,7 +245,7 @@ function _run10000(
 		end
 
 		local ref = buildContextsAndHasteMaps(configs, globalConfig, outputStream):expect()
-		-- ROBLOX deviation START: not supported: hasteMapInstances
+		-- deviation START: not supported: hasteMapInstances
 		-- local contexts, hasteMapInstances = ref.contexts, ref.hasteMapInstances
 		local contexts = ref.contexts
 
@@ -254,11 +254,11 @@ function _run10000(
 		-- else
 		runWithoutWatch(globalConfig, contexts, outputStream, onComplete, changedFilesPromise, filter):expect()
 		-- end
-		-- ROBLOX deviation END
+		-- deviation END
 	end)
 end
 
--- ROBLOX deviation START: not supported
+-- deviation START: not supported
 -- local function runWatch(
 -- 	contexts: Array<Context>,
 -- 	_configs: Array<Config_ProjectConfig>,
@@ -270,7 +270,7 @@ end
 -- )
 -- 	return Promise.resolve():andThen(function()
 -- 		error("watch tests is not handled yet")
--- 		-- ROBLOX deviation START: no deprecation warning handling
+-- 		-- deviation START: no deprecation warning handling
 -- 		-- if hasDeprecationWarnings then
 -- 		-- 	local ok, result = pcall(function()
 -- 		-- 		handleDeprecationWarnings(outputStream, process.stdin):expect()
@@ -281,12 +281,12 @@ end
 -- 		-- 	end
 -- 		-- 	return result
 -- 		-- end
--- 		-- ROBLOX deviation END
+-- 		-- deviation END
 
 -- 		-- return watch(globalConfig, contexts, outputStream, hasteMapInstances, nil, nil, filter)
 -- 	end)
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 function runWithoutWatch(
 	globalConfig: Config_GlobalConfig,

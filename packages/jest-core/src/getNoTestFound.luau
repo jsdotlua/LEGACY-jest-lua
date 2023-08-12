@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/getNoTestFound.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/getNoTestFound.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -22,7 +22,7 @@ type TestRunData = typesModule.TestRunData
 
 local function getNoTestFound(testRunData: TestRunData, globalConfig: Config_GlobalConfig): string
 	local testFiles = Array.reduce(testRunData, function(
-		-- ROBLOX FIXME Luau: should be inferred from reduce's initial value
+		-- FIXME Luau: should be inferred from reduce's initial value
 		current: number,
 		testRun
 	)

@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/normalizeDiffOptions.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/normalizeDiffOptions.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -14,7 +14,7 @@ local Number = LuauPolyfill.Number
 local Object = LuauPolyfill.Object
 
 local chalk = require(Packages.ChalkLua)
--- ROBLOX TODO: fix PrettyFormat types imports
+-- TODO: fix PrettyFormat types imports
 type CompareKeys = ((a: string, b: string) -> number) | nil
 
 local Types = require(CurrentModule.types)
@@ -39,7 +39,7 @@ local OPTIONS_DEFAULT = {
 	commonColor = chalk.dim,
 	commonIndicator = " ",
 	commonLineTrailingSpaceColor = noColor,
-	-- ROBLOX deviation: using Object.None instead of nil because assigning nil is no different from not assigning value at all
+	-- deviation: using Object.None instead of nil because assigning nil is no different from not assigning value at all
 	compareKeys = Object.None,
 	contextLines = DIFF_CONTEXT_DEFAULT,
 	emptyFirstOrLastLinePlaceholder = "",
@@ -62,7 +62,7 @@ end
 
 -- Pure function returns options with all properties.
 local function normalizeDiffOptions(options_: DiffOptions?): DiffOptionsNormalized
-	-- ROBLOX FIXME Luau: needs a normalization fix to avoid Key 'compareKeys' is missing from '{  }' in the type 'DiffOptions | {  }'
+	-- FIXME Luau: needs a normalization fix to avoid Key 'compareKeys' is missing from '{  }' in the type 'DiffOptions | {  }'
 	local options = if options_ then options_ else {} :: DiffOptions
 	return Object.assign({}, OPTIONS_DEFAULT, options, {
 		compareKeys = getCompareKeys(options.compareKeys),

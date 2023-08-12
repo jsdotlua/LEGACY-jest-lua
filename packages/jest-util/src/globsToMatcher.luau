@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/globsToMatcher.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/globsToMatcher.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -24,7 +24,7 @@ type Config_Path = typesModule.Config_Path
 type Config_Glob = typesModule.Config_Glob
 -- local replacePathSepForGlob = require(script.Parent.replacePathSepForGlob).default
 
--- ROBLOX deviation START using Callable table to allow for properties on a function alternative
+-- deviation START using Callable table to allow for properties on a function alternative
 type CallableMatcher = typeof(setmetatable({
 	state = {} :: any,
 }, {
@@ -35,7 +35,7 @@ type CallableMatcher = typeof(setmetatable({
 
 type MatcherFn = (str: Config_Path) -> boolean
 type Matcher = CallableMatcher
--- ROBLOX deviation END
+-- deviation END
 
 local globsToMatchersMap = Map.new() :: Map<string, { isMatch: Matcher, negated: boolean }>
 
@@ -85,10 +85,10 @@ local function globsToMatcher(globs: Array<Config_Glob>): MatcherFn
 	end)
 
 	return function(path)
-		-- ROBLOX FIXME START: implement replacePathSepForGlob
+		-- FIXME START: implement replacePathSepForGlob
 		local replacedPath = path
 		-- local replacedPath = replacePathSepForGlob(path)
-		-- ROBLOX FIXME END
+		-- FIXME END
 		local kept = nil
 		local negatives = 0
 

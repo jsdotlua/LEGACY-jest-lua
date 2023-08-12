@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/types.ts
 --[[*
 	* Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 	*
@@ -6,7 +6,7 @@
 	* LICENSE file in the root directory of this source tree.
 ]]
 
--- ROBLOX TODO: fix PrettyFormat types imports
+-- TODO: fix PrettyFormat types imports
 type CompareKeys = ((a: string, b: string) -> number) | nil
 
 export type DiffOptionsColor = (string) -> string

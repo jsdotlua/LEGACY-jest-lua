@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/utils.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -8,37 +8,37 @@
 
 local Packages = script.Parent.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local Array = LuauPolyfill.Array
 -- local Boolean = LuauPolyfill.Boolean
 -- local Error = LuauPolyfill.Error
--- ROBLOX deviation END
+-- deviation END
 local String = LuauPolyfill.String
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local instanceof = LuauPolyfill.instanceof
--- ROBLOX deviation END
+-- deviation END
 type Array<T> = LuauPolyfill.Array<T>
 type Record<K, T> = { [K]: T }
 
 local exports = {}
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local path = require(Packages.path)
--- ROBLOX deviation END
+-- deviation END
 local chalk = require(Packages.ChalkLua)
 local typesModule = require(Packages.JestTypes)
 type Config_Glob = typesModule.Config_Glob
 type Config_Path = typesModule.Config_Path
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local Resolver = require(Packages["jest-resolve"]).default
 -- local ValidationError = require(Packages["jest-validate"]).ValidationError
 -- local ValidationError = Error
--- ROBLOX deviation END
+-- deviation END
 
 type ResolveOptions = {
-	-- ROBLOX deviation START: using Instance instead of Config_Path
+	-- deviation START: using Instance instead of Config_Path
 	rootDir: Instance,
-	-- ROBLOX deviation END
+	-- deviation END
 	key: string,
 	filePath: Config_Path,
 	optional: boolean?,
@@ -51,7 +51,7 @@ local DOCUMENTATION_NOTE = ([[  %s
 ]]):format(chalk.bold("Configuration Documentation:"))
 exports.DOCUMENTATION_NOTE = DOCUMENTATION_NOTE
 
--- ROBLOX deviation START: not ported yet
+-- deviation START: not ported yet
 -- local function createValidationError(message: string)
 -- 	return ValidationError.new(("%sValidation Error"):format(tostring(BULLET)), message, DOCUMENTATION_NOTE)
 -- end
@@ -133,7 +133,7 @@ exports.DOCUMENTATION_NOTE = DOCUMENTATION_NOTE
 -- 	return config
 -- end
 -- exports._replaceRootDirTags = _replaceRootDirTags
--- ROBLOX deviation END
+-- deviation END
 
 type JSONString = string & {
 	["$$type"]: never,

@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/types.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -26,7 +26,7 @@ exports.RETRY_TIMES = RETRY_TIMES
 local TEST_TIMEOUT_SYMBOL = (Symbol.for_("TEST_TIMEOUT_SYMBOL") :: unknown) :: "TEST_TIMEOUT_SYMBOL"
 exports.TEST_TIMEOUT_SYMBOL = TEST_TIMEOUT_SYMBOL
 
--- ROBLOX NOTE: can't declare type within a global namespace in Luau
+-- NOTE: can't declare type within a global namespace in Luau
 export type NodeJS_Global = {
 	STATE_SYM_SYMBOL: Circus_State,
 	RETRY_TIMES_SYMBOL: string,

@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-message-util/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-message-util/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -29,20 +29,20 @@ local prettyFormat = require(Packages.PrettyFormat).format
 
 type Path = Config_Path
 
--- ROBLOX deviation START: additional dependencies
+-- deviation START: additional dependencies
 local normalizePromiseError = require(Packages.RobloxShared).normalizePromiseError
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation: forward declarations
+-- deviation: forward declarations
 local formatStackTrace, getStackTraceLines, separateMessageFromStack
 
--- ROBLOX deviation: omitting imports since they're mostly fs related
+-- deviation: omitting imports since they're mostly fs related
 
--- ROBLOX deviation: static definition for StackTraceConfig
+-- deviation: static definition for StackTraceConfig
 export type StackTraceConfig = {
-	-- ROBLOX deviation START: using Instance instead of string
+	-- deviation START: using Instance instead of string
 	rootDir: Instance?,
-	-- ROBLOX deviation END
+	-- deviation END
 	testMatch: Array<string>,
 }
 
@@ -64,7 +64,7 @@ local JASMINE_IGNORE_BUILDEXPECTATIONRESULT = "%s+at(%s+jasmine%.buildExpectatio
 	  /^\s+at.*?jest(-.*?)?(\/|\\)(build|node_modules|packages)(\/|\\)/;
 ]]
 local ANONYMOUS_FN_IGNORE = "^%s+at <anonymous>.*$"
--- ROBLOX deviation: no optional capturing group in Lua string patterns so we try matching against both
+-- deviation: no optional capturing group in Lua string patterns so we try matching against both
 local ANONYMOUS_PROMISE_IGNORE = "^%s+at Promise %(<anonymous>%).*$"
 local ANONYMOUS_NEW_PROMISE_IGNORE = "^%s+at new Promise %(<anonymous>%).*$"
 local ANONYMOUS_GENERATOR_IGNORE = "^%s+at Generator.next %(<anonymous>%).*$"
@@ -79,7 +79,7 @@ local STACK_PATH_REGEXP = "%s*at.*%(?:%d*:%d*%)?"
 local STACK_PATH_REGEXP_NATIVE = "%s*at.*%(?native%)?"
 local EXEC_ERROR_MESSAGE = "Test suite failed to run"
 
--- ROBLOX deviation START: rewrote this because Lua doesn't have negative lookahead
+-- deviation START: rewrote this because Lua doesn't have negative lookahead
 local function indentAllLines(lines: string, indent: string): string
 	local t = string.split(lines, "\n")
 	for i, l in t do
@@ -87,7 +87,7 @@ local function indentAllLines(lines: string, indent: string): string
 	end
 	return table.concat(t, "\n")
 end
--- ROBLOX deviation END
+-- deviation END
 
 -- string trim5 implementation from http://lua-users.org/wiki/StringTrim
 local function trim(string_: string): string
@@ -99,24 +99,24 @@ end
 -- want to trim those, because they may have pointers to the column/character
 -- which will get misaligned.
 local function trimPaths(string_: string): string
-	-- ROBLOX deviation: match both since Lua doesn't have alternations
+	-- deviation: match both since Lua doesn't have alternations
 	if string_:find(STACK_PATH_REGEXP) or string_:find(STACK_PATH_REGEXP_NATIVE) then
 		return trim(string_)
 	end
 	return string_
 end
 
--- ROBLOX deviation START: can't match for blank string in Lua so we match for NOT blank string
+-- deviation START: can't match for blank string in Lua so we match for NOT blank string
 local notBlankStringRegexp = "%S"
 local blankStringRegexp = {
 	test = function(_self, str: string): boolean
 		return string.match(str, notBlankStringRegexp) == nil
 	end,
 }
--- ROBLOX deviation END
+-- deviation END
 
 local function checkForCommonEnvironmentErrors(error_): string
-	-- ROBLOX deviation START: no need to check for jsdom nor node specific environment errors
+	-- deviation START: no need to check for jsdom nor node specific environment errors
 	-- if
 	-- 	String.includes(error_, "ReferenceError: document is not defined")
 	-- 	or String.includes(error_, "ReferenceError: window is not defined")
@@ -126,11 +126,11 @@ local function checkForCommonEnvironmentErrors(error_): string
 	-- elseif String.includes(error_, ".unref is not a function") then
 	-- 	return warnAboutWrongTestEnvironment(error_, "node")
 	-- end
-	-- ROBLOX deviation END
+	-- deviation END
 	return error_
 end
 
--- ROBLOX deviation START: not used
+-- deviation START: not used
 -- local function warnAboutWrongTestEnvironment(error_: string, env: "jsdom" | "node")
 -- 	return chalk.red(
 -- 		chalk.bold(
@@ -143,7 +143,7 @@ end
 -- 		)
 -- 	) .. error_
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 -- ExecError is an error thrown outside of the test suite (not inside an `it` or
 -- `before/after each` hooks). If it's thrown, none of the tests in the file
@@ -167,14 +167,14 @@ local function formatExecError(
 			error_ = "EMPTY ERROR"
 		end
 		message = ""
-		-- ROBLOX FIXME Luau: error_ is guaranteed to be string at this point
+		-- FIXME Luau: error_ is guaranteed to be string at this point
 		stack = error_ :: string
 	else
-		-- ROBLOX deviation START: additional logic to handle Promise library error
+		-- deviation START: additional logic to handle Promise library error
 		if (error_ :: any).kind == "ExecutionError" then
 			error_ = normalizePromiseError(error_)
 		end
-		-- ROBLOX deviation END
+		-- deviation END
 		message = error_.message
 		stack = if typeof(error_.stack) == "string"
 			then error_.stack
@@ -184,14 +184,14 @@ local function formatExecError(
 	local separated = separateMessageFromStack(Boolean.toJSBoolean(stack) and stack or "")
 	stack = separated.stack
 
-	-- ROBLOX deviation START: using string.find instead
+	-- deviation START: using string.find instead
 	-- 	if
 	-- 		Boolean.toJSBoolean(
 	-- 			Array.includes(separated.message, trim(message)) --[[ ROBLOX CHECK: check if 'separated.message' is an Array ]]
 	-- 		)
 	-- 	then
 	if string.find(separated.message, trim(message), 1, true) ~= nil then
-		-- ROBLOX deviation END
+		-- deviation END
 		-- Often stack trace already contains the duplicate of the message
 		message = separated.message
 	end
@@ -240,17 +240,17 @@ local function removeInternalStackEntries(lines: { string }, options: StackTrace
 			return false
 		end
 
-		-- ROBLOX deviation: omitting node specific stuff
+		-- deviation: omitting node specific stuff
 		-- if (nodeInternals.some(internal => internal.test(line))) {
 		-- 	return false;
 		-- }
 
-		-- ROBLOX deviation: match both since Lua doesn't have alternations
+		-- deviation: match both since Lua doesn't have alternations
 		if not line:find(STACK_PATH_REGEXP) or not line:find(STACK_PATH_REGEXP_NATIVE) then
 			return true
 		end
 
-		-- ROBLOX deviation: match both since Lua doesn't have alternations
+		-- deviation: match both since Lua doesn't have alternations
 		if line:find(JASMINE_IGNORE) or line:find(JASMINE_IGNORE_BUILDEXPECTATIONRESULT) then
 			return false
 		end
@@ -272,9 +272,9 @@ local function removeInternalStackEntries(lines: { string }, options: StackTrace
 	end)
 end
 
--- ROBLOX deviation: config does not have StackTraceConfig type annotation
+-- deviation: config does not have StackTraceConfig type annotation
 local function formatPaths(config, relativeTestPath, line: string): string
-	-- ROBLOX deviation: we don't do any formatting of paths in Lua to align with upstream
+	-- deviation: we don't do any formatting of paths in Lua to align with upstream
 	return line
 end
 
@@ -380,7 +380,7 @@ function separateMessageFromStack(content: string): { message: string, stack: st
 		original regexp: RegExp([=[^(?:Error: )?([\s\S]*?(?=\n\s*at\s.*:\d*:\d*)|\s*.*)([\s\S]*)$]=])
 	]]
 	local re = RegExp([=[^(?:Error: )?([\s\S]*?(?=\n\s*LoadedCode.*:\d*)|\s*.*)([\s\S]*)$]=])
-	-- ROBLOX deviation END
+	-- deviation END
 	local messageMatch = re:exec(content)
 	if not messageMatch then
 		-- For typescript

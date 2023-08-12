@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/index.ts
 
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -62,14 +62,14 @@ type RawMatcherFn = Types.RawMatcherFn_
 type SyncExpectationResult = Types.SyncExpectationResult
 type ThrowingMatcherFn = Types.ThrowingMatcherFn
 
--- ROBLOX deviation START: add additional type exports
+-- deviation START: add additional type exports
 export type ExpectExtended<E, State = JestMatcherState> = Types.ExpectExtended<E, State>
--- ROBLOX deviation END
+-- deviation END
 
 local utils = require(CurrentModule.utils)
 local iterableEquality = utils.iterableEquality
 local subsetEquality = utils.subsetEquality
--- ROBLOX deviation: Roblox Instance matchers
+-- deviation: Roblox Instance matchers
 -- local instanceSubsetEquality = utils.instanceSubsetEquality
 
 local makeThrowingMatcher, _validateResult
@@ -85,7 +85,7 @@ type Omit_SyncExpectationResult_message = {
 type JestAssertionError = Error & {
 	matcherResult: Omit_SyncExpectationResult_message & { message: string },
 }
--- ROBLOX deviation END
+-- deviation END
 type JestAssertionError_statics = { new: (message: string?) -> JestAssertionError }
 local JestAssertionError = (
 	setmetatable({}, { __index = Error }) :: any
@@ -120,7 +120,7 @@ local function getPromiseMatcher(name: string, matcher: any)
 	return nil
 end
 
--- ROBLOX deviation: Declaring this here because hoisting is not available in lua
+-- deviation: Declaring this here because hoisting is not available in lua
 local makeResolveMatcher, makeRejectMatcher
 
 local function expect_(_self, actual: any, ...)
@@ -229,7 +229,7 @@ function makeRejectMatcher(
 	end
 end
 
--- ROBLOX deviation: matcher does not have RawMatcherFn type annotation and the
+-- deviation: matcher does not have RawMatcherFn type annotation and the
 -- the function return is not annotated with ThrowingMatcherFn
 function makeThrowingMatcher(
 	matcher: RawMatcherFn,
@@ -243,7 +243,7 @@ function makeThrowingMatcher(
 		local utils = Object.assign({
 			iterableEquality = iterableEquality,
 			subsetEquality = subsetEquality,
-			-- ROBLOX deviation: Roblox Instance matchers
+			-- deviation: Roblox Instance matchers
 			-- instanceSubsetEquality = instanceSubsetEquality
 		}, matcherUtils)
 
@@ -278,9 +278,9 @@ function makeThrowingMatcher(
 					error_ = err
 					error_.message = message
 				elseif asyncError then
-					-- ROBLOX deviation START: Currently async is not implemented
+					-- deviation START: Currently async is not implemented
 					error("Currently async is not implemented")
-					-- ROBLOX deviation END
+					-- deviation END
 				else
 					error_ = JestAssertionError.new(message)
 
@@ -305,14 +305,14 @@ function makeThrowingMatcher(
 
 		local function handleError(error_)
 			if
-				-- ROBLOX deviation START: adjusted condition
+				-- deviation START: adjusted condition
 				-- matcher[INTERNAL_MATCHER_FLAG] == true
 				-- and not instanceof(error_, JestAssertionError)
 				-- and error_.name ~= "PrettyFormatPluginError"
 				-- -- Guard for some environments (browsers) that do not support this feature.
 				-- and
 				Error.captureStackTrace and typeof(error_) == "table"
-				-- ROBLOX deviation END
+				-- deviation END
 			then
 				-- Try to remove this and deeper functions from the stack trace frame.
 				Error.captureStackTrace(error_, throwingMatcher)
@@ -321,7 +321,7 @@ function makeThrowingMatcher(
 		end
 
 		local ok, result = pcall(function(...)
-			-- ROBLOX TODO: Implement INTERNAL_MATCHER_FLAG cases
+			-- TODO: Implement INTERNAL_MATCHER_FLAG cases
 			local potentialResult = matcher(matcherContext, actual, ...)
 
 			local syncResult = potentialResult :: SyncExpectationResult
@@ -367,7 +367,7 @@ end
 Expect.anything = anything
 Expect.any = any
 
--- ROBLOX deviation: not is a reserved keyword in Lua, we use never instead
+-- deviation: not is a reserved keyword in Lua, we use never instead
 Expect.never = {
 	arrayContaining = arrayNotContaining,
 	objectContaining = objectNotContaining,
@@ -407,19 +407,19 @@ setMatchers(matchers, true, Expect)
 setMatchers(spyMatchers, true, Expect)
 setMatchers(toThrowMatchers, true, Expect)
 
--- ROBLOX deviation START: defining addSnapshotSerializer override here
+-- deviation START: defining addSnapshotSerializer override here
 local plugins = require(Packages.JestSnapshot).plugins
 Expect.addSnapshotSerializer = plugins.addSerializer
--- ROBLOX deviation END
+-- deviation END
 Expect.assertions = assertions
 Expect.hasAssertions = hasAssertions
 Expect.getState = getState
 Expect.setState = setState
 Expect.extractExpectedAssertionsErrors = extractExpectedAssertionsErrors
 
--- ROBLOX TODO: ADO-1554 clean up the following deviations and move them to the
+-- TODO: ADO-1554 clean up the following deviations and move them to the
 -- appropriate locations
--- ROBLOX deviation START: for now we extend the snapshot matchers in the Expect file instead
+-- deviation START: for now we extend the snapshot matchers in the Expect file instead
 -- of jest-jasmine2/jestExpect
 local JestSnapshot = require(Packages.JestSnapshot)
 local toMatchSnapshot = JestSnapshot.toMatchSnapshot
@@ -428,14 +428,14 @@ setMatchers({
 	toMatchSnapshot = toMatchSnapshot,
 	toThrowErrorMatchingSnapshot = toThrowErrorMatchingSnapshot,
 }, false, Expect)
--- ROBLOX deviation END
+-- deviation END
 
 setmetatable(Expect, { __call = expect_ })
 local expectExport = (Expect :: any) :: Expect
 
--- ROBLOX deviation START: exporting types without a namespace prefix
+-- deviation START: exporting types without a namespace prefix
 export type MatcherState = JestMatcherState
 export type Matcher<R> = MatcherInterface<R>
--- ROBLOX deviation END
+-- deviation END
 
 return expectExport

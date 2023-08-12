@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/DefaultReporter.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/DefaultReporter.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -101,29 +101,29 @@ type DefaultReporterPrivate = DefaultReporter & {
 	__clearStatus: (self: DefaultReporter) -> (),
 	__printStatus: (self: DefaultReporter) -> (),
 	_process: NodeProcessMock,
-	-- ROBLOX deviation: we need to store _isInteractive per reporter to not override isInteractive globally
+	-- deviation: we need to store _isInteractive per reporter to not override isInteractive globally
 	_isInteractive: boolean,
 }
 
--- ROBLOX FIXME LUAU: Casting to any to prevent unwanted type narrowing
+-- FIXME LUAU: Casting to any to prevent unwanted type narrowing
 local DefaultReporter = setmetatable({}, { __index = BaseReporter }) :: any
 DefaultReporter.__index = DefaultReporter
--- ROBLOX deviation: No __filename available - just using the module name
+-- deviation: No __filename available - just using the module name
 DefaultReporter.filename = "DefaultReporter"
 
--- ROBLOX deviation: Added _process arg to mock global node process for testing
+-- deviation: Added _process arg to mock global node process for testing
 function DefaultReporter.new(globalConfig: Config_GlobalConfig, _process: NodeProcessMock?): DefaultReporter
 	local self = setmetatable((BaseReporter.new(_process) :: any) :: DefaultReporterPrivate, DefaultReporter)
-	-- ROBLOX deviation: we need to store _isInteractive per reporter to not override isInteractive globally
+	-- deviation: we need to store _isInteractive per reporter to not override isInteractive globally
 	self._isInteractive = jestUtilModule.isInteractive
 
-	-- ROBLOX deviation START: Added for tests otherwise isInteractive = false
+	-- deviation START: Added for tests otherwise isInteractive = false
 	if _process ~= nil and _process.env.IS_INTERACTIVE ~= nil then
 		self._isInteractive = Boolean.toJSBoolean(_process.env.IS_INTERACTIVE)
 	end
-	-- ROBLOX deviation END
+	-- deviation END
 
-	-- ROBLOX deviation START: Need a copy of stdout/stderr write since
+	-- deviation START: Need a copy of stdout/stderr write since
 	-- they get overwritten in _wrapStdio.
 	local function defaultWrite()
 		local writable = Writeable.new()
@@ -143,8 +143,8 @@ function DefaultReporter.new(globalConfig: Config_GlobalConfig, _process: NodePr
 	local _stderrWrite: (Writeable, string) -> () = if _process and _process.stderr
 		then _process.stderr.write
 		else defaultWrite()
-	-- ROBLOX FIXME Luau END
-	-- ROBLOX deviation END
+	-- FIXME Luau END
+	-- deviation END
 
 	self._globalConfig = globalConfig
 	self._clear = ""
@@ -215,7 +215,7 @@ function DefaultReporter:forceFlushBufferedOutput(): ()
 end
 
 function DefaultReporter:__clearStatus(): ()
-	-- ROBLOX deviation: we need to store _isInteractive per reporter to not override isInteractive globally
+	-- deviation: we need to store _isInteractive per reporter to not override isInteractive globally
 	if self._isInteractive then
 		if self._globalConfig.useStderr then
 			self:_err(self._clear)
@@ -229,7 +229,7 @@ function DefaultReporter:__printStatus(): ()
 	local ref = self._status:get()
 	local content, clear = ref.content, ref.clear
 	self._clear = clear
-	-- ROBLOX deviation: we need to store _isInteractive per reporter to not override isInteractive globally
+	-- deviation: we need to store _isInteractive per reporter to not override isInteractive globally
 	if self._isInteractive then
 		if self._globalConfig.useStderr then
 			self:_err(content)

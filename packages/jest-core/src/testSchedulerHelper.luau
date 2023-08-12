@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/testSchedulerHelper.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/testSchedulerHelper.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -14,7 +14,7 @@ local test_resultModule = require(Packages.JestTestResult)
 type Test = test_resultModule.Test
 local typesModule = require(Packages.JestTypes)
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
--- ROBLOX deviation START: always run in band
+-- deviation START: always run in band
 -- local SLOW_TEST_TIME = 1000
 local function shouldRunInBand(_tests: Array<Test>, _timings: Array<number>, _ref: Config_GlobalConfig): boolean
 	return true
@@ -46,6 +46,6 @@ local function shouldRunInBand(_tests: Array<Test>, _timings: Array<number>, _re
 	-- end
 	-- return oneWorkerOrLess or oneTestOrLess or (#tests <= 20 and #timings > 0 and areFastTests)
 end
--- ROBLOX deviation END
+-- deviation END
 exports.shouldRunInBand = shouldRunInBand
 return exports

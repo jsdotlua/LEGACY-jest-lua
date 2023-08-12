@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/State.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/State.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -6,7 +6,7 @@
 --  * LICENSE file in the root directory of this source tree.
 --  */
 
--- ROBLOX deviation: omitting fs and types file import and defining in line instead
+-- deviation: omitting fs and types file import and defining in line instead
 
 local CurrentModule = script.Parent
 local Packages = CurrentModule.Parent
@@ -19,19 +19,19 @@ local Object = LuauPolyfill.Object
 local Set = LuauPolyfill.Set
 
 local JestTypes = require(Packages.JestTypes)
--- ROBLOX deviation: custom type
+-- deviation: custom type
 type ConfigPath = {
 	getInstance: () -> ModuleScript?,
 	getPath: () -> string,
 }
--- ROBLOX deviation END
+-- deviation END
 type ConfigSnapshotUpdateState = JestTypes.Config_SnapshotUpdateState
 
 -- local JestMessageUtil = require(Packages.JestMessageUtil)
 -- local getStackTraceLines = JestMessageUtil.getStackTraceLines
 -- local getTopFrame = JestMessageUtil.getTopFrame
 
--- ROBLOX TODO: fix PrettyFormat types imports
+-- TODO: fix PrettyFormat types imports
 -- local PrettyFormat = require(Packages.PrettyFormat)
 local PrettyFormat = require(CurrentModule.PrettyFormat)
 type PrettyFormatOptions = PrettyFormat.OptionsReceived
@@ -41,23 +41,23 @@ local addExtraLineBreaks = utils.addExtraLineBreaks
 local getSnapshotData = utils.getSnapshotData
 local keyToTestName = utils.keyToTestName
 local removeExtraLineBreaks = utils.removeExtraLineBreaks
--- ROBLOX TODO: ADO-1552 translate this function when we add inlineSnapshot functionality
+-- TODO: ADO-1552 translate this function when we add inlineSnapshot functionality
 -- local removeLinesBeforeExternalMatcherTrap = utils.removeLinesBeforeExternalMatcherTrap
 local saveSnapshotFile = utils.saveSnapshotFile
 local serialize = utils.serialize
 local testNameToKey = utils.testNameToKey
 
--- ROBLOX TODO: ADO-1552 add inline_snapshots imports when we support this
+-- TODO: ADO-1552 add inline_snapshots imports when we support this
 -- functionality
 
 local types = require(CurrentModule.types)
--- ROBLOX deviation: we do not have the BabelTraverse or Prettier types defined in the
+-- deviation: we do not have the BabelTraverse or Prettier types defined in the
 -- types file
 type SnapshotData = types.SnapshotData
 
 export type SnapshotStateOptions = {
 	updateSnapshot: ConfigSnapshotUpdateState,
-	-- ROBLOX deviation: the function return is defined as any instead of null | Prettier
+	-- deviation: the function return is defined as any instead of null | Prettier
 	-- prettierPath: ConfigPath;
 	expand: boolean?,
 	snapshotFormat: PrettyFormatOptions,
@@ -69,7 +69,7 @@ export type SnapshotMatchOptions = {
 	key: string?,
 	inlineSnapshot: string?,
 	isInline: boolean,
-	-- ROBLOX deviation: error type defined as any instead of Error
+	-- deviation: error type defined as any instead of Error
 	error_: any,
 }
 
@@ -109,13 +109,13 @@ type SnapshotStatePrivate = {
 	_snapshotData: SnapshotData,
 	_initialData: SnapshotData,
 	_snapshotPath: ConfigPath,
-	-- ROBLOX TODO: ADO-1552 align this type as Array<InlineSnapshot> when we support inlineSnapshot testing
+	-- TODO: ADO-1552 align this type as Array<InlineSnapshot> when we support inlineSnapshot testing
 	_inlineSnapshots: { any },
-	-- ROBLOX deviation: defined as any for now because LuauPolyfill.Set<string> and Set.Set<string>
+	-- deviation: defined as any for now because LuauPolyfill.Set<string> and Set.Set<string>
 	-- both didn't seem to be working
 	_uncheckedKeys: any,
 	-- _uncheckedKeys: LuauPolyfill.Set<string>,
-	-- ROBLOX deviation: omitting field _prettierPath
+	-- deviation: omitting field _prettierPath
 	-- _prettierPath: ConfigPath;
 	_snapshotFormat: PrettyFormatOptions,
 
@@ -147,9 +147,9 @@ local SnapshotState = {} :: SnapshotStatePrivate & SnapshotState_statics;
 
 function SnapshotState.new(snapshotPath: ConfigPath, options: SnapshotStateOptions): SnapshotState
 	local returnValue = getSnapshotData(
-		-- ROBLOX deviation START: get instance of a snapshot
+		-- deviation START: get instance of a snapshot
 		snapshotPath.getInstance(),
-		-- ROBLOX deviation END
+		-- deviation END
 		options.updateSnapshot
 	)
 	local data = returnValue.data
@@ -160,7 +160,7 @@ function SnapshotState.new(snapshotPath: ConfigPath, options: SnapshotStateOptio
 		_initialData = data,
 		_snapshotData = data,
 		_dirty = dirty,
-		-- ROBLOX deviation: omitting assignment for getBabelTraverse, getPrettier
+		-- deviation: omitting assignment for getBabelTraverse, getPrettier
 		_inlineSnapshots = {},
 		_uncheckedKeys = Set.new(Object.keys(data)),
 		_counters = {},
@@ -185,7 +185,7 @@ function SnapshotState:markSnapshotsAsCheckedForTest(testName: string): ()
 	end
 end
 
--- ROBLOX deviation: Error type annotated as any
+-- deviation: Error type annotated as any
 function SnapshotState:_addSnapshot(
 	key: string,
 	receivedSerialized: string,
@@ -193,7 +193,7 @@ function SnapshotState:_addSnapshot(
 ): ()
 	self._dirty = true
 	if options.isInline then
-		-- ROBLOX TODO: ADO-1552 Add when we support inlineSnapshot testing
+		-- TODO: ADO-1552 Add when we support inlineSnapshot testing
 		error(Error("Jest-Roblox: inline snapshot testing is not currently supported"))
 	else
 		self._snapshotData[key] = receivedSerialized
@@ -212,10 +212,10 @@ function SnapshotState:clear(): ()
 end
 
 function SnapshotState:save(): SaveStatus
-	-- ROBLOX deviation START: checking if there is more than 0 keys as `0` is considered truthy in L
+	-- deviation START: checking if there is more than 0 keys as `0` is considered truthy in L
 	local hasExternalSnapshots = #Object.keys(self._snapshotData) > 0
 	local hasInlineSnapshots = #self._inlineSnapshots > 0
-	-- ROBLOX deviation END
+	-- deviation END
 	local isEmpty = not hasExternalSnapshots and not hasInlineSnapshots
 
 	local status: SaveStatus = {
@@ -227,23 +227,23 @@ function SnapshotState:save(): SaveStatus
 		if hasExternalSnapshots and (self._dirty or self._updateSnapshot == "all") then
 			saveSnapshotFile(
 				self._snapshotData,
-				-- ROBLOX deviation START: custom logic
+				-- deviation START: custom logic
 				self._snapshotPath.getPath()
-				-- ROBLOX deviation END
+				-- deviation END
 			)
 		end
 		if hasInlineSnapshots then
-			-- ROBLOX TODO: Add when we support inlineSnapshot testing
+			-- TODO: Add when we support inlineSnapshot testing
 			error(Error("Jest-Roblox: inline snapshot testing is not currently supported"))
 		end
 		status.saved = true
 	elseif
 		not hasExternalSnapshots
-		-- ROBLOX deviation START: check if ModuleScript for given snapshot file exists
+		-- deviation START: check if ModuleScript for given snapshot file exists
 		and self._snapshotPath.getInstance() ~= nil
-		-- ROBLOX deviation END
+		-- deviation END
 	then
-		-- ROBLOX deviation START: omitted part of code dealing with unlinking file until we have
+		-- deviation START: omitted part of code dealing with unlinking file until we have
 		-- robust final solution for I/O. This may not even be needed in our translation?
 		if self._updateSnapshot == "all" then
 			error(
@@ -251,7 +251,7 @@ function SnapshotState:save(): SaveStatus
 			)
 			--	fs.unlinkSync(this._snapshotPath)
 		end
-		-- ROBLOX deviation END
+		-- deviation END
 		status.deleted = true
 	end
 
@@ -279,9 +279,9 @@ end
 function SnapshotState:match(snapshotMatchOptions: SnapshotMatchOptions): SnapshotReturnOptions
 	local testName = snapshotMatchOptions.testName
 	local received = snapshotMatchOptions.received
-	-- ROBLOX deviation START: not supported
+	-- deviation START: not supported
 	-- local inlineSnapshot = snapshotMatchOptions.inlineSnapshot
-	-- ROBLOX deviation END
+	-- deviation END
 	local isInline = snapshotMatchOptions.isInline
 	local error_ = snapshotMatchOptions.error_
 
@@ -300,7 +300,7 @@ function SnapshotState:match(snapshotMatchOptions: SnapshotMatchOptions): Snapsh
 	local receivedSerialized = addExtraLineBreaks(serialize(received, nil, self._snapshotFormat))
 	local expected
 	if isInline then
-		-- ROBLOX TODO: ADO-1552 Add when we support inlineSnapshot testing
+		-- TODO: ADO-1552 Add when we support inlineSnapshot testing
 		error(Error("Jest-Roblox: inline snapshot testing is not currently supported"))
 	else
 		expected = self._snapshotData[key]
@@ -384,7 +384,7 @@ function SnapshotState:match(snapshotMatchOptions: SnapshotMatchOptions): Snapsh
 	end
 end
 
--- ROBLOX deviation: changed string? to string so that return type could align
+-- deviation: changed string? to string so that return type could align
 function SnapshotState:fail(testName: string, _received: any, key: string): string
 	self._counters[testName] = (self._counters[testName] or 0) + 1
 	local count = self._counters[testName]

@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-test-result/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-test-result/src/index.ts
 --[[*
 * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 *
@@ -31,7 +31,7 @@ export type Suite = typesModule.Suite
 export type Test = typesModule.Test
 export type Context = typesModule.Context
 export type TestEvents = typesModule.TestEvents
--- ROBLOX FIXME: find a way to keep the generic param and it's default value when re-exporting
+-- FIXME: find a way to keep the generic param and it's default value when re-exporting
 export type TestFileEvent = typesModule.TestFileEvent
 export type TestResult = typesModule.TestResult
 export type TestResultsProcessor = typesModule.TestResultsProcessor

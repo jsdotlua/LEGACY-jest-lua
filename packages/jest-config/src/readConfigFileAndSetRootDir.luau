@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/readConfigFileAndSetRootDir.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/readConfigFileAndSetRootDir.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -14,15 +14,15 @@ local Promise = require(Packages.Promise)
 
 local exports = {}
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local path = require(Packages.path)
 -- local fs = require(Packages["graceful-fs"])
 -- local ts_nodeModule = require(Packages["ts-node"])
 -- type Service = ts_nodeModule.Service
--- ROBLOX deviation END
+-- deviation END
 local typesModule = require(Packages.JestTypes)
 type Config_InitialOptions = typesModule.Config_InitialOptions
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- type Config_Path = typesModule.Config_Path
 -- local jest_utilModule = require(Packages.JestUtil)
 -- local interopRequireDefault = jest_utilModule.interopRequireDefault
@@ -33,7 +33,7 @@ type Config_InitialOptions = typesModule.Config_InitialOptions
 -- local PACKAGE_JSON = constantsModule.PACKAGE_JSON
 -- @ts-expect-error: vendored
 -- local jsonlint = require(script.Parent.vendor.jsonlint).default
--- ROBLOX deviation END
+-- deviation END
 
 -- Read the configuration and set its `rootDir`
 -- 1. If it's a `package.json` file, we look into its "jest" property
@@ -41,14 +41,14 @@ type Config_InitialOptions = typesModule.Config_InitialOptions
 -- 3. For any other file, we just require it. If we receive an 'ERR_REQUIRE_ESM'
 --    from node, perform a dynamic import instead.
 local function readConfigFileAndSetRootDir(
-	-- ROBLOX deviation: using ModuleScript instead of Config_Path
+	-- deviation: using ModuleScript instead of Config_Path
 	configPath: ModuleScript
 ): Promise<Config_InitialOptions>
 	return Promise.resolve():andThen(function()
-		-- ROBLOX deviation START: custom implementation
+		-- deviation START: custom implementation
 		-- local isTS = configPath:endsWith(JEST_CONFIG_EXT_TS)
 		-- local isJSON = configPath:endsWith(JEST_CONFIG_EXT_JSON)
-		-- ROBLOX deviation END
+		-- deviation END
 		local ok, configObjectOrError = pcall(require, configPath)
 
 		if not ok then
@@ -70,12 +70,12 @@ local function readConfigFileAndSetRootDir(
 			configObject.rootDir = configPath.Parent
 		end
 		return configObject
-		-- ROBLOX deviation END
+		-- deviation END
 	end)
 end
 exports.default = readConfigFileAndSetRootDir
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local registerer -- Load the TypeScript configuration: Service
 -- local function loadTSConfigFile(configPath: Config_Path): Promise<Config_InitialOptions>
 -- 	return Promise.resolve():andThen(function()
@@ -112,6 +112,6 @@ exports.default = readConfigFileAndSetRootDir
 -- 		return configObject
 -- 	end)
 -- end
--- ROBLOX deviation END
+-- deviation END
 
 return exports

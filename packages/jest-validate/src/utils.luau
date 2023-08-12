@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-validate/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-validate/src/utils.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -8,22 +8,22 @@
 
 local Packages = script.Parent.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
--- ROBLOX deviation START: not needed dependencies
+-- deviation START: not needed dependencies
 -- local Array = LuauPolyfill.Array
--- ROBLOX deviation END
+-- deviation END
 local Boolean = LuauPolyfill.Boolean
 local Error = LuauPolyfill.Error
--- ROBLOX deviation START: not needed dependencies
+-- deviation START: not needed dependencies
 -- local String = LuauPolyfill.String
 -- local console = LuauPolyfill.console
 -- type Array<T> = LuauPolyfill.Array<T>
--- ROBLOX deviation END
+-- deviation END
 type Error = LuauPolyfill.Error
 
 local exports = {}
 
 local chalk = require(Packages.ChalkLua)
--- ROBLOX deviation START: not ported yet
+-- deviation START: not ported yet
 -- local leven = require(Packages.leven).default
 -- local prettyFormat = require(Packages.PrettyFormat).format
 -- local BULLET: string = chalk.bold("\u{25cf}")
@@ -46,7 +46,7 @@ local chalk = require(Packages.ChalkLua)
 -- 			Array.join(String.split(JSON.stringify(value, nil, 2),"\n"), "\n    ")
 -- end
 -- exports.formatPrettyObject = formatPrettyObject
--- ROBLOX deviation END
+-- deviation END
 
 export type ValidationError = Error & { name: string, message: string }
 local ValidationError = setmetatable({}, { __index = Error })
@@ -56,14 +56,14 @@ function ValidationError.new(name: string, message: string, comment: (string | n
 	comment = if comment ~= nil and Boolean.toJSBoolean(comment) then "\n\n" .. comment else "\n"
 	self.name = ""
 	self.message = chalk.red(chalk.bold(name) .. ":\n\n" .. message .. (comment :: string))
-	-- ROBLOX deviation START: no captureStackTrace available
+	-- deviation START: no captureStackTrace available
 	-- Error:captureStackTrace(self, function() end)
-	-- ROBLOX deviation END
+	-- deviation END
 	return (self :: any) :: ValidationError
 end
 exports.ValidationError = ValidationError
 
--- ROBLOX deviation START: not ported yet
+-- deviation START: not ported yet
 -- local function logValidationWarning(name: string, message: string, comment: (string | nil)?): ()
 -- 	comment = if Boolean.toJSBoolean(comment) then "\n\n" .. comment else "\n"
 -- 	console.warn(chalk.yellow(chalk.bold(name) .. ":\n\n" .. message .. comment))
@@ -78,6 +78,6 @@ exports.ValidationError = ValidationError
 -- 	return if Boolean.toJSBoolean(suggestion) then ("Did you mean %s?"):format(chalk.bold(format(suggestion))) else ""
 -- end
 -- exports.createDidYouMeanMessage = createDidYouMeanMessage
--- ROBLOX deviation END
+-- deviation END
 
 return exports

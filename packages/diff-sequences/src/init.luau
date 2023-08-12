@@ -1,5 +1,5 @@
 --!nonstrict
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/diff-sequences/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/diff-sequences/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -72,7 +72,7 @@ type FoundSubsequence = (
 	number -- caller can assume: 0 <= bCommon && bCommon < bLength
 ) -> ()
 
--- ROBLOX deviation: omitted since Luau doesn't have mixed type arrays
+-- deviation: omitted since Luau doesn't have mixed type arrays
 -- Either original functions or wrapped to swap indexes if graph is transposed.
 -- export type Callbacks = {
 -- 	FoundSubsequence;
@@ -157,7 +157,7 @@ local function extendPathsF(
 	-- Unroll the first iteration.
 	local iF = 0
 	local kF = -d -- kF = 2 * iF - d
-	-- ROBLOX FIXME? should the values inserted into aIndexesF be 1-based so we don't have to adjust in several places here?
+	-- FIXME? should the values inserted into aIndexesF be 1-based so we don't have to adjust in several places here?
 	local aFirst = aIndexesF[iF + 1] -- in first iteration always insert
 	local aIndexPrev1 = aFirst -- prev value of [iF - 1] in next iteration
 	aIndexesF[iF + 1] += countCommonItemsF(aFirst + 1, aEnd, bF + aFirst - kF + 1, bEnd, isCommon)
@@ -172,7 +172,7 @@ local function extendPathsF(
 		-- To get first point of path segment, move one change in forward direction
 		-- from last point of previous path segment in an adjacent diagonal.
 		-- In last possible iteration when iF === d and kF === d always delete.
-		-- ROBLOX deviation: add one to index for Lua 1-based arrays
+		-- deviation: add one to index for Lua 1-based arrays
 		if iF ~= d and aIndexPrev1 < aIndexesF[iF + 1] then
 			aFirst = aIndexesF[iF + 1] -- vertical to insert from b
 		else
@@ -185,7 +185,7 @@ local function extendPathsF(
 		end
 
 		-- To get last point of path segment, move along diagonal of common items.
-		-- ROBLOX deviation: add one to index for Lua 1-based arrays
+		-- deviation: add one to index for Lua 1-based arrays
 		aIndexPrev1 = aIndexesF[iF + 1]
 		aIndexesF[iF + 1] = aFirst + countCommonItemsF(aFirst + 1, aEnd, bF + aFirst - kF + 1, bEnd, isCommon)
 
@@ -210,7 +210,7 @@ local function extendPathsR(
 	-- Unroll the first iteration.
 	local iR = 0
 	local kR = d -- kR = d - 2 * iR
-	-- ROBLOX FIXME? should the values inserted into aIndexesR be 1-based so we don't have to adjust in several places here?
+	-- FIXME? should the values inserted into aIndexesR be 1-based so we don't have to adjust in several places here?
 	local aFirst = aIndexesR[iR + 1] -- in first iteration always insert
 	local aIndexPrev1 = aFirst -- prev value of [iR - 1] in next iteration
 	aIndexesR[iR + 1] -= countCommonItemsR(aStart, aFirst - 1, bStart, bR + aFirst - kR - 1, isCommon)
@@ -276,7 +276,7 @@ local function extendOverlappablePathsF(
 	local nF = d < iMaxF and d or iMaxF
 
 	-- The diagonals kF = 2 * iF - d are odd when d is odd and even when d is even.
-	-- ROBLOX FIXME? why aren't we just starting iF at 1?
+	-- FIXME? why aren't we just starting iF at 1?
 	local iF = 0
 	local kF: number = -d
 	while iF <= nF do
@@ -285,7 +285,7 @@ local function extendOverlappablePathsF(
 		-- In first iteration when iF === 0 and kF === -d always insert.
 		-- In last possible iteration when iF === d and kF === d always delete.
 		local insert = iF == 0 or (iF ~= d and aIndexPrev1 < aIndexesF[iF + 1])
-		-- ROBLOX FIXME? should the values inserted into aIndexesF be 1-based so we don't have to adjust in several places here?
+		-- FIXME? should the values inserted into aIndexesF be 1-based so we don't have to adjust in several places here?
 		local aLastPrev = insert and aIndexesF[iF + 1] or aIndexPrev1
 		local aFirst: number = insert and aLastPrev -- vertical to insert from b
 			or aLastPrev + 1 -- horizontal to delete from a
@@ -409,7 +409,7 @@ local function extendOverlappablePathsR(
 		-- from last point of previous path segment in an adjacent diagonal.
 		-- In first iteration when iR === 0 and kR === d always insert.
 		-- In last possible iteration when iR === d and kR === -d always delete.
-		-- ROBLOX FIXME? should the values inserted into aIndexesF be 1-based so we don't have to adjust in several places here?
+		-- FIXME? should the values inserted into aIndexesF be 1-based so we don't have to adjust in several places here?
 		local insert = iR == 0 or (iR ~= d and aIndexesR[iR + 1] < aIndexPrev1)
 		local aLastPrev = insert and aIndexesR[iR + 1] or aIndexPrev1
 		local aFirst: number = insert and aLastPrev -- vertical to insert from b
@@ -541,7 +541,7 @@ local function divide(
 
 	if baDeltaLength % 2 == 0 then
 		-- The number of changes in paths is 2 * d if length difference is even.
-		-- ROBLOX deviation: lua treats 0 as a true value
+		-- deviation: lua treats 0 as a true value
 		local dMin = (nChange ~= 0 and nChange or baDeltaLength) / 2
 		local dMax = (aLength + bLength) / 2
 

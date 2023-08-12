@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/ReporterDispatcher.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/ReporterDispatcher.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -163,7 +163,7 @@ end
 
 function ReporterDispatcher:getErrors(): Array<Error>
 	return Array.reduce(self._reporters, function(
-		-- ROBLOX FIXME Luau: should be inferred from reduce's initial value
+		-- FIXME Luau: should be inferred from reduce's initial value
 		list: Array<Error>,
 		reporter
 	)

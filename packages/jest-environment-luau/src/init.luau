@@ -42,15 +42,15 @@ type FakeTimers = FakeTimersModule.FakeTimers
 local jestMockModule = require(Packages.JestMock)
 type ModuleMocker = jestMockModule.ModuleMocker
 
--- ROBLOX NOTE: redefine props and methods to have proper `self` typing
+-- NOTE: redefine props and methods to have proper `self` typing
 type JestEnvironmentLuau = {
 	new: (config: Config_ProjectConfig) -> JestEnvironmentLuau,
 	global: Global_Global,
-	-- ROBLOX deviation START: no modern/legacy timers
+	-- deviation START: no modern/legacy timers
 	-- fakeTimers: LegacyFakeTimers<Timer> | nil,
 	-- fakeTimersModern: ModernFakeTimers | nil,
 	fakeTimers: FakeTimers | nil,
-	-- ROBLOX deviation END
+	-- deviation END
 	moduleMocker: ModuleMocker | nil,
 	getVmContext: (self: JestEnvironmentLuau) -> Context | nil,
 	setup: (self: JestEnvironmentLuau) -> Promise<nil>,

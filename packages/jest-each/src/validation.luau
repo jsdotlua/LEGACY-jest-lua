@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/validation.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/validation.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -22,7 +22,7 @@ local typesModule = require(Packages.JestTypes)
 type Global_TemplateData = typesModule.Global_TemplateData
 local pretty = require(Packages.PrettyFormat).format
 
--- ROBLOX deviation: predefine variables
+-- deviation: predefine variables
 local isTaggedTemplateLiteral, isEmptyString, isEmptyTable, pluralize
 
 type TemplateData = Global_TemplateData
@@ -31,7 +31,7 @@ local EXPECTED_COLOR = chalk.green
 local RECEIVED_COLOR = chalk.red
 
 local function validateArrayTable(table_: unknown): ()
-	-- ROBLOX deviation START: need a tableArr variable to help Luau analyze
+	-- deviation START: need a tableArr variable to help Luau analyze
 	if not Array.isArray(table_) then
 		error(
 			Error.new(
@@ -42,7 +42,7 @@ local function validateArrayTable(table_: unknown): ()
 	end
 
 	local tableArr = table_ :: Array<unknown>
-	-- ROBLOX deviation END
+	-- deviation END
 
 	if isTaggedTemplateLiteral(tableArr) then
 		if isEmptyString(tableArr[1]) then
@@ -74,7 +74,7 @@ function isEmptyString(str: string | unknown)
 end
 
 local function validateTemplateTableArguments(headings: Array<string>, data: TemplateData): ()
-	-- ROBLOX deviation START: dealing with arrays instead of a variadic list of values, error if any has less or more elements
+	-- deviation START: dealing with arrays instead of a variadic list of values, error if any has less or more elements
 	Array.forEach(data, function(array, index)
 		local countDifference = #headings - #array
 		local missingData = if countDifference >= 0 then countDifference else (countDifference - #headings)
@@ -100,7 +100,7 @@ local function validateTemplateTableArguments(headings: Array<string>, data: Tem
 			)
 		end
 	end)
-	-- ROBLOX deviation END
+	-- deviation END
 end
 exports.validateTemplateTableArguments = validateTemplateTableArguments
 
@@ -108,7 +108,7 @@ function pluralize(word: string, count: number)
 	return word .. (if count == 1 then "" else "s")
 end
 
--- ROBLOX deviation: does not work the same as upstream (single lines supported/preferred)
+-- deviation: does not work the same as upstream (single lines supported/preferred)
 local START_OF_LINE = "^"
 -- local NEWLINE = "\n"
 local HEADING = "s*[^%.*]+s*"
@@ -117,10 +117,10 @@ local HEADING = "s*[^%.*]+s*"
 -- local HEADINGS_FORMAT = START_OF_LINE .. NEWLINE .. HEADING .. REPEATABLE_HEADING .. NEWLIN
 local END_OF_LINE = "$"
 local HEADINGS_FORMAT = START_OF_LINE .. HEADING .. END_OF_LINE
--- ROBLOX deviation END
+-- deviation END
 
 local function extractValidTemplateHeadings(headings: string): string
-	-- ROBLOX deviation START: get lines with value, return the first one, check for spaces in headings
+	-- deviation START: get lines with value, return the first one, check for spaces in headings
 	local match = headings:match(HEADINGS_FORMAT)
 	local matches, hasEmptySpacesInHeading
 	if match then
@@ -148,7 +148,7 @@ local function extractValidTemplateHeadings(headings: string): string
 			)
 		)
 	end
-	-- ROBLOX deviation END
+	-- deviation END
 	return matches[1]
 end
 exports.extractValidTemplateHeadings = extractValidTemplateHeadings

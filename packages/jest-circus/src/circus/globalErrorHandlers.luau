@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/globalErrorHandlers.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/globalErrorHandlers.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
--- ROBLOX deviation START: moved implementation to `combined.lua` to avoid cyclic dependencies
+-- deviation START: moved implementation to `combined.lua` to avoid cyclic dependencies
 
 local combinedModule = require(script.Parent.combined)
 local exports = {}
@@ -14,6 +14,6 @@ local exports = {}
 exports.injectGlobalErrorHandlers = combinedModule.injectGlobalErrorHandlers
 exports.restoreGlobalErrorHandlers = combinedModule.restoreGlobalErrorHandlers
 
--- ROBLOX deviation END
+-- deviation END
 
 return exports

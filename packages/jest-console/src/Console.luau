@@ -19,7 +19,7 @@
 	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 	IN THE SOFTWARE.
 ]]
--- ROBLOX NOTE: no upstream: minimal implementation derived from - https://github.com/nodejs/node/blob/094b2ae/lib/internal/console/constructor.js
+-- NOTE: no upstream: minimal implementation derived from - https://github.com/nodejs/node/blob/094b2ae/lib/internal/console/constructor.js
 
 local exports = {}
 

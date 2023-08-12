@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-console/src/BufferedConsole.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-console/src/BufferedConsole.ts
 --[[*
 * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 *
@@ -23,11 +23,11 @@ local ConsoleModule = require(CurrentModule.Console)
 local Console = ConsoleModule.default
 type Console = ConsoleModule.Console
 
--- ROBLOX deviation START: use custom implementations instead of unavailable node API
+-- deviation START: use custom implementations instead of unavailable node API
 local helpers = require(CurrentModule.helpers)
 local format = helpers.format
 local formatWithOptions = helpers.formatWithOptions
--- ROBLOX deviation END
+-- deviation END
 
 local chalk = require(Packages.ChalkLua)
 
@@ -76,11 +76,11 @@ type BufferedConsolePrivate = BufferedConsole & {
 	_groupDepth: number,
 }
 
--- ROBLOX deviation START: pre declare invariant function
+-- deviation START: pre declare invariant function
 local invariant
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX FIXME LUAU: Casting to any to prevent unwanted type narrowing for write method
+-- FIXME LUAU: Casting to any to prevent unwanted type narrowing for write method
 local BufferedConsole = setmetatable({}, { __index = Console }) :: any
 BufferedConsole.__index = BufferedConsole
 

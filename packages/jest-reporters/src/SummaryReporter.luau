@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/SummaryReporter.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/SummaryReporter.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -65,7 +65,7 @@ local NPM_EVENTS = Set.new({
 	"postrestart",
 })
 
--- ROBLOX DEVIATION: These are assigned in the constructor for testing
+-- deviation: These are assigned in the constructor for testing
 local npm_config_user_agent, npm_lifecycle_event, npm_lifecycle_script
 
 export type SummaryReporter = {
@@ -86,13 +86,13 @@ SummaryReporter.filename = "SummaryReporter"
 function SummaryReporter.new(globalConfig: Config_GlobalConfig, _process: any?): SummaryReporter
 	local self = setmetatable((BaseReporter.new(_process) :: any) :: SummaryReporterPrivate, SummaryReporter)
 
-	-- ROBLOX deviation START: _process can be nil
+	-- deviation START: _process can be nil
 	if _process then
 		npm_lifecycle_script = _process.env.npm_lifecycle_script
 		npm_lifecycle_event = _process.env.npm_lifecycle_event
 		npm_config_user_agent = _process.env.npm_config_user_agent
 	end
-	-- ROBLOX deviation END
+	-- deviation END
 	self._globalConfig = globalConfig
 	self._estimatedTime = 0
 
@@ -105,7 +105,7 @@ end
 -- Let's print the test failure summary character by character which is safer
 -- when hundreds of tests are failing.
 function SummaryReporter:_write(string_: string)
-	-- ROBLOX deviation START: print whole string at once
+	-- deviation START: print whole string at once
 	self._process.stderr:write(string_)
 	-- local i = 1
 	-- local strLen = utf8.len(string_)
@@ -114,7 +114,7 @@ function SummaryReporter:_write(string_: string)
 	-- 	self._process.stderr:write(String.charCodeAt(string_, i))
 	-- 	i += 1
 	-- end
-	-- ROBLOX deviation END
+	-- deviation END
 end
 
 function SummaryReporter:onRunStart(aggregatedResults: AggregatedResult, options: ReporterOnStartOptions)
@@ -167,11 +167,11 @@ function SummaryReporter:_printSnapshotSummary(snapshots: SnapshotSummary, globa
 		local client = if Boolean.toJSBoolean(isYarn) then "yarn" else "npm"
 		local scriptUsesJest = typeof(npm_lifecycle_script) == "string"
 			and Boolean.toJSBoolean(string.match(npm_lifecycle_script or "", "jest"))
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- if globalConfig.watch or globalConfig.watchAll then
 		-- 	updateCommand = "press `u`"
 		-- else
-		-- ROBLOX deviation END
+		-- deviation END
 		if Boolean.toJSBoolean(event) and scriptUsesJest then
 			updateCommand = ("run `%s -u`"):format(client .. " " .. prefix .. event .. (isYarn and "" or " --"))
 		else
@@ -204,22 +204,22 @@ end
 
 function SummaryReporter:_getTestSummary(contexts: Set<Context>, globalConfig: Config_GlobalConfig)
 	local function getMatchingTestsInfo()
-		-- ROBLOX deviation START: not supported: findRelatedTests
+		-- deviation START: not supported: findRelatedTests
 		-- local prefix = Boolean.toJSBoolean(globalConfig.findRelatedTests) and " related to files matching "
 		-- 	or " matching "
 		local prefix = " matching"
-		-- ROBLOX deviation END
-		-- ROBLOX deviation START: testPathPatternToRegExp not implemented (and not needed I don't think)
+		-- deviation END
+		-- deviation START: testPathPatternToRegExp not implemented (and not needed I don't think)
 		return chalk.dim(prefix)
-		-- ROBLOX deviation END
+		-- deviation END
 	end
 	local testInfo = ""
 	if globalConfig.runTestsByPath then
 		testInfo = chalk.dim(" within paths")
-		-- ROBLOX deviation START: not supported
+		-- deviation START: not supported
 		-- elseif Boolean.toJSBoolean(globalConfig.onlyChanged) then
 		-- 	testInfo = chalk.dim(" related to changed files")
-		-- ROBLOX deviation END
+		-- deviation END
 	elseif Boolean.toJSBoolean(globalConfig.testPathPattern) then
 		testInfo = getMatchingTestsInfo()
 	end

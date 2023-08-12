@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/toThrowMatchers.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/toThrowMatchers.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -66,7 +66,7 @@ local toThrowExpectedRegExp, toThrowExpectedAsymmetric, toThrowExpectedObject, t
 local toThrowExpectedString, toThrow, formatExpected, formatReceived, formatStack
 
 local function getThrown(e: any): Thrown
-	-- ROBLOX deviation: hasMessage is also considered true if message is a table
+	-- deviation: hasMessage is also considered true if message is a table
 	local hasMessage = e ~= nil and (typeof(e.message) == "string" or typeof(e.message) == "table")
 
 	if hasMessage and typeof(e.name) == "string" and typeof(e.stack) == "string" then
@@ -79,7 +79,7 @@ local function getThrown(e: any): Thrown
 	end
 
 	-- We include the following cases for completeness but based on our
-	-- ROBLOX deviation of always printing the stack trace even for non-errors
+	-- deviation of always printing the stack trace even for non-errors
 	-- we should always be in the case above
 	if hasMessage then
 		return {
@@ -110,7 +110,7 @@ local function createMatcher(matcherName: string, fromPromise: boolean?): RawMat
 		if fromPromise and isError(received) then
 			thrown = getThrown(received)
 		else
-			-- ROBLOX deviation: we also allow received to be a table with a __call metamethod
+			-- deviation: we also allow received to be a table with a __call metamethod
 			if
 				typeof(received) ~= "function"
 				and not (typeof(received) == "table" and getmetatable(received) and getmetatable(received).__call)
@@ -232,7 +232,7 @@ local function createMatcher(matcherName: string, fromPromise: boolean?): RawMat
 					end
 
 					local errorObject = Error.new(error_)
-					-- ROBLOX NOTE: using LuauPolyfill's private method to capture the stacktrace without this function
+					-- NOTE: using LuauPolyfill's private method to capture the stacktrace without this function
 					Error.__captureStackTrace(errorObject, 3)
 					local _, end_ = string.find(
 						errorObject.stack :: string,
@@ -244,7 +244,7 @@ local function createMatcher(matcherName: string, fromPromise: boolean?): RawMat
 					errorObject.stack = diffStack(compareStack, errorObject.stack :: string)
 					errorObject["$$robloxInternalJestError"] = true
 
-					-- ROBLOX FIXME: can we return from xpcall error handler?
+					-- FIXME: can we return from xpcall error handler?
 					return (errorObject :: any) :: never
 				end)
 
@@ -262,7 +262,7 @@ local function createMatcher(matcherName: string, fromPromise: boolean?): RawMat
 			return toThrowExpectedString(matcherName, options, thrown, expected)
 		elseif getType(expected) == "regexp" then
 			return toThrowExpectedRegExp(matcherName, options, thrown, expected)
-			-- ROBLOX deviation: we have different logic for determining if expected is an Error class
+			-- deviation: we have different logic for determining if expected is an Error class
 		elseif typeof(expected) == "table" and not expected.message then
 			return toThrowExpectedClass(matcherName, options, thrown, expected)
 		elseif typeof(expected) == "table" then
@@ -295,7 +295,7 @@ local matchers = {
 	as error(Error('simple'))
 ]]
 
--- ROBLOX deviation: expected does not have RegExp type annotation
+-- deviation: expected does not have RegExp type annotation
 function toThrowExpectedRegExp(
 	matcherName: string,
 	options: JestMatcherUtils.MatcherHintOptions,
@@ -306,9 +306,9 @@ function toThrowExpectedRegExp(
 
 	local message
 	if pass then
-		-- ROBLOX deviation START: assertion to help analyze
+		-- deviation START: assertion to help analyze
 		assert(thrown ~= nil)
-		-- ROBLOX deviation END
+		-- deviation END
 		message = function()
 			local retval = matcherHint(matcherName, nil, nil, options)
 				.. "\n\n"
@@ -361,9 +361,9 @@ function toThrowExpectedAsymmetric(
 
 	local message
 	if pass then
-		-- ROBLOX deviation START: assertion to help analyze
+		-- deviation START: assertion to help analyze
 		assert(thrown ~= nil)
-		-- ROBLOX deviation END
+		-- deviation END
 		message = function()
 			local retval = matcherHint(matcherName, nil, nil, options)
 				.. "\n\n"
@@ -408,7 +408,7 @@ function toThrowExpectedAsymmetric(
 	return { message = message, pass = pass }
 end
 
--- ROBLOX deviation: expected does not have Error type annotation
+-- deviation: expected does not have Error type annotation
 function toThrowExpectedObject(
 	matcherName: string,
 	options: JestMatcherUtils.MatcherHintOptions,
@@ -419,9 +419,9 @@ function toThrowExpectedObject(
 
 	local message
 	if pass then
-		-- ROBLOX deviation START: assertion to help analyze
+		-- deviation START: assertion to help analyze
 		assert(thrown ~= nil)
-		-- ROBLOX deviation END
+		-- deviation END
 		message = function()
 			local retval = matcherHint(matcherName, nil, nil, options)
 				.. "\n\n"
@@ -468,7 +468,7 @@ function toThrowExpectedObject(
 	return { message = message, pass = pass }
 end
 
--- ROBLOX deviation: expected does not have Function type annotation
+-- deviation: expected does not have Function type annotation
 function toThrowExpectedClass(
 	matcherName: string,
 	options: JestMatcherUtils.MatcherHintOptions,
@@ -544,16 +544,16 @@ function toThrowExpectedString(
 	expected: string
 ): SyncExpectationResult
 	local pass = false
-	-- ROBLOX deviation: thrown.message can be nil or a table, so ensure it is a string before calling find
+	-- deviation: thrown.message can be nil or a table, so ensure it is a string before calling find
 	if thrown ~= nil and typeof(thrown.message) == "string" and thrown.message:find(expected, 1, true) then
 		pass = true
 	end
 
 	local message
 	if pass then
-		-- ROBLOX deviation START: assertion to help analyze
+		-- deviation START: assertion to help analyze
 		assert(thrown ~= nil)
-		-- ROBLOX deviation END
+		-- deviation END
 		message = function()
 			local retval = matcherHint(matcherName, nil, nil, options)
 				.. "\n\n"
@@ -600,9 +600,9 @@ function toThrow(matcherName: string, options: MatcherHintOptions, thrown: Throw
 	local message
 
 	if pass then
-		-- ROBLOX deviation START: assertion to help analyze
+		-- deviation START: assertion to help analyze
 		assert(thrown ~= nil)
-		-- ROBLOX deviation END
+		-- deviation END
 		message = function()
 			local retval = matcherHint(matcherName, nil, "", options) .. "\n\n"
 
@@ -630,12 +630,12 @@ function formatExpected(label: string, expected: any)
 	return label .. printExpected(expected) .. "\n"
 end
 
--- ROBLOX deviation: expected does not have string | RegExp type annotation
+-- deviation: expected does not have string | RegExp type annotation
 function formatReceived(
 	label: string,
-	thrown: Thrown, -- ROBLOX FIXME: narrowing | nil,
+	thrown: Thrown, -- FIXME: narrowing | nil,
 	key: string,
-	expected: any -- ROBLOX FIXME: narrowing string | RegExp
+	expected: any -- FIXME: narrowing string | RegExp
 )
 	if thrown == nil then
 		return ""
@@ -651,7 +651,7 @@ function formatReceived(
 				return label .. printReceivedStringContainExpectedSubstring(message, index, #expected) .. "\n"
 			end
 		elseif getType(expected) == "regexp" then
-			-- ROBLOX deviation: we don't check for expected.exec being a function
+			-- deviation: we don't check for expected.exec being a function
 			-- since all RegExp polyfill instances have this function defined
 			return label .. printReceivedStringContainExpectedResult(message, expected:exec(message)) .. "\n"
 		end
@@ -678,7 +678,7 @@ function formatReceived(
 	return ""
 end
 
-function formatStack(thrown: Thrown) -- ROBLOX FIXME: narrowing | nil)
+function formatStack(thrown: Thrown) -- FIXME: narrowing | nil)
 	if thrown == nil or not thrown.isError then
 		return ""
 	else

@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/print.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/print.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -175,7 +175,7 @@ end
 	deviation: constructor does not have Function type annotation
 ]]
 function printConstructorName(label: string, constructor: any, isNot: boolean, isExpected: boolean): string
-	-- ROBLOX deviation: omitted handling for tostring() returning non-string as
+	-- deviation: omitted handling for tostring() returning non-string as
 	-- tostring() always returns string
 	local retval = label .. ": "
 	if not isNot then

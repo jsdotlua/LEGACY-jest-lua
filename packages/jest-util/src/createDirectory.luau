@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/createDirectory.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/createDirectory.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -14,7 +14,7 @@ local exports = {}
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Error = LuauPolyfill.Error
 
--- ROBLOX deviation: using FileSystemService instead of fs
+-- deviation: using FileSystemService instead of fs
 local getFileSystemService = require(CurrentModule.getFileSystemService)
 local typesModule = require(Packages.JestTypes)
 type Config_Path = typesModule.Config_Path
@@ -23,12 +23,12 @@ local function createDirectory(path: Config_Path): ()
 	local FileSystemService = getFileSystemService()
 
 	local ok, result, hasReturned = pcall(function()
-		-- ROBLOX deviation: using FileSystemService instead of fs
+		-- deviation: using FileSystemService instead of fs
 		FileSystemService:CreateDirectories(path)
 	end)
 	if not ok then
 		local e = result
-		-- ROBLOX deviation START: additional error handling for AccessDenied case
+		-- deviation START: additional error handling for AccessDenied case
 		if e:find("Error%(13%): Access Denied%. Path is outside of sandbox%.") then
 			error(
 				Error.new(
@@ -37,9 +37,9 @@ local function createDirectory(path: Config_Path): ()
 				)
 			)
 		end
-		-- ROBLOX deviation END
+		-- deviation END
 
-		-- ROBLOX FIXME: investigate how to catch directory exists error
+		-- FIXME: investigate how to catch directory exists error
 		if e.code ~= "EEXIST" then
 			error(e)
 		end

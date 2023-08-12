@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-validate/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-validate/src/index.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -11,7 +11,7 @@ local exports = {}
 local utilsModule = require(script.utils)
 exports.ValidationError = utilsModule.ValidationError
 export type ValidationError = utilsModule.ValidationError
--- ROBLOX deviation START: not ported yet
+-- deviation START: not ported yet
 -- exports.createDidYouMeanMessage = utilsModule.createDidYouMeanMessage
 -- exports.format = utilsModule.format
 -- exports.logValidationWarning = utilsModule.logValidationWarning
@@ -20,5 +20,5 @@ export type ValidationError = utilsModule.ValidationError
 -- exports.validate = require(script.validate).default
 -- exports.validateCLIOptions = require(script.validateCLIOptions).default
 -- exports.multipleValidOptions = require(script.condition).multipleValidOptions
--- ROBLOX deviation END
+-- deviation END
 return exports

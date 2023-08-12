@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/getSelectProjectsMessage.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/getSelectProjectsMessage.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -19,11 +19,11 @@ local typesModule = require(Packages.JestTypes)
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 local getProjectDisplayName = require(script.Parent.getProjectDisplayName).default
 
--- ROBLOX deviation START: predefine functions
+-- deviation START: predefine functions
 local getNoSelectionWarning
 local getProjectsRunningMessage
 local getProjectNameListElement
--- ROBLOX deviation END
+-- deviation END
 
 local function getSelectProjectsMessage(projectConfigs: Array<Config_ProjectConfig>): string
 	if #projectConfigs == 0 then

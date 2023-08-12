@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/formatTime.ts
+-- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/formatTime.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -9,19 +9,19 @@
 
 local exports = {}
 
--- ROBLOX deviation START: Polyfill Math.trunc
+-- deviation START: Polyfill Math.trunc
 local function mathTrunc(value: number): number
 	return if value > 0 then math.floor(value) else math.ceil(value)
 end
--- ROBLOX deviation END
--- ROBLOX deviation START: Polyfill String.padStart
+-- deviation END
+-- deviation START: Polyfill String.padStart
 local function stringPadStart(str: string, targetLength_: number, padString_: string?)
 	local targetLength = math.max(#str, targetLength_)
 
 	local padString = padString_ or " "
 	return (padString:rep(targetLength) .. str):sub(-targetLength)
 end
--- ROBLOX deviation END
+-- deviation END
 
 local function formatTime(time: number, prefixPower_: number?, padLeftLength_: number?): string
 	local prefixPower = prefixPower_ or -3

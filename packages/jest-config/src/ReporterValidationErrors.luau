@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/ReporterValidationErrors.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/ReporterValidationErrors.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -27,19 +27,19 @@ local utilsModule = require(script.Parent.utils)
 local BULLET = utilsModule.BULLET
 local DOCUMENTATION_NOTE = utilsModule.DOCUMENTATION_NOTE
 
--- ROBLOX deviation START: added missing variables to limit nr deviations
+-- deviation START: added missing variables to limit nr deviations
 local RobloxShared = require(Packages.RobloxShared)
 local nodeUtils = RobloxShared.nodeUtils
 local JSON = nodeUtils.JSON
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: predefine functions
+-- deviation START: predefine functions
 local validateArrayReporter
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: valid reporter needs to be either a table or a ModuleScript
+-- deviation START: valid reporter needs to be either a table or a ModuleScript
 local validReporterTypes = { "table", "ModuleScript" }
--- ROBLOX deviation END
+-- deviation END
 local ERROR = ("%sReporter Validation Error"):format(tostring(BULLET))
 
 --[[*
@@ -98,12 +98,12 @@ exports.validateReporters = validateReporters
 
 function validateArrayReporter(arrayReporter: Config_ReporterConfig, reporterIndex: number)
 	local path, options = table.unpack(arrayReporter, 1, 2)
-	-- ROBLOX deviation START: path needs to be ModuleScript and options need to be a table
+	-- deviation START: path needs to be ModuleScript and options need to be a table
 	if typeof(path) ~= "Instance" or not path:isA("ModuleScript") then
 		error(createArrayReporterError(arrayReporter, reporterIndex, 0, path, "ModuleScript", "Path"))
 	elseif typeof(options) ~= "table" then
 		error(createArrayReporterError(arrayReporter, reporterIndex, 1, options, "table", "Reporter Configuration"))
 	end
-	-- ROBLOX deviation END
+	-- deviation END
 end
 return exports

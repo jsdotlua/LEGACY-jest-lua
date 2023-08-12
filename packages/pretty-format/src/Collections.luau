@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/collections.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/collections.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -18,12 +18,12 @@ type Config = Types.Config
 type Refs = Types.Refs
 type Printer = Types.Printer
 
--- ROBLOX deviation: deviates from upstream substantially since Lua only has tables
+-- deviation: deviates from upstream substantially since Lua only has tables
 -- we only have two functions
 -- `printTableEntries` for formatting key, value pairs and
 -- `printListItems` for formatting arrays
 
--- ROBLOX deviation: printIteratorEntries is renamed to printTableEntries
+-- deviation: printIteratorEntries is renamed to printTableEntries
 -- /**
 --  * Return entries (for example, of a map)
 --  * with spacing, indentation, and comma
@@ -41,7 +41,7 @@ local function printTableEntries(
 	local separator = if separator_ then separator_ else ": "
 	local result = ""
 
-	-- ROBLOX TODO: remove this inline if-expression and function once Array.sort() fix merges
+	-- TODO: remove this inline if-expression and function once Array.sort() fix merges
 	local keys = Array.sort(
 		Object.keys(t),
 		if config.compareKeys ~= nil and config.compareKeys ~= Object.None
@@ -106,7 +106,7 @@ local function printListItems(
 				result ..= printer(list[i], config, indentationNext, depth, refs)
 			end
 
-			-- ROBLOX deviation: < #list instead of #list - 1 because of 1-indexing
+			-- deviation: < #list instead of #list - 1 because of 1-indexing
 			if i < #list then
 				result = result .. "," .. config.spacingInner
 			elseif not config.min then

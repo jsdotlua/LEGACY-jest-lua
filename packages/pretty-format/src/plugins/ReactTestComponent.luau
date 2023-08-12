@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/plugins/ReactTestComponent.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/plugins/ReactTestComponent.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -31,7 +31,7 @@ local printElementAsLeaf = markupModule.printElementAsLeaf
 local printProps = markupModule.printProps
 
 export type ReactTestObject = {
-	-- ROBLOX deviation: using number to match roact-alignment
+	-- deviation: using number to match roact-alignment
 	["$$typeof"]: number,
 	type: string,
 	props: Record<string, unknown>?,
@@ -41,7 +41,7 @@ export type ReactTestObject = {
 -- Child can be `number` in Stack renderer but not in Fiber renderer.
 type ReactTestChild = ReactTestObject | string | number
 
--- ROBLOX deviation: Symbol is always available in polyfills
+-- deviation: Symbol is always available in polyfills
 local testSymbol = Symbol.for_("react.test.json")
 
 local function getPropKeys(object: ReactTestObject)

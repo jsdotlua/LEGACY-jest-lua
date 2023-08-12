@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/index.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -19,22 +19,22 @@ local Promise = require(Packages.Promise)
 
 local exports = {}
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local path = require(Packages.path)
--- ROBLOX deviation END
+-- deviation END
 local chalk = require(Packages.ChalkLua)
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local fs = require(Packages["graceful-fs"])
--- ROBLOX deviation END
+-- deviation END
 local typesModule = require(Packages.JestTypes)
 type Config_Argv = typesModule.Config_Argv
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
 type Config_InitialOptions = typesModule.Config_InitialOptions
 type Config_Path = typesModule.Config_Path
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local tryRealpath = require(Packages.JestUtil).tryRealpath
--- ROBLOX deviation END
+-- deviation END
 local constants = require(script.constants)
 local normalize = require(script.normalize).default
 local readConfigFileAndSetRootDir = require(script.readConfigFileAndSetRootDir).default
@@ -42,39 +42,39 @@ local resolveConfigPath = require(script.resolveConfigPath).default
 local utilsModule = require(script.utils)
 local isJSONString = utilsModule.isJSONString
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local replaceRootDirInPath = utilsModule.replaceRootDirInPath
 -- TODO: remove export in Jest 28
 -- exports.getTestEnvironment = require(Packages["jest-resolve"]).resolveTestEnvironment
--- ROBLOX deviation END
+-- deviation END
 exports.isJSONString = require(script.utils).isJSONString
 exports.normalize = require(script.normalize).default
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- exports.deprecationEntries = require(script.Deprecated).default
 -- exports.replaceRootDirInPath = require(script.utils).replaceRootDirInPath
--- ROBLOX deviation END
+-- deviation END
 exports.defaults = require(script.Defaults).default
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- exports.descriptions = require(script.Descriptions).default
--- ROBLOX deviation END
+-- deviation END
 exports.constants = constants
 
--- ROBLOX deviation START: added missing variables to limit nr deviations
+-- deviation START: added missing variables to limit nr deviations
 local RobloxShared = require(Packages.RobloxShared)
 local nodeUtils = RobloxShared.nodeUtils
 type NodeJS_WriteStream = RobloxShared.NodeJS_WriteStream
 local JSON = nodeUtils.JSON
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: predefine functions
+-- deviation START: predefine functions
 local groupOptions
 local ensureNoDuplicateConfigs
--- ROBLOX deviation END
+-- deviation END
 
 type ReadConfig = {
-	-- ROBLOX deviation START: using ModuleScript instead of Config_Path
+	-- deviation START: using ModuleScript instead of Config_Path
 	configPath: ModuleScript | nil,
-	-- ROBLOX deviation END
+	-- deviation END
 	globalConfig: Config_GlobalConfig,
 	hasDeprecationWarnings: boolean,
 	projectConfig: Config_ProjectConfig,
@@ -83,17 +83,17 @@ type ReadConfig = {
 local function readConfig(
 	cwdInstance: Instance,
 	argv: Config_Argv,
-	-- ROBLOX deviation START: using Instance instead of Config_Path
+	-- deviation START: using Instance instead of Config_Path
 	packageRootOrConfig: Instance | Config_InitialOptions,
-	-- ROBLOX deviation END
+	-- deviation END
 	-- Whether it needs to look into `--config` arg passed to CLI.
 	-- It only used to read initial config. If the initial config contains
 	-- `project` property, we don't want to read `--config` value and rather
 	-- read individual configs for every project.
 	skipArgvConfigOption: boolean?,
-	-- ROBLOX deviation START: using Instance instead of Config_Path
+	-- deviation START: using Instance instead of Config_Path
 	parentConfigDirname: Instance?,
-	-- ROBLOX deviation END
+	-- deviation END
 	projectIndex: any?,
 	skipMultipleConfigWarning: boolean?
 ): Promise<ReadConfig>
@@ -108,11 +108,11 @@ local function readConfig(
 		local configPath = nil
 
 		if
-			-- ROBLOX deviation START: using Instance instead of Config_Path
+			-- deviation START: using Instance instead of Config_Path
 			typeof(packageRootOrConfig) ~= "Instance" and typeof(packageRootOrConfig) ~= "string"
-			-- ROBLOX deviation END
+			-- deviation END
 		then
-			-- ROBLOX deviation START: configuration as an object not supported yet
+			-- deviation START: configuration as an object not supported yet
 			error(Error.new("Jest: configuration as an object not supported yet"))
 			-- if parentConfigDirname ~= nil then
 			-- 	rawOptions = packageRootOrConfig :: Config_InitialOptions
@@ -122,7 +122,7 @@ local function readConfig(
 			-- else
 			-- 	error(Error.new("Jest: Cannot use configuration as an object without a file path."))
 			-- end
-			-- ROBLOX deviation END
+			-- deviation END
 		elseif isJSONString(argv.config) then
 			-- A JSON string was passed to `--config` argument and we can parse it
 			-- and use as is.
@@ -170,11 +170,11 @@ function groupOptions(options: Config_ProjectConfig & Config_GlobalConfig): {
 		globalConfig = (
 				Object.freeze({
 					bail = options.bail,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- changedFilesWithAncestor = options.changedFilesWithAncestor,
-					-- ROBLOX deviation END
+					-- deviation END
 					changedSince = options.changedSince,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- collectCoverage = options.collectCoverage,
 					-- collectCoverageFrom = options.collectCoverageFrom,
 					-- collectCoverageOnlyFrom = options.collectCoverageOnlyFrom,
@@ -185,87 +185,87 @@ function groupOptions(options: Config_ProjectConfig & Config_GlobalConfig): {
 					-- detectLeaks = options.detectLeaks,
 					-- detectOpenHandles = options.detectOpenHandles,
 					-- errorOnDeprecated = options.errorOnDeprecated,
-					-- ROBLOX deviation END
+					-- deviation END
 					expand = options.expand,
 					filter = options.filter,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- findRelatedTests = options.findRelatedTests,
 					-- forceExit = options.forceExit,
 					-- globalSetup = options.globalSetup,
 					-- globalTeardown = options.globalTeardown,
-					-- ROBLOX deviation END
+					-- deviation END
 					json = options.json,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- lastCommit = options.lastCommit,
-					-- ROBLOX deviation END
+					-- deviation END
 					listTests = options.listTests,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- logHeapUsage = options.logHeapUsage,
-					-- ROBLOX deviation END
+					-- deviation END
 					maxConcurrency = options.maxConcurrency,
 					maxWorkers = options.maxWorkers,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- noSCM = nil,
-					-- ROBLOX deviation END
+					-- deviation END
 					noStackTrace = options.noStackTrace,
 					nonFlagArgs = options.nonFlagArgs,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- notify = options.notify,
 					-- notifyMode = options.notifyMode,
 					-- onlyChanged = options.onlyChanged,
 					-- onlyFailures = options.onlyFailures,
-					-- ROBLOX deviation END
+					-- deviation END
 					outputFile = options.outputFile,
 					passWithNoTests = options.passWithNoTests,
 					projects = options.projects,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- replname = options.replname,
 					-- reporters = options.reporters,
-					-- ROBLOX deviation END
+					-- deviation END
 					rootDir = options.rootDir,
 					runTestsByPath = options.runTestsByPath,
 					silent = options.silent,
 					skipFilter = options.skipFilter,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- snapshotFormat = options.snapshotFormat,
-					-- ROBLOX deviation END
+					-- deviation END
 					testFailureExitCode = options.testFailureExitCode,
 					testNamePattern = options.testNamePattern,
 					testPathPattern = options.testPathPattern,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- testResultsProcessor = options.testResultsProcessor,
 					-- testSequencer = options.testSequencer,
-					-- ROBLOX deviation END
+					-- deviation END
 					testTimeout = options.testTimeout,
 					updateSnapshot = options.updateSnapshot,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- useStderr = options.useStderr,
-					-- ROBLOX deviation END
+					-- deviation END
 					verbose = options.verbose,
-					-- ROBLOX deviation START: not supported
+					-- deviation START: not supported
 					-- watch = options.watch,
 					-- watchAll = options.watchAll,
 					-- watchPlugins = options.watchPlugins,
 					-- watchman = options.watchman,
-					-- ROBLOX deviation END
+					-- deviation END
 				}) :: any
 			) :: Config_GlobalConfig,
 		projectConfig = Object.freeze({
 			automock = options.automock,
-			-- ROBLOX deviation START: caching not supported
+			-- deviation START: caching not supported
 			-- cache = options.cache,
 			-- cacheDirectory = options.cacheDirectory,
-			-- ROBLOX devation END
+			-- devation END
 			clearMocks = options.clearMocks,
-			-- ROBLOX deviation START: not supported
+			-- deviation START: not supported
 			-- coveragePathIgnorePatterns = options.coveragePathIgnorePatterns,
 			-- cwd = options.cwd,
 			-- dependencyExtractor = options.dependencyExtractor,
 			-- detectLeaks = options.detectLeaks,
 			-- detectOpenHandles = options.detectOpenHandles,
-			-- ROBLOX deviation END
+			-- deviation END
 			displayName = options.displayName,
-			-- ROBLOX deviation START: not supported
+			-- deviation START: not supported
 			-- errorOnDeprecated = options.errorOnDeprecated,
 			-- extensionsToTreatAsEsm = options.extensionsToTreatAsEsm,
 			-- extraGlobals = options.extraGlobals,
@@ -275,40 +275,40 @@ function groupOptions(options: Config_ProjectConfig & Config_GlobalConfig): {
 			-- globalTeardown = options.globalTeardown,
 			-- globals = options.globals,
 			-- haste = options.haste,
-			-- ROBLOX deviation END
+			-- deviation END
 			injectGlobals = options.injectGlobals,
-			-- ROBLOX deviation START: not supported
+			-- deviation START: not supported
 			-- moduleDirectories = options.moduleDirectories,
 			-- moduleFileExtensions = options.moduleFileExtensions,
 			-- moduleLoader = options.moduleLoader,
 			-- moduleNameMapper = options.moduleNameMapper,
 			-- modulePathIgnorePatterns = options.modulePathIgnorePatterns,
 			-- modulePaths = options.modulePaths,
-			-- ROBLOX deviation END
+			-- deviation END
 			name = options.name,
-			-- ROBLOX deviation START: not supported
+			-- deviation START: not supported
 			-- prettierPath = options.prettierPath,
-			-- ROBLOX deviation END
+			-- deviation END
 			resetMocks = options.resetMocks,
 			resetModules = options.resetModules,
-			-- ROBLOX deviation START: not supported
+			-- deviation START: not supported
 			-- resolver = options.resolver,
-			-- ROBLOX deviation END
+			-- deviation END
 			restoreMocks = options.restoreMocks,
 			rootDir = options.rootDir,
 			roots = options.roots,
 			runner = options.runner,
 			setupFiles = options.setupFiles,
 			setupFilesAfterEnv = options.setupFilesAfterEnv,
-			-- ROBLOX deviation START: not supported
+			-- deviation START: not supported
 			-- skipFilter = options.skipFilter,
 			-- skipNodeResolution = options.skipNodeResolution,
-			-- ROBLOX deviation END
+			-- deviation END
 			slowTestThreshold = options.slowTestThreshold,
-			-- ROBLOX deviation START: not supported
+			-- deviation START: not supported
 			-- snapshotFormat = options.snapshotFormat,
 			-- snapshotResolver = options.snapshotResolver,
-			-- ROBLOX deviation END
+			-- deviation END
 			snapshotSerializers = options.snapshotSerializers,
 			testEnvironment = options.testEnvironment,
 			testEnvironmentOptions = options.testEnvironmentOptions,
@@ -316,17 +316,17 @@ function groupOptions(options: Config_ProjectConfig & Config_GlobalConfig): {
 			testMatch = options.testMatch,
 			testPathIgnorePatterns = options.testPathIgnorePatterns,
 			testRegex = options.testRegex,
-			-- ROBLOX deviation START: not supported
+			-- deviation START: not supported
 			-- testRunner = options.testRunner,
 			-- testURL = options.testURL,
-			-- ROBLOX deviation END
+			-- deviation END
 			timers = options.timers,
-			-- ROBLOX deviation START: not supported
+			-- deviation START: not supported
 			-- transform = options.transform,
 			-- transformIgnorePatterns = options.transformIgnorePatterns,
 			-- unmockedModulePathPatterns = options.unmockedModulePathPatterns,
 			-- watchPathIgnorePatterns = options.watchPathIgnorePatterns,
-			-- ROBLOX deviation END
+			-- deviation END
 		}) :: Config_ProjectConfig,
 	}
 end
@@ -380,7 +380,7 @@ end
 local function readConfigs(
 	cwdInstance: Instance,
 	argv: Config_Argv,
-	-- ROBLOX deviation: using Instance instead of Config_Path
+	-- deviation: using Instance instead of Config_Path
 	projectPaths: Array<Instance>
 ): Promise<{
 	globalConfig: Config_GlobalConfig,
@@ -392,9 +392,9 @@ local function readConfigs(
 		local hasDeprecationWarnings
 		local configs: Array<Config_ProjectConfig> = {}
 		local projects = projectPaths
-		-- ROBLOX deviation START: using ModuleScript instead of Config_Path
+		-- deviation START: using ModuleScript instead of Config_Path
 		local configPath: ModuleScript | nil
-		-- ROBLOX deviation END
+		-- deviation END
 		if #projectPaths == 1 then
 			local parsedConfig = readConfig(cwdInstance, argv, projects[1]):expect()
 			configPath = parsedConfig.configPath

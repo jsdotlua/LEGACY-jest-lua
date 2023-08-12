@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/types.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -29,7 +29,7 @@ local jestTypesModule = require(Packages.JestTypes)
 type Config_Path = jestTypesModule.Config_Path
 type Config_ProjectConfig = jestTypesModule.Config_ProjectConfig
 
--- ROBLOX deviation START: any types that aren't ported and we don't need
+-- deviation START: any types that aren't ported and we don't need
 -- local jest_haste_mapModule = require(Packages["jest-haste-map"])
 type HasteFS = any
 type ModuleMap = any
@@ -40,9 +40,9 @@ type Resolver = any
 -- local CoverageWorkerModule = require(CurrentModule.CoverageWorker)
 -- type worker = CoverageWorkerModule.worker
 type worker = any
--- ROBLOX deviation END
+-- deviation END
 
--- ROBLOX deviation START: type for mock process param used added to Reporters
+-- deviation START: type for mock process param used added to Reporters
 local RobloxShared = require(Packages.RobloxShared)
 type Writeable = RobloxShared.Writeable
 export type NodeProcessMock = {
@@ -52,17 +52,17 @@ export type NodeProcessMock = {
 	stdout: Writeable,
 	stderr: Writeable,
 }
--- ROBLOX deviation END
+-- deviation END
 
 export type ReporterOnStartOptions = { estimatedTime: number, showStatus: boolean }
 
 export type Context = {
 	config: Config_ProjectConfig,
-	-- ROBLOX deviation START: no supported
+	-- deviation START: no supported
 	-- hasteFS: HasteFS,
 	-- moduleMap: ModuleMap,
 	-- resolver: Resolver,
-	-- ROBLOX deviation END
+	-- deviation END
 }
 
 export type Test = { context: Context, duration: number?, path: Config_Path }

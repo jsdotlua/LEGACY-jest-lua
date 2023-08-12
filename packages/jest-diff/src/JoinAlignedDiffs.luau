@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/joinAlignedDiffs.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-diff/src/joinAlignedDiffs.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -282,7 +282,7 @@ local function joinAlignedDiffsExpand(diffs: Array<Diff>, options: DiffOptionsNo
 	return table.concat(
 		Array.map(diffs, function(diff, i: number, diffs_: { [number]: any }): string
 			local line = diff[2]
-			-- ROBLOX deviation: 1-indexing
+			-- deviation: 1-indexing
 			local isFirstOrLast = i == 1 or i == #diffs_
 
 			local case = diff[1] :: number

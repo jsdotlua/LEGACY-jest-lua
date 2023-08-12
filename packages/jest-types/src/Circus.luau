@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-types/src/Circus.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-types/src/Circus.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -16,15 +16,15 @@ type Promise<T> = LuauPolyfill.Promise<T>
 local RegExp = require(rootWorkspace.RegExp)
 type RegExp = RegExp.RegExp
 
--- ROBLOX FIXME: can't express void when defined outside of a function type
+-- FIXME: can't express void when defined outside of a function type
 type void = nil
 
 local GlobalModule = require(script.Parent.Global)
 
--- ROBLOX deviation START: NodeJS.Process not available
+-- deviation START: NodeJS.Process not available
 -- type Process = NodeJS.Process
 type Process = Object
--- ROBLOX deviation END
+-- deviation END
 
 export type DoneFn = GlobalModule.DoneFn
 export type BlockFn = GlobalModule.BlockFn
@@ -49,7 +49,7 @@ export type Hook = {
 	timeout: number | nil,
 }
 
--- ROBLOX deviation: combined both possible function signatures into one so that it's considered callable by Luau analyze
+-- deviation: combined both possible function signatures into one so that it's considered callable by Luau analyze
 export type EventHandler = (self: any, event: AsyncEvent | SyncEvent, state: State) -> ...Promise<void>
 
 export type Event = SyncEvent | AsyncEvent

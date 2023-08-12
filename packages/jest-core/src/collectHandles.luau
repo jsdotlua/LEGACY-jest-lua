@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/collectHandles.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/collectHandles.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -19,15 +19,15 @@ local exports = {}
 
 --[[ eslint-disable local/ban-types-eventually ]]
 
--- ROBLOX deviation START: not needed
+-- deviation START: not needed
 -- local asyncHooks = require(Packages.async_hooks)
 -- local promisify = require(Packages.util).promisify
--- ROBLOX deviation END
+-- deviation END
 local stripAnsi = require(script.Parent.jsHelpers.stripAnsi)
 local typesModule = require(Packages.JestTypes)
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 local formatExecError = require(Packages.JestMessageUtil).formatExecError
--- ROBLOX deviation START: collectHandles not ported
+-- deviation START: collectHandles not ported
 -- local ErrorWithStack = require(Packages.JestUtil).ErrorWithStack
 -- export type HandleCollectionResult = () -> Promise<Array<Error>>
 -- local function stackIsFromUser(stack: string)
@@ -158,7 +158,7 @@ local formatExecError = require(Packages.JestMessageUtil).formatExecError
 -- 	end
 -- end
 -- exports.default = collectHandles
--- ROBLOX deviation END
+-- deviation END
 
 local function formatHandleErrors(errors: Array<Error>, config: Config_ProjectConfig): Array<string>
 	local stacks = Set.new()
@@ -172,7 +172,7 @@ local function formatHandleErrors(errors: Array<Error>, config: Config_ProjectCo
 		function(handle)
 			local ansiFree: string = stripAnsi(handle)
 
-			-- ROBLOX deviation START: rewritten logic to Lua's pattern matching
+			-- deviation START: rewritten logic to Lua's pattern matching
 			local match = string.match(ansiFree, "%s+at(.*)")
 
 			if match == nil then
@@ -180,7 +180,7 @@ local function formatHandleErrors(errors: Array<Error>, config: Config_ProjectCo
 			end
 
 			local stack = String.trim(string.sub(ansiFree, string.find(ansiFree, match :: string) :: number))
-			-- ROBLOX deviation END
+			-- deviation END
 
 			if stacks:has(stack) then
 				return false

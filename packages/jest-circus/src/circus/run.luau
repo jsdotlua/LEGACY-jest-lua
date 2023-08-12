@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/run.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/run.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -34,12 +34,12 @@ local getTestID = utilsModule.getTestID
 local invariant = utilsModule.invariant
 local makeRunResult = utilsModule.makeRunResult
 
--- ROBLOX deviation START: predefine variables
+-- deviation START: predefine variables
 local _runTestsForDescribeBlock
 local _runTest
 local _callCircusHook
 local _callCircusTest
--- ROBLOX deviation END
+-- deviation END
 
 local function run(): Promise<Circus_RunResult>
 	return Promise.resolve():andThen(function()

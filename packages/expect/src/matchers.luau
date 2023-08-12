@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/matchers.ts
+-- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/matchers.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -59,17 +59,17 @@ type MatcherState = Types.MatcherState
 type MatchersObject = Types.MatchersObject_
 
 local Utils = require(CurrentModule.utils)
--- ROBLOX deviation: skipped as Lua doesn't support ArrayBuffer
+-- deviation: skipped as Lua doesn't support ArrayBuffer
 -- local arrayBufferEquality = Utils.arrayBufferEquality
 local getObjectSubset = Utils.getObjectSubset
 local getPath = Utils.getPath
 local iterableEquality = Utils.iterableEquality
 local pathAsArray = Utils.pathAsArray
--- ROBLOX deviation: omitted imports for sparseArrayEquality
+-- deviation: omitted imports for sparseArrayEquality
 local subsetEquality = Utils.subsetEquality
 local typeEquality = Utils.typeEquality
 
--- ROBLOX deviation: Roblox Instance matchers
+-- deviation: Roblox Instance matchers
 local RobloxShared = require(Packages.RobloxShared)
 local instanceSubsetEquality = RobloxShared.RobloxInstance.instanceSubsetEquality
 local getInstanceSubset = RobloxShared.RobloxInstance.getInstanceSubset
@@ -81,12 +81,12 @@ local EXPECTED_VALUE_LABEL = "Expected value"
 local RECEIVED_VALUE_LABEL = "Received value"
 
 -- The optional property of matcher context is true if undefined.
--- ROBLOX deviation: upstream injects expand: false by default so we actually set to true if undefined
+-- deviation: upstream injects expand: false by default so we actually set to true if undefined
 local function isExpand(expand: boolean?): boolean
 	return not not expand
 end
 
--- ROBLOX deviation: don't need any of the strict equality testers since we don't have added constraints for
+-- deviation: don't need any of the strict equality testers since we don't have added constraints for
 -- strict equality in Lua compared to deep equality
 local toStrictEqualTesters = {
 	-- 	iterableEquality,
@@ -94,7 +94,7 @@ local toStrictEqualTesters = {
 	-- 	sparseArrayEquality,
 	--  arrayBufferEquality,
 }
--- ROBLOX deviation: we can't handle iterable with a type constraint in the same way
+-- deviation: we can't handle iterable with a type constraint in the same way
 -- type ContainIterable =
 --   | Array<unknown>
 --   | Set<unknown>
@@ -102,9 +102,9 @@ local toStrictEqualTesters = {
 --   | DOMTokenList
 --   | HTMLCollectionOf<any>;
 
--- ROBLOX deviation: upstream defines matchers as a single monolithic object but we split it up for readability
+-- deviation: upstream defines matchers as a single monolithic object but we split it up for readability
 local function toBe(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: any
@@ -128,11 +128,11 @@ local function toBe(
 	else
 		message = function()
 			local deepEqualityName = nil
-			-- ROBLOX deviation: no map or set types for now so this check is always true so we omit it
+			-- deviation: no map or set types for now so this check is always true so we omit it
 			-- if expectedType ~= 'map' and expectedType ~= 'set' then
 			-- If deep equality passes when referential identity fails,
 			-- but exclude map and set until review of their equality logic.
-			-- ROBLOX deviation: no strict equality in lua
+			-- deviation: no strict equality in lua
 			if equals(received, expected, { iterableEquality }) then
 				deepEqualityName = "toEqual"
 			end
@@ -162,13 +162,13 @@ local function toBe(
 end
 
 local function toBeCloseTo(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: number,
 	expected: number,
 	precision: number
 )
-	-- ROBLOX deviation: instead of getting argument count, just see if last arg is nil
+	-- deviation: instead of getting argument count, just see if last arg is nil
 	local secondArgument
 	if precision then
 		secondArgument = "precision"
@@ -252,9 +252,9 @@ local function toBeCloseTo(
 	return { message = message, pass = pass }
 end
 
--- ROBLOX deviation: toBeDefined equivalent to never.toBeNil
+-- deviation: toBeDefined equivalent to never.toBeNil
 local function toBeDefined(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: nil
@@ -277,9 +277,9 @@ local function toBeDefined(
 	return { message = message, pass = pass }
 end
 
--- ROBLOX deviation: toBeFalsy checks for Lua falsy values, not JS falsy values
+-- deviation: toBeFalsy checks for Lua falsy values, not JS falsy values
 local function toBeFalsy(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: nil
@@ -303,7 +303,7 @@ local function toBeFalsy(
 end
 
 local function toBeGreaterThan(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: number,
 	expected: number
@@ -329,7 +329,7 @@ local function toBeGreaterThan(
 end
 
 local function toBeGreaterThanOrEqual(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: number,
 	expected: number
@@ -354,9 +354,9 @@ local function toBeGreaterThanOrEqual(
 	return { message = message, pass = pass }
 end
 
--- ROBLOX deviation: toBeInstanceOf checks for Lua prototypical classes, major deviation from upstream
+-- deviation: toBeInstanceOf checks for Lua prototypical classes, major deviation from upstream
 local function toBeInstanceOf(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: any
@@ -419,7 +419,7 @@ local function toBeInstanceOf(
 end
 
 local function toBeLessThan(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: number,
 	expected: number
@@ -445,7 +445,7 @@ local function toBeLessThan(
 end
 
 local function toBeLessThanOrEqual(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: number,
 	expected: number
@@ -471,7 +471,7 @@ local function toBeLessThanOrEqual(
 end
 
 local function toBeNan(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: nil
@@ -495,7 +495,7 @@ local function toBeNan(
 end
 
 local function toBeNil(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: nil
@@ -519,7 +519,7 @@ local function toBeNil(
 end
 
 local function toBeTruthy(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: nil
@@ -542,9 +542,9 @@ local function toBeTruthy(
 	return { message = message, pass = pass }
 end
 
--- ROBLOX deviation: toBeUndefined equivalent to toBeNil
+-- deviation: toBeUndefined equivalent to toBeNil
 local function toBeUndefined(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: nil
@@ -568,7 +568,7 @@ local function toBeUndefined(
 end
 
 local function toContain(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: any
@@ -680,7 +680,7 @@ local function toContain(
 end
 
 local function toContainEqual(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: any
@@ -732,7 +732,7 @@ local function toContainEqual(
 end
 
 local function toEqual(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: any
@@ -772,7 +772,7 @@ local function toEqual(
 end
 
 local function toHaveLength(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: number
@@ -784,7 +784,7 @@ local function toHaveLength(
 		promise = self.promise,
 	}
 
-	-- ROBLOX deviation: only strings and array-like tables have a well defined built in length in Lua
+	-- deviation: only strings and array-like tables have a well defined built in length in Lua
 	-- we also allow for objects that have a length property
 	local hasLengthProperty = typeof(received) == "table" and typeof(received.length) == "number"
 	if not Array.isArray(received) and typeof(received) ~= "string" and not hasLengthProperty then
@@ -840,7 +840,7 @@ local function toHaveLength(
 end
 
 local function toHaveProperty(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expectedPath: any,
@@ -921,7 +921,7 @@ local function toHaveProperty(
 	end
 	-- Remove type cast if we rewrite getPath as iterative algorithm.
 
-	-- ROBLOX deviation: omit code block for dealing with upstream edge case with undefined expectedValues
+	-- deviation: omit code block for dealing with upstream edge case with undefined expectedValues
 
 	local message
 	if pass then
@@ -977,9 +977,9 @@ local function toHaveProperty(
 end
 
 -- FIXME: After CLI-39007, change expected to have type string | RegExp type
--- ROBLOX deviation: toMatch accepts Lua string patterns or RegExp polyfill but not simple substring
+-- deviation: toMatch accepts Lua string patterns or RegExp polyfill but not simple substring
 local function toMatch(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: string,
 	expected: any
@@ -1016,14 +1016,14 @@ local function toMatch(
 
 	local pass
 	if typeof(expected) == "string" then
-		-- ROBLOX deviation: escape chalk sequences if necessary
+		-- deviation: escape chalk sequences if necessary
 		expected = string.gsub(expected, string.char(27) .. "%[", string.char(27) .. "%%[")
 		pass = received:find(expected) ~= nil
 	else
 		pass = expected:test(received)
 	end
 
-	-- ROBLOX deviation: We print "expected pattern" in both cases because this function
+	-- deviation: We print "expected pattern" in both cases because this function
 	-- treats strings as Lua patterns
 	local message
 	if pass then
@@ -1068,7 +1068,7 @@ local function toMatch(
 end
 
 local function toMatchObject(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: any
@@ -1103,7 +1103,7 @@ local function toMatchObject(
 		)
 	end
 
-	-- ROBLOX TODO: Revisit usage of subsetEquality
+	-- TODO: Revisit usage of subsetEquality
 	local pass = equals(received, expected, { iterableEquality, subsetEquality })
 
 	local message
@@ -1145,7 +1145,7 @@ end
 	applies type checking
 ]]
 local function toStrictEqual(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: any
@@ -1185,9 +1185,9 @@ local function toStrictEqual(
 	return { actual = received, expected = expected, message = message, name = matcherName, pass = pass }
 end
 
--- ROBLOX deviation: Roblox Instance matchers
+-- deviation: Roblox Instance matchers
 local function toMatchInstance(
-	-- ROBLOX deviation: self param in Lua needs to be explicitely defined
+	-- deviation: self param in Lua needs to be explicitely defined
 	self: MatcherState,
 	received: any,
 	expected: any
@@ -1264,9 +1264,9 @@ local matchers: MatchersObject = {
 	toBeLessThan = toBeLessThan,
 	toBeLessThanOrEqual = toBeLessThanOrEqual,
 	toBeNan = toBeNan,
-	toBeNaN = toBeNan, -- ROBLOX deviation: aliased to toBeNan
+	toBeNaN = toBeNan, -- deviation: aliased to toBeNan
 	toBeNil = toBeNil,
-	toBeNull = toBeNil, -- ROBLOX deviation: aliased to toBeNil
+	toBeNull = toBeNil, -- deviation: aliased to toBeNil
 	toBeTruthy = toBeTruthy,
 	toBeUndefined = toBeUndefined,
 	toContain = toContain,
@@ -1278,7 +1278,7 @@ local matchers: MatchersObject = {
 	toMatchObject = toMatchObject,
 	toStrictEqual = toStrictEqual,
 
-	-- ROBLOX deviation: Roblox Instance matchers
+	-- deviation: Roblox Instance matchers
 	toMatchInstance = toMatchInstance,
 }
 
