@@ -115,7 +115,7 @@ function resolveConfigPathByTraversing(
 ) --[[ ROBLOX deviation: using ModuleScript instead of Config_Path]]: ModuleScript
 	-- ROBLOX deviation START: custom logic
 	-- ROBLOX NOTE: additional nil check
-	if pathToResolve == nil or typeof(pathToResolve.GetChildren) ~= "function" then
+	if (pathToResolve :: any) == nil or typeof(pathToResolve.GetChildren) ~= "function" then
 		error(Error.new(makeResolutionErrorMessage(initialPath, cwd)))
 	end
 

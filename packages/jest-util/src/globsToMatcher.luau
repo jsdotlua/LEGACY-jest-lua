@@ -69,7 +69,7 @@ local function globsToMatcher(globs: Array<Config_Glob>): MatcherFn
 
 	local matchers = Array.map(globs, function(glob)
 		if not globsToMatchersMap:has(glob) then
-			local isMatch = picomatch(glob, picomatchOptions, true) :: Matcher
+			local isMatch = (picomatch(glob, picomatchOptions, true) :: any) :: Matcher
 
 			local matcher = {
 				isMatch = isMatch,
