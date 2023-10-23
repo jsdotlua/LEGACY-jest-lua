@@ -1,9 +1,9 @@
 [package]
 name = 'jsdotlua/chalk-lua'
 description = 'https://github.com/jsdotlua/jest-lua'
-version = '5.2.0'
+version = '0.2.1'
 license = 'MIT'
-authors = ['Matt Hargett']
+authors = ['Roblox Corporation']
 registry = 'https://github.com/UpliftGames/wally-index'
 realm = 'shared'
 

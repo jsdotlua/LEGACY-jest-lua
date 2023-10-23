@@ -37,7 +37,7 @@ local path = { sep = "\\" }
 -- local win32 = process.platform == "win32"
 local win32 = true
 
-local Constants = require("./constants")
+local Constants = require(script.Parent.constants)
 local REGEX_BACKSLASH = Constants.REGEX_BACKSLASH
 local REGEX_REMOVE_BACKSLASH = Constants.REGEX_REMOVE_BACKSLASH
 local REGEX_SPECIAL_CHARS = Constants.REGEX_SPECIAL_CHARS

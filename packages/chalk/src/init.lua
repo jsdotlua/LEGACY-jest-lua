@@ -1,226 +1,322 @@
 --[[
-	MIT License
-
-	Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
-	Lua port by Matt Hargett.
-
-	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-	The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	* Copyright (c) Roblox Corporation. All rights reserved.
+	* Licensed under the MIT License (the "License");
+	* you may not use this file except in compliance with the License.
+	* You may obtain a copy of the License at
+	*
+	*     https://opensource.org/licenses/MIT
+	*
+	* Unless required by applicable law or agreed to in writing, software
+	* distributed under the License is distributed on an "AS IS" BASIS,
+	* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	* See the License for the specific language governing permissions and
+	* limitations under the License.
 ]]
---!strict
+--!nonstrict
 
-local Packages = script.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Array = LuauPolyfill.Array
-local String = LuauPolyfill.String
-
-local ansiStyles = require(script.vendor.ansiStyles)
--- local supportsColor = require(script.vendor.supportsColor)
-local utilities = require(script.utilities)
-local ourString = require(script.string)
-
-type Object = { [string]: any }
-local stringReplaceAll = ourString.replaceAll
-local stringEncaseCRLFWithFirstIndex = utilities.stringEncaseCRLFWithFirstIndex
--- `supportsColor.level` → `ansiStyles.color[name]` mapping
-local levelMapping = { "ansi", "ansi", "ansi256", "ansi16m" }
-local styles = {}
-local createChalk
-local chalkFactory
-local chalkTag
-
-local function createStyler(open: string, close: string, parent: any?)
-	local openAll
-	local closeAll
-	if parent == nil then
-		openAll = open
-		closeAll = close
-	else
-		openAll = parent.openAll .. open
-		closeAll = close .. parent.closeAll
-	end
-	return { open = open, close = close, openAll = openAll, closeAll = closeAll, parent = parent }
-end
-
-local function applyStyle(self, string_)
-	if self.level <= 0 or string_ == nil or string.len(string_) == 0 then
-		return if self._isEmpty then "" else string_
-	end
-	local styler = self._styler
-	if styler == nil then
+local function stringReplaceAll(string_, substring, replacer)
+	local index = string.find(string_, substring, 1, true)
+	if index == nil then
 		return string_
 	end
-	local openAll, closeAll = styler.openAll, styler.closeAll
-	if string.match(string_, "\u{001B}") then
-		while styler ~= nil do
-			-- Replace any instances already present with a re-opening code
-			-- otherwise only the part of the string until said closing code
-			-- will be colored, and the rest will simply be 'plain'.
-			string_ = stringReplaceAll(string_, styler.close, styler.open)
-			styler = styler.parent
-		end
+	local substringLength = #substring
+	local endIndex = 1
+	local returnValue = ""
+	repeat
+		returnValue ..= string.sub(string_, endIndex, index - 1) .. substring .. replacer
+		endIndex = index + substringLength
+		index = string.find(string_, substring, endIndex, true)
+	until not (index ~= nil)
+	returnValue ..= string.sub(string_, endIndex)
+	return returnValue
+end
+
+local function stringEncaseCRLFWithFirstIndex(string_, prefix, postfix, index)
+	local endIndex = 1
+	local returnValue = ""
+	repeat
+		local gotCR = string.sub(string_, index - 1, index - 1) == "\r"
+		returnValue ..= string.sub(string_, endIndex, if gotCR then index - 2 else index - 1) .. prefix .. (if gotCR
+			then "\r\n"
+			else "\n") .. postfix
+		endIndex = index + 1
+		index = string.find(string_, "\n", endIndex)
+	until not (index ~= nil)
+	returnValue ..= string.sub(string_, endIndex)
+	return returnValue
+end
+
+local ansiStyles = {
+	modifier = {
+		reset = { 0, 0 },
+		bold = { 1, 22 },
+		dim = { 2, 22 },
+		italic = { 3, 23 },
+		underline = { 4, 24 },
+		overline = { 53, 55 },
+		inverse = { 7, 27 },
+		hidden = { 8, 28 },
+		strikethrough = { 9, 29 },
+	},
+
+	color = {
+		black = { 30, 39 },
+		red = { 31, 39 },
+		green = { 32, 39 },
+		yellow = { 33, 39 },
+		blue = { 34, 39 },
+		magenta = { 35, 39 },
+		cyan = { 36, 39 },
+		white = { 37, 39 },
+
+		-- bright color
+		blackBright = { 90, 39 },
+		gray = { 90, 39 },
+		grey = { 90, 39 },
+		redBright = { 91, 39 },
+		greenBright = { 92, 39 },
+		yellowBright = { 93, 39 },
+		blueBright = { 94, 39 },
+		magentaBright = { 95, 39 },
+		cyanBright = { 96, 39 },
+		whiteBright = { 97, 39 },
+	},
+
+	bgColor = {
+		bgBlack = { 40, 49 },
+		bgRed = { 41, 49 },
+		bgGreen = { 42, 49 },
+		bgYellow = { 43, 49 },
+		bgBlue = { 44, 49 },
+		bgMagenta = { 45, 49 },
+		bgCyan = { 46, 49 },
+		bgWhite = { 47, 49 },
+
+		-- bright color
+		bgBlackBright = { 100, 49 },
+		bgGray = { 100, 49 },
+		bgGrey = { 100, 49 },
+		bgRedBright = { 101, 49 },
+		bgGreenBright = { 102, 49 },
+		bgYellowBright = { 103, 49 },
+		bgBlueBright = { 104, 49 },
+		bgMagentaBright = { 105, 49 },
+		bgCyanBright = { 106, 49 },
+		bgWhiteBright = { 107, 49 },
+	},
+}
+
+local ansi16 = "%c[%dm"
+local ansi256 = "%c[%d;5;%dm"
+local ESC = 27
+local ANSI_SET_FOREGROUND = 38
+local ANSI_SET_BACKGROUND = 48
+
+local styles = {}
+
+for groupName, group in pairs(ansiStyles) do
+	for styleName, style in pairs(group) do
+		styles[styleName] = {
+			open = string.format(ansi16, ESC, style[1]),
+			close = string.format(ansi16, ESC, style[2]),
+		}
 	end
+end
+
+local createStyler
+local applyStyle
+
+local function compositeStyler(style, otherStyle)
+	return createStyler(style.open .. otherStyle.open, otherStyle.close .. style.close)
+end
+
+local studioCheckPass, isStudio = pcall(function()
+	return game:GetService("RunService"):IsStudio()
+end)
+
+local Chalk = { level = 2 }
+if _G.NOCOLOR or (studioCheckPass and isStudio) then
+	Chalk.level = 0
+end
+
+setmetatable(Chalk, {
+	__call = function(_, str)
+		if str == nil or type(str) == "string" and #str == 0 then
+			return ""
+		end
+		return tostring(str)
+	end,
+})
+
+function createStyler(open, close)
+	local styler = {
+		open = open,
+		close = close,
+	}
+
+	setmetatable(styler, {
+		__call = function(self, str)
+			return applyStyle(self, str)
+		end,
+		__concat = function(self, other)
+			return compositeStyler(self, other)
+		end,
+	})
+
+	return styler
+end
+
+function applyStyle(self, str)
+	if str == nil or type(str) == "string" and #str == 0 then
+		return ""
+	end
+	if Chalk.level == 0 then
+		return tostring(str)
+	end
+
+	local styler = self
+
+	local openAll, closeAll = styler.open, styler.close
+	if string.match(str, "\u{001B}") then
+		-- deviation START: no parent styles support yet
+		-- Replace any instances already present with a re-opening code
+		-- otherwise only the part of the string until said closing code
+		-- will be colored, and the rest will simply be 'plain'.
+		str = stringReplaceAll(str, styler.close, styler.open)
+		-- deviation END
+	end
+
 	-- We can move both next actions out of loop, because remaining actions in loop won't have
 	-- any/visible effect on parts we add here. Close the styling before a linebreak and reopen
 	-- after next line to fix a bleed issue on macOS: https://github.com/chalk/chalk/pull/92
-	local lfIndex = string.find(string_, "\n")
-	if lfIndex then
-		string_ = stringEncaseCRLFWithFirstIndex(string_, closeAll, openAll, lfIndex)
-	end
-	return openAll .. string_ .. closeAll
-end
-
-local function createBuilder(self, styler, isEmpty)
-	local builder = {} :: any
-	setmetatable(builder, {
-		__call = function(_self, ...)
-			local firstArgument = select(1, ...)
-			if Array.isArray(firstArgument) then
-				return applyStyle(builder, chalkTag(builder, ...))
-			end
-			-- Single argument is hot path, implicit coercion is faster than anything
-			return applyStyle(
-				builder,
-				if select("#", ...) == 1 then tostring(firstArgument) else table.concat({ ... }, " ")
-			)
-		end,
-		__index = function(self, key)
-			if key == "level" then
-				return self._generator.level
-			end
-			return rawget(self, key)
-		end,
-
-		__newindex = function(self, key, level)
-			if key == "level" then
-				self._generator.level = level
-			end
-			rawset(self, key, level)
-		end,
-	})
-	-- no way to create a function with a different prototype
-	for k, v in pairs(styles) do
-		builder[k] = v
-	end
-	builder._generator = self
-	builder._styler = styler
-	builder._isEmpty = isEmpty
-	return builder
-end
-
-local function applyOptions(object, options_: Object?)
-	local options: Object = if options_ ~= nil then options_ else {}
-	if options.level and (tonumber(options.level) == nil or options.level >= 0 or options.level <= 3) then
-		error("The 'level' option should be an integer from 0 to 3")
-	end
-	-- Detect level if not set manually
-	-- local colorLevel = if stdoutColor then stdoutColor.level else 0
-	local colorLevel = 0
-	object.level = if options.level == nil then colorLevel else options.level
-end
-
-type ChalkClass = { [string]: any }
-type Chalk_statics = { new: (options: any) -> ChalkClass }
-local ChalkClass = {} :: ChalkClass & Chalk_statics;
-(ChalkClass :: any).__index = ChalkClass
-function ChalkClass.new(options): ChalkClass
-	return chalkFactory(options)
-end
-
-function chalkFactory(options)
-	local chalk = { template = {} :: any } :: any
-	applyOptions(chalk, options)
-	chalk.template = function(...)
-		chalkTag(chalk.template, ...)
-	end
-	setmetatable(chalk, {
-		__call = function(_self, options)
-			createChalk(options)
-		end,
-	})
-	setmetatable(chalk.template, {
-		__call = function(_self, options)
-			createChalk(options)
-		end,
-		__newindex = function(self, key, value)
-			if key == "new" then
-				error("'chalk.constructor()' is deprecated. Use 'new chalk.Instance()' instead.")
-			end
-			rawset(self, key, value)
-		end,
-	})
-	for styleName, style in pairs(styles) do
-		chalk[styleName] = style
+	local lfIndex = string.find(str, "\n")
+	if lfIndex ~= nil then
+		str = stringEncaseCRLFWithFirstIndex(str, closeAll, openAll, lfIndex)
 	end
 
-	chalk.template.Instance = ChalkClass
-	return chalk.template
+	return self.open .. tostring(str) .. self.close
 end
 
-function createChalk(options)
-	return chalkFactory(options)
+local function noStyle()
+	return createStyler("", "")
 end
 
-for _, ansiStyleEntry in pairs(ansiStyles) do
-	local this = styles
-	local styleName = ansiStyleEntry[1]
-	local style = ansiStyleEntry[2]
-	-- Lua FIXME: style is nil
-	local builder = createBuilder(this, createStyler(style.open, style.close, this._styler), this._isEmpty)
-	this[styleName] = builder
+local close = string.format(ansi16, ESC, 39)
+local bgClose = string.format(ansi16, ESC, 49)
+local reset = string.format(ansi16, ESC, 0)
+
+for styleName, style in pairs(styles) do
+	Chalk[styleName] = createStyler(style.open, style.close)
 end
 
-styles.visible = (function()
-	local this = styles.visible
-	return createBuilder(this, this._styler, true)
-end)()
+Chalk["reset"] = createStyler(reset, reset)
 
-local usedModels = { "rgb", "hex", "keyword", "hsl", "hsv", "hwb", "ansi", "ansi256" }
+local function rgbToAnsi256(red, green, blue)
+	if red == green and green == blue then
+		if red < 8 then
+			return 16
+		end
+		if red > 248 then
+			return 231
+		end
 
-for _, model in usedModels do
-	styles[model] = (function(...)
-		local this = styles[model]
-		local level = this.level
-		local styler = createStyler(
-			(ansiStyles :: any).color[levelMapping[level]][model](...),
-			ansiStyles.color.close,
-			this._styler
-		)
-		return createBuilder(this, styler, this._isEmpty)
-	end)()
-
-	local bgModel = "bg" .. string.upper(string.sub(model, 1, 1)) .. String.slice(model, 1)
-	styles[bgModel] = (function(...)
-		local this = styles[bgModel]
-		local level = this.level :: number
-		local styler = createStyler(
-			(ansiStyles :: any).bgColor[levelMapping[level]][model](...),
-			ansiStyles.bgColor.close,
-			this._styler
-		)
-		return createBuilder(this, styler, this._isEmpty)
-	end)()
-end
-
-function chalkTag(_chalk, ...: string)
-	local firstString = select(1, ...)
-	if not Array.isArray(firstString) then
-		-- If chalk() was called by itself or with a string,
-		-- return the string itself as a string.
-		return table.concat({ ... }, " ")
+		return math.round((((red - 8) / 247) * 24) + 232)
 	end
 
-	error("Lua port of chalk does not support template literals")
+	local ansi = 16 + (36 * math.round(red / 255 * 5)) + (6 * math.round(green / 255 * 5)) + math.round(blue / 255 * 5)
+	return ansi
 end
 
-local chalk = createChalk()
--- chalk.supportsColor = false -- stdoutColor
--- chalk.stderr = createChalk({
--- 	level = if stderrColor then stderrColor.level else 0,
--- })
--- chalk.stderr.supportsColor = stderrColor
+Chalk["rgb"] = function(red, green, blue)
+	if
+		type(red) ~= "number"
+		or type(green) ~= "number"
+		or type(blue) ~= "number"
+		or red > 255
+		or red < 0
+		or green > 255
+		or green < 0
+		or blue > 255
+		or blue < 0
+	then
+		return noStyle()
+	end
+	local open = string.format(ansi256, ESC, ANSI_SET_FOREGROUND, rgbToAnsi256(red, green, blue))
+	return createStyler(open, close)
+end
 
-return chalk
+Chalk["bgRgb"] = function(red, green, blue)
+	if
+		type(red) ~= "number"
+		or type(green) ~= "number"
+		or type(blue) ~= "number"
+		or red > 255
+		or red < 0
+		or green > 255
+		or green < 0
+		or blue > 255
+		or blue < 0
+	then
+		return noStyle()
+	end
+	local open = string.format(ansi256, ESC, ANSI_SET_BACKGROUND, rgbToAnsi256(red, green, blue))
+	return createStyler(open, bgClose)
+end
+
+local function hexToRgb(hex)
+	local red = tonumber(string.sub(hex, 2, 3), 16)
+	local blue = tonumber(string.sub(hex, 4, 5), 16)
+	local green = tonumber(string.sub(hex, 6, 7), 16)
+
+	return rgbToAnsi256(red, blue, green)
+end
+
+Chalk["hex"] = function(hex)
+	if type(hex) ~= "string" or string.find(hex, "#%X") ~= nil or #hex ~= 7 then
+		return noStyle()
+	end
+	local open = string.format(ansi256, ESC, ANSI_SET_FOREGROUND, hexToRgb(hex))
+	return createStyler(open, close)
+end
+
+Chalk["bgHex"] = function(hex)
+	if type(hex) ~= "string" or string.find(hex, "#%X") ~= nil or #hex ~= 7 then
+		return noStyle()
+	end
+	local open = string.format(ansi256, ESC, ANSI_SET_BACKGROUND, hexToRgb(hex))
+	return createStyler(open, bgClose)
+end
+
+Chalk["ansi"] = function(ansi)
+	if type(ansi) ~= "number" or ansi < 30 or (ansi > 37 and ansi < 90) or ansi > 97 then
+		return noStyle()
+	end
+	local open = string.format(ansi16, ESC, ansi)
+	return createStyler(open, close)
+end
+
+Chalk["bgAnsi"] = function(ansi)
+	if type(ansi) ~= "number" or ansi < 40 or (ansi > 47 and ansi < 100) or ansi > 107 then
+		return noStyle()
+	end
+	local open = string.format(ansi16, ESC, ansi)
+	return createStyler(open, bgClose)
+end
+
+Chalk["ansi256"] = function(ansi)
+	if type(ansi) ~= "number" or ansi < 0 or ansi > 255 then
+		return noStyle()
+	end
+	local open = string.format(ansi256, ESC, ANSI_SET_FOREGROUND, ansi)
+	return createStyler(open, close)
+end
+
+Chalk["bgAnsi256"] = function(ansi)
+	if type(ansi) ~= "number" or ansi < 0 or ansi > 255 then
+		return noStyle()
+	end
+	local open = string.format(ansi256, ESC, ANSI_SET_BACKGROUND, ansi)
+	return createStyler(open, bgClose)
+end
+
+return Chalk

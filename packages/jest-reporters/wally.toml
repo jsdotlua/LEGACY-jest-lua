@@ -8,7 +8,7 @@ registry = 'https://github.com/UpliftGames/wally-index'
 realm = 'shared'
 
 [dependencies]
-ChalkLua = 'jsdotlua/chalk-lua@0.2.0'
+ChalkLua = 'jsdotlua/chalk-lua@0.2.1'
 JestConsole = 'jsdotlua/jest-console@3.2.5'
 JestMock = 'jsdotlua/jest-mock@3.2.5'
 JestTestResult = 'jsdotlua/jest-test-result@3.2.5'

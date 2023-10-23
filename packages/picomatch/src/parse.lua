@@ -32,8 +32,8 @@ local String = require(script.Parent.string)
 type Object = { [string]: any }
 local RegExp = require(Packages.RegExp)
 
-local constants = require("./constants")
-local utils = require("./utils")
+local constants = require(script.Parent.constants)
+local utils = require(script.Parent.utils)
 
 --[[*
  * Constants
@@ -683,7 +683,7 @@ local function parse(input: string, options: Object): Object
 				local out = String.slice(state.output, 1, brace.outputIndex)
 				local toks = Array.slice(state.tokens, brace.tokensIndex)
 				brace.output = "\\{"
-				brace.value = brace.output
+				brace.value = brace.output :: any
 				output = "\\}"
 				value = output
 				state.output = out
