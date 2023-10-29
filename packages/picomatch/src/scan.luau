@@ -2,7 +2,6 @@
 The MIT License (MIT)
 
 Copyright (c) 2017-present, Jon Schlinkert.
-Lua port by Matt Hargett.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,39 +21,43 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]
---!strict
+--!nonstrict
+-- upstream: https://github.com/micromatch/picomatch/tree/2.3.1/lib/scan.js
 
-local Packages = script.Parent.Parent
+local CurrentModule = script.Parent
+local Packages = CurrentModule.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
+local Boolean = LuauPolyfill.Boolean
 local String = LuauPolyfill.String
-type Object = { [string]: any }
-local utils = require(script.Parent.utils)
-local constants = require(script.Parent.constants)
+type Object = LuauPolyfill.Object
+type Token = any
 
+local utils = require(CurrentModule.utils)
+local Constants = require(CurrentModule.constants)
 local CHAR_ASTERISK, CHAR_AT, CHAR_BACKWARD_SLASH, CHAR_COMMA, CHAR_DOT, CHAR_EXCLAMATION_MARK, CHAR_FORWARD_SLASH, CHAR_LEFT_CURLY_BRACE, CHAR_LEFT_PARENTHESES, CHAR_LEFT_SQUARE_BRACKET, CHAR_PLUS, CHAR_QUESTION_MARK, CHAR_RIGHT_CURLY_BRACE, CHAR_RIGHT_PARENTHESES, CHAR_RIGHT_SQUARE_BRACKET =
-	constants.CHAR_ASTERISK, --[*]
-	constants.CHAR_AT, --[@]
-	constants.CHAR_BACKWARD_SLASH, --[\]
-	constants.CHAR_COMMA, --[,]
-	constants.CHAR_DOT, --[.]
-	constants.CHAR_EXCLAMATION_MARK, --[!]
-	constants.CHAR_FORWARD_SLASH, --[/]
-	constants.CHAR_LEFT_CURLY_BRACE, --[{]
-	constants.CHAR_LEFT_PARENTHESES, --[(]
-	constants.CHAR_LEFT_SQUARE_BRACKET, --[ \[ ]
-	constants.CHAR_PLUS, --[+]
-	constants.CHAR_QUESTION_MARK, --[?]
-	constants.CHAR_RIGHT_CURLY_BRACE, --[}]
-	constants.CHAR_RIGHT_PARENTHESES, --[)]
-	constants.CHAR_RIGHT_SQUARE_BRACKET --[\]]
+	Constants.CHAR_ASTERISK, --[[ * ]]
+	Constants.CHAR_AT, --[[ @ ]]
+	Constants.CHAR_BACKWARD_SLASH, --[[ \ ]]
+	Constants.CHAR_COMMA, --[[ , ]]
+	Constants.CHAR_DOT, --[[ . ]]
+	Constants.CHAR_EXCLAMATION_MARK, --[[ ! ]]
+	Constants.CHAR_FORWARD_SLASH, --[[ / ]]
+	Constants.CHAR_LEFT_CURLY_BRACE, --[[ { ]]
+	Constants.CHAR_LEFT_PARENTHESES, --[[ ( ]]
+	Constants.CHAR_LEFT_SQUARE_BRACKET, --[[ [ ]]
+	Constants.CHAR_PLUS, --[[ + ]]
+	Constants.CHAR_QUESTION_MARK, --[[ ? ]]
+	Constants.CHAR_RIGHT_CURLY_BRACE, --[[ } ]]
+	Constants.CHAR_RIGHT_PARENTHESES, --[[ ) ]]
+	Constants.CHAR_RIGHT_SQUARE_BRACKET --[[ ] ]]
 
-local isPathSeparator = function(code)
+local function isPathSeparator(code)
 	return code == CHAR_FORWARD_SLASH or code == CHAR_BACKWARD_SLASH
 end
 
-local depth = function(token)
+local function depth(token)
 	if token.isPrefix ~= true then
-		token.depth = if token.isGlobstar then math.huge else 1
+		token.depth = if Boolean.toJSBoolean(token.isGlobstar) then math.huge else 1
 	end
 end
 
@@ -73,10 +76,10 @@ end
  * @param {Object} `options`
  * @return {Object} Returns an object with tokens and regex source string.
  * @api public
-]]
+ ]]
 
-local scan = function(input, options)
-	local opts = options or {} :: Object
+local function scan(input: string, options: Object?)
+	local opts: Object = options or {}
 
 	local length = #input + 1
 	local scanToEnd = opts.parts == true or opts.scanToEnd == true
@@ -101,7 +104,8 @@ local scan = function(input, options)
 	local braces = 0
 	local prev
 	local code
-	local token = { value = "", depth = 0, isGlob = false }
+	-- FIXME: specify type explicitely to avoid type narrowing
+	local token: Token = { value = "", depth = 0, isGlob = false }
 
 	local function eos()
 		return index >= length
@@ -114,20 +118,14 @@ local scan = function(input, options)
 		index += 1
 		return String.charCodeAt(str, index)
 	end
-
-	local function advanceAndAssignCode()
-		code = advance()
-		return code
-	end
-
 	while index < length do
-		advanceAndAssignCode()
+		code = advance()
 		local next
 
 		if code == CHAR_BACKWARD_SLASH then
 			token.backslashes = true
 			backslashes = token.backslashes
-			advanceAndAssignCode()
+			code = advance()
 
 			if code == CHAR_LEFT_CURLY_BRACE then
 				braceEscaped = true
@@ -137,7 +135,10 @@ local scan = function(input, options)
 
 		if braceEscaped == true or code == CHAR_LEFT_CURLY_BRACE then
 			braces += 1
-			while eos() ~= true and advanceAndAssignCode() ~= nil do
+			while eos() ~= true and Boolean.toJSBoolean((function()
+				code = advance()
+				return code
+			end)()) do
 				if code == CHAR_BACKWARD_SLASH then
 					token.backslashes = true
 					backslashes = token.backslashes
@@ -150,7 +151,14 @@ local scan = function(input, options)
 					continue
 				end
 
-				if braceEscaped ~= true and code == CHAR_DOT and advanceAndAssignCode() == CHAR_DOT then
+				if
+					braceEscaped ~= true
+					and code == CHAR_DOT
+					and (function()
+						code = advance()
+						return code
+					end)() == CHAR_DOT
+				then
 					token.isBrace = true
 					isBrace = token.isBrace
 					token.isGlob = true
@@ -201,12 +209,12 @@ local scan = function(input, options)
 		if code == CHAR_FORWARD_SLASH then
 			table.insert(slashes, index)
 			table.insert(tokens, token)
-			token = { value = "", depth = 0, isGlob = false } :: Object
+			token = { value = "", depth = 0, isGlob = false }
 
 			if finished == true then
 				continue
 			end
-			if prev == CHAR_DOT and index == (start + 1) then
+			if prev == CHAR_DOT and index == start + 1 then
 				start += 2
 				continue
 			end
@@ -233,11 +241,17 @@ local scan = function(input, options)
 				end
 
 				if scanToEnd == true then
-					while eos() ~= true and advanceAndAssignCode() do
+					while
+						eos() ~= true
+						and Boolean.toJSBoolean((function()
+							code = advance()
+							return code
+						end)())
+					do
 						if code == CHAR_BACKWARD_SLASH then
 							token.backslashes = true
 							backslashes = token.backslashes
-							advanceAndAssignCode()
+							code = advance()
 							continue
 						end
 
@@ -281,15 +295,14 @@ local scan = function(input, options)
 		end
 
 		if code == CHAR_LEFT_SQUARE_BRACKET then
-			next = advance()
-			while eos() ~= true and next ~= nil do
+			while eos() ~= true and Boolean.toJSBoolean((function()
+				next = advance()
+				return next
+			end)()) do
 				if next == CHAR_BACKWARD_SLASH then
 					token.backslashes = true
 					backslashes = token.backslashes
 					advance()
-					if eos() ~= true then
-						next = advance()
-					end
 					continue
 				end
 
@@ -322,11 +335,17 @@ local scan = function(input, options)
 			isGlob = token.isGlob
 
 			if scanToEnd == true then
-				while eos() ~= true and advanceAndAssignCode() do
+				while
+					eos() ~= true
+					and Boolean.toJSBoolean((function()
+						code = advance()
+						return code
+					end)())
+				do
 					if code == CHAR_LEFT_PARENTHESES then
 						token.backslashes = true
 						backslashes = token.backslashes
-						advanceAndAssignCode()
+						code = advance()
 						continue
 					end
 
@@ -366,7 +385,7 @@ local scan = function(input, options)
 		lastIndex -= start
 	end
 
-	if base ~= nil and string.len(base) ~= 0 and isGlob == true and lastIndex > 1 then
+	if Boolean.toJSBoolean(base) and isGlob == true and lastIndex > 1 then
 		base = String.slice(str, 1, lastIndex)
 		glob = String.slice(str, lastIndex)
 	elseif isGlob == true then
@@ -376,18 +395,18 @@ local scan = function(input, options)
 		base = str
 	end
 
-	if base ~= nil and base ~= "" and base ~= "/" and base ~= str then
-		if isPathSeparator(String.charCodeAt(base, string.len(base))) then
+	if Boolean.toJSBoolean(base) and base ~= "" and base ~= "/" and base ~= str then
+		if isPathSeparator(String.charCodeAt(base, #base)) then
 			base = String.slice(base, 1, -1)
 		end
 	end
 
 	if opts.unescape == true then
-		if glob ~= nil and string.len(glob) ~= 0 then
+		if Boolean.toJSBoolean(glob) then
 			glob = utils.removeBackslashes(glob)
 		end
 
-		if base ~= nil and string.len(base) ~= 0 and backslashes == true then
+		if Boolean.toJSBoolean(base) and backslashes == true then
 			base = utils.removeBackslashes(base)
 		end
 	end
@@ -416,13 +435,13 @@ local scan = function(input, options)
 	end
 
 	if opts.parts == true or opts.tokens == true then
-		local prevIndex: number?
+		local prevIndex
 
 		for idx = 1, #slashes do
-			local n = if prevIndex ~= nil and prevIndex ~= 0 then prevIndex + 1 else start
+			local n = if Boolean.toJSBoolean(prevIndex) then prevIndex + 1 else start
 			local i = slashes[idx]
 			local value = String.slice(input, n, i)
-			if opts.tokens then
+			if Boolean.toJSBoolean(opts.tokens) then
 				if idx == 1 and start ~= 1 then
 					tokens[idx].isPrefix = true
 					tokens[idx].value = prefix
@@ -438,11 +457,11 @@ local scan = function(input, options)
 			prevIndex = i
 		end
 
-		if prevIndex ~= nil and prevIndex ~= 0 and prevIndex + 1 < string.len(input) then
+		if Boolean.toJSBoolean(prevIndex) and prevIndex + 1 < #input then
 			local value = String.slice(input, prevIndex + 1)
 			table.insert(parts, value)
 
-			if opts.tokens then
+			if Boolean.toJSBoolean(opts.tokens) then
 				tokens[#tokens].value = value
 				depth(tokens[#tokens])
 				state.maxDepth += tokens[#tokens].depth

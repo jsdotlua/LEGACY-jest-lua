@@ -116,6 +116,9 @@
         },
         "RegExp": {
             "$path": "deps/RegExp.lua"
+        },
+        "ReactIs": {
+            "$path": "deps/ReactIs.lua"
         }
     }
 }

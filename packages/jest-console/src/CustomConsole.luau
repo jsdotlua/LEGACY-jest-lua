@@ -198,7 +198,7 @@ end
 
 function CustomConsole.time(self: CustomConsolePrivate, label_: string?)
 	local label: string = if label_ ~= nil then label_ else "default"
-	if self._timers[label] ~= nil then
+	if (self._timers[label] :: DateTime?) ~= nil then
 		return
 	end
 	self._timers[label] = DateTime.now()

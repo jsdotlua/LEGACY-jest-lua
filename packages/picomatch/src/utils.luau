@@ -2,7 +2,6 @@
 The MIT License (MIT)
 
 Copyright (c) 2017-present, Jon Schlinkert.
-Lua port by Matt Hargett.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,85 +21,98 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]
---!strict
+-- upstream: https://github.com/micromatch/picomatch/tree/2.3.1/lib/utils.js
 
-local Packages = script.Parent.Parent
+local CurrentModule = script.Parent
+local Packages = CurrentModule.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
-local String = require(script.Parent.string)
-type Object = { [string]: any }
+local Boolean = LuauPolyfill.Boolean
+local String = LuauPolyfill.String
+type Object = LuauPolyfill.Object
+
 local exports = {}
 
--- Lua FIXME: how to detect platform or get system path separator?
+-- deviation: skipping path
 -- local path = require("path")
-local path = { sep = "\\" }
+-- FIXME: make proper platform check
 -- local win32 = process.platform == "win32"
-local win32 = true
-
-local Constants = require(script.Parent.constants)
-local REGEX_BACKSLASH = Constants.REGEX_BACKSLASH
-local REGEX_REMOVE_BACKSLASH = Constants.REGEX_REMOVE_BACKSLASH
+local win32 = false
+local Constants = require(CurrentModule.constants)
+-- TODO START: implement missing RegExp when 'g' flag available (or reimplement without RegExp)
 local REGEX_SPECIAL_CHARS = Constants.REGEX_SPECIAL_CHARS
+-- local REGEX_BACKSLASH, REGEX_REMOVE_BACKSLASH, REGEX_SPECIAL_CHARS, REGEX_SPECIAL_CHARS_GLOBAL =
+-- 	Constants.REGEX_BACKSLASH,
+-- 	Constants.REGEX_REMOVE_BACKSLASH,
+-- 	Constants.REGEX_SPECIAL_CHARS,
 local REGEX_SPECIAL_CHARS_GLOBAL = Constants.REGEX_SPECIAL_CHARS_GLOBAL
+-- TODO END
 
-exports.isObject = function(val)
-	return val ~= nil and type(val) == "table" and not Array.isArray(val)
+function exports.isObject(val)
+	return val ~= nil and typeof(val) == "table" and not Array.isArray(val)
 end
-exports.hasRegexChars = function(str: string): boolean
-	return str:match(REGEX_SPECIAL_CHARS) ~= nil
+function exports.hasRegexChars(str)
+	return string.match(str, REGEX_SPECIAL_CHARS) ~= nil
 end
-exports.isRegexChar = function(str: string): boolean
-	return string.len(str) == 1 and exports.hasRegexChars(str)
+function exports.isRegexChar(str: string)
+	return #str == 1 and exports.hasRegexChars(str)
 end
+-- deviation START: additional dependencies
+local String_replace = require(CurrentModule.stringUtils).stringReplace
+-- deviation END
 
-exports.escapeRegex = function(str)
-	return String.replace(str, REGEX_SPECIAL_CHARS_GLOBAL, function(input)
-		return "\\" .. input
+function exports.escapeRegex(str): string
+	-- deviation: using custom String_replace function
+	return String_replace(str, REGEX_SPECIAL_CHARS_GLOBAL, function(m)
+		return "\\" .. m
 	end)
+	-- return str:replace(REGEX_SPECIAL_CHARS_GLOBAL, "\\$1")
+	-- deviation END
 end
-exports.toPosixSlashes = function(str)
-	return String.replace(str, REGEX_BACKSLASH, function(_)
-		return "/"
-	end)
-end
-
-exports.removeBackslashes = function(str)
-	return String.replace(str, REGEX_REMOVE_BACKSLASH, function(match)
-		return if match == "\\" then "" else match
-	end)
+function exports.toPosixSlashes(str): string
+	error("toPosixSlashes not implemented")
+	-- return str:replace(REGEX_BACKSLASH, "/")
 end
 
-exports.supportsLookbehinds = function(): false
-	-- Lua TODO: lua matchers don't support lookbehinds, and neither does the regexp polyfill we currently have
-	-- const segs = process.version.slice(1).split('.').map(Number);
-	-- if (segs.length === 3 && segs[0] >= 9 || (segs[0] === 8 && segs[1] >= 10)) {
-	--   return true;
-	-- }
+function exports.removeBackslashes(str): string
+	error("removeBackslashes not implemented")
+	-- return str:replace(REGEX_REMOVE_BACKSLASH, function(match)
+	-- 	return match == "\\" and "" or match
+	-- end)
+end
+-- TODO END
+
+function exports.supportsLookbehinds()
+	-- CHECK: do we suppoert lookbehind in Lua?
+	-- deviation: no equivalent check in Lua. Returning always false
 	return false
 end
 
-function exports.isWindows(options): boolean
-	if type(options) == "table" and type(options.windows) == "boolean" then
+function exports.isWindows(options: Object?): boolean
+	if typeof(options) == "table" and typeof(options.windows) == "boolean" then
 		return options.windows
 	end
-	-- Lua FIXME: figure out a way to detect OS pathing style
-	return win32 == true or path.sep == "\\"
+	--[[
+		ROBLOX deviation: not using path.sep as it's not available
+		original code:
+		return win32 === true || path.sep === '\\';
+	]]
+	return win32 == true
 end
 
-exports.escapeLast = function(input: string, char: string, lastIdx: number?): string
+function exports.escapeLast(input: string, char: string, lastIdx: number?)
 	local idx = String.lastIndexOf(input, char, lastIdx)
 	if idx == -1 then
 		return input
 	end
-	if string.sub(input, idx - 1, idx - 1) == "\\" then
-		-- Lua FIXME: type solver doesn't see last arg as nil-able number, trying this cast to see if it tricks it into working
-		return exports.escapeLast(input, char, (idx - 1) :: number?)
+	if input:sub(idx - 1, idx - 1) == "\\" then
+		return exports.escapeLast(input, char, idx - 1)
 	end
-	return String.slice(input, 1, idx) .. String.slice(input, idx)
+	return ("%s%s"):format(String.slice(input, 1, idx), String.slice(input, idx))
 end
 
-exports.removePrefix = function(input: string, state_)
-	local state = state_ or {} :: Object
+function exports.removePrefix(input: string, state_: Object?)
+	local state: Object = state_ or {}
 
 	local output = input
 	if String.startsWith(output, "./") then
@@ -109,16 +121,16 @@ exports.removePrefix = function(input: string, state_)
 	end
 	return output
 end
-exports.wrapOutput = function(input: string, state_, options_: Object): string
-	local state = state_ or {} :: Object
-	local options = options_ or {} :: Object
+function exports.wrapOutput(input, state_: Object?, options_: Object?)
+	local state: Object = state_ or {}
+	local options: Object = options_ or {}
 
-	local prepend = if options.contains then "" else "^"
-	local append = if options.contains then "" else "$"
+	local prepend = if Boolean.toJSBoolean(options.contains) then "" else "^"
+	local append = if Boolean.toJSBoolean(options.contains) then "" else "$"
 
-	local output = prepend .. "(?:" .. input .. ")" .. append
+	local output = ("%s(?:%s)%s"):format(prepend, input, append)
 	if state.negated == true then
-		output = "(?:^(?!" .. output .. ").*$)"
+		output = ("(?:^(?!%s).*$)"):format(output)
 	end
 	return output
 end

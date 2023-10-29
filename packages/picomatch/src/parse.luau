@@ -2,7 +2,6 @@
 The MIT License (MIT)
 
 Copyright (c) 2017-present, Jon Schlinkert.
-Lua port by Matt Hargett.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +21,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]
---!strict
+--!nonstrict
+-- upstream: https://github.com/micromatch/picomatch/tree/2.3.1/lib/parse.js
 
-local Packages = script.Parent.Parent
+local CurrentModule = script.Parent
+local Packages = CurrentModule.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
+local Boolean = LuauPolyfill.Boolean
+local Error = LuauPolyfill.Error
+local Object = LuauPolyfill.Object
+local String = LuauPolyfill.String
+local String_replace = require(CurrentModule.stringUtils).stringReplace
+type Token = Object
+type Object = LuauPolyfill.Object
 type Array<T> = LuauPolyfill.Array<T>
-local String = require(script.Parent.string)
-type Object = { [string]: any }
-local RegExp = require(Packages.RegExp)
 
-local constants = require(script.Parent.constants)
-local utils = require(script.Parent.utils)
+local RegExp = require(Packages.RegExp)
+local constants = require(CurrentModule.constants)
+local utils = require(CurrentModule.utils)
 
 --[[*
  * Constants
@@ -50,16 +56,18 @@ local MAX_LENGTH, POSIX_REGEX_SOURCE, REGEX_NON_SPECIAL_CHARS, REGEX_SPECIAL_CHA
  * Helpers
  ]]
 
-local expandRange = function(args: Array<any>, options)
-	if type(options.expandRange) == "function" then
+local function expandRange(args: Array<any>, options)
+	if typeof(options.expandRange) == "function" then
 		return options.expandRange(table.unpack(args), options)
 	end
 
 	Array.sort(args)
-	local value = `[{Array.join(args, "-")}]`
+	local value = ("[%s]"):format(Array.join(args, "-"))
 
-	--[[ eslint-disable-next-line no-new ]]
-	local ok = pcall(RegExp, value)
+	local ok = pcall(function()
+		--[[ eslint-disable-next-line no-new ]]
+		RegExp(value)
+	end)
 	if not ok then
 		return Array.join(
 			Array.map(args, function(v)
@@ -76,8 +84,8 @@ end
  * Create the message for a syntax error
  ]]
 
-local syntaxError = function(type, char)
-	return `Missing {type}: "{char}" - use "\\\\{char}" to match literal characters`
+local function syntaxError(type, char)
+	return ('Missing %s: "%s" - use "\\%s" to match literal characters'):format(type, char, char)
 end
 
 --[[*
@@ -87,26 +95,40 @@ end
  * @return {Object}
  ]]
 
-local function parse(input: string, options: Object): Object
-	if type(input) ~= "string" then
-		error("Expected a string")
+-- deviation START: defining parse as callable table
+local parse_
+local parse = setmetatable({}, {
+	__call = function(_self: any, input: string, options: Object?)
+		return parse_(input, options)
+	end,
+})
+
+function parse_(input, options) -- deviation END
+	if typeof(input) ~= "string" then
+		error(Error.new("TypeError: Expected a string"))
 	end
 
 	input = REPLACEMENTS[input] or input
 
-	local opts = table.clone(options)
-	local max = if type(opts.maxLength) == "number" then math.min(MAX_LENGTH, opts.maxLength) else MAX_LENGTH
+	local opts = Object.assign({}, options)
+	local max = if typeof(opts.maxLength) == "number" then math.min(MAX_LENGTH, opts.maxLength) else MAX_LENGTH
 
-	-- Lua TODO: does this need to support utf8?
 	local len = #input
 	if len > max then
-		error(`Input length: {len}, exceeds maximum allowed length: {max}`)
+		error(
+			Error.new(
+				("SyntaxError: Input length: %s, exceeds maximum allowed length: %s"):format(
+					tostring(len),
+					tostring(max)
+				)
+			)
+		)
 	end
 
 	local bos = { type = "bos", value = "", output = opts.prepend or "" }
 	local tokens = { bos }
 
-	local capture = if opts.capture then "" else "?:"
+	local capture = if Boolean.toJSBoolean(opts.capture) then "" else "?:"
 	local win32 = utils.isWindows(options)
 
 	-- create constants based on platform, for windows or posix
@@ -127,27 +149,31 @@ local function parse(input: string, options: Object): Object
 		PLATFORM_CHARS.STAR,
 		PLATFORM_CHARS.START_ANCHOR
 
-	local globstar = function(opts)
-		return `({capture}(?:(?!{START_ANCHOR}{if opts.dot then DOTS_SLASH else DOT_LITERAL}).)*?)`
+	local function globstar(opts)
+		return ("(%s(?:(?!%s%s).)*?)"):format(
+			capture,
+			START_ANCHOR,
+			if Boolean.toJSBoolean(opts.dot) then DOTS_SLASH else DOT_LITERAL
+		)
 	end
 
-	local nodot = if opts.dot then "" else NO_DOT
-	local qmarkNoDot = if opts.dot then QMARK else QMARK_NO_DOT
+	local nodot = if Boolean.toJSBoolean(opts.dot) then "" else NO_DOT
+	local qmarkNoDot = if Boolean.toJSBoolean(opts.dot) then QMARK else QMARK_NO_DOT
 	local star = if opts.bash == true then globstar(opts) else STAR
 
-	if opts.capture then
-		star = `({star})`
+	if Boolean.toJSBoolean(opts.capture) then
+		star = ("(%s)"):format(star)
 	end
 
 	-- minimatch options support
-	if type(opts.noext) == "boolean" then
+	if typeof(opts.noext) == "boolean" then
 		opts.noextglob = opts.noext
 	end
 
 	local state = {
 		input = input,
-		index = -1,
-		start = 0,
+		index = 0,
+		start = 1,
 		dot = opts.dot == true,
 		consumed = "",
 		output = "",
@@ -163,52 +189,47 @@ local function parse(input: string, options: Object): Object
 	}
 
 	input = utils.removePrefix(input, state)
-	-- Lua TODO: does this need to support utf8?
 	len = #input
 
-	local extglobs: Array<Object> = {}
-	local braces: Array<Object> = {}
+	local extglobs: Array<Token> = {}
+	local braces: Array<Token> = {}
 	local stack: Array<string> = {}
-	local prev: Object = bos
-	local value: string
+	local prev: Token = bos
+	local value
 
 	--[[*
-   * Tokenizing helpers
-   ]]
+	 * Tokenizing helpers
+	 ]]
 
-	local eos = function()
+	local function eos()
 		return state.index == len
 	end
-
-	state.peek = function(n_: number?): string
-		local n = n_ or 1
+	state.peek = function(n_: number?)
+		local n = if n_ ~= nil then n_ else 1
 		return string.sub(input, state.index + n, state.index + n)
 	end
 	local peek = state.peek
-
-	state.advance = function(): string
+	state.advance = function()
 		state.index += 1
 		return string.sub(input, state.index, state.index) or ""
 	end
 	local advance = state.advance
-
-	local remaining = function(): string
+	local function remaining()
 		return string.sub(input, state.index + 1)
 	end
-
-	local consume = function(value_: string?, num_: number?): ()
+	local function consume(value_: string?, num_: number?)
 		local value = value_ or ""
 		local num = num_ or 0
 		state.consumed ..= value
 		state.index += num
 	end
 
-	local append = function(token: Object): ()
+	local function append(token: Token)
 		state.output ..= if token.output ~= nil then token.output else token.value
 		consume(token.value)
 	end
 
-	local negate = function()
+	local function negate()
 		local count = 1
 
 		while peek() == "!" and (peek(2) ~= "(" or peek(3) == "?") do
@@ -237,23 +258,21 @@ local function parse(input: string, options: Object): Object
 	end
 
 	--[[*
-   * Push tokens onto the tokens array. This helper speeds up
-   * tokenizing by 1) helping us avoid backtracking as much as possible,
-   * and 2) helping us avoid creating extra tokens when consecutive
-   * characters are plain text. This improves performance and simplifies
-   * lookbehinds.
-   ]]
+	 * Push tokens onto the tokens array. This helper speeds up
+	 * tokenizing by 1) helping us avoid backtracking as much as possible,
+	 * and 2) helping us avoid creating extra tokens when consecutive
+	 * characters are plain text. This improves performance and simplifies
+	 * lookbehinds.
+	 ]]
 
-	local push = function(tok: Object): ()
-		-- LUA NOTE: cache the length instead of re-querying it, Lua runtimes don't help optimize this
-		local extGlobsLength = #extglobs
+	local function push(tok: Token)
 		if prev.type == "globstar" then
 			local isBrace = state.braces > 0 and (tok.type == "comma" or tok.type == "brace")
 			local isExtglob = tok.extglob == true
-				or (extGlobsLength ~= 0 and (tok.type == "pipe" or tok.type == "paren"))
+				or if #extglobs ~= 0 then tok.type == "pipe" or tok.type == "paren" else #extglobs
 
 			if tok.type ~= "slash" and tok.type ~= "paren" and not isBrace and not isExtglob then
-				state.output = String.slice(state.output, 0, -string.len(prev.output))
+				state.output = String.slice(state.output, 0, -#prev.output)
 				prev.type = "star"
 				prev.value = "*"
 				prev.output = star
@@ -261,17 +280,16 @@ local function parse(input: string, options: Object): Object
 			end
 		end
 
-		if extGlobsLength ~= 0 and tok.type ~= "paren" then
-			extglobs[extGlobsLength].inner ..= tok.value
+		if #extglobs ~= 0 and tok.type ~= "paren" then
+			extglobs[#extglobs].inner ..= tok.value
 		end
 
-		if tok.value or tok.output then
+		if Boolean.toJSBoolean(tok.value) or Boolean.toJSBoolean(tok.output) then
 			append(tok)
 		end
-		if prev and prev.type == "text" and tok.type == "text" then
+		if prev ~= nil and prev.type == "text" and tok.type == "text" then
 			prev.value ..= tok.value
-			-- LUA NOTE: minor change to avoid an unnecessary string concat if we don't need to
-			prev.output = if prev.output then prev.output .. tok.value else tok.value
+			prev.output = (prev.output or "") .. tok.value
 			return
 		end
 
@@ -280,56 +298,57 @@ local function parse(input: string, options: Object): Object
 		prev = tok
 	end
 
-	local extglobOpen = function(type, value: string)
-		-- LUA NOTE: manually unrolled Object.assign({}, ...) avoids unnecessary table re-hashing
-		local token = table.clone(EXTGLOB_CHARS[value]) :: Object
-		token.conditions = 1
-		token.inner = ""
+	local function extglobOpen(type, value)
+		local token = Object.assign({}, EXTGLOB_CHARS[value], { conditions = 1, inner = "" })
 
 		token.prev = prev
 		token.parens = state.parens
 		token.output = state.output
-		-- LUA NOTE: minor change to avoid an unnecessary string concat if we don't need to
-		local output = if opts.capture then "(" .. token.open else token.open
+		local output = (if Boolean.toJSBoolean(opts.capture) then "(" else "") .. token.open
 
 		increment("parens")
-		push({ type = type, value = value, output = if state.output then "" else ONE_CHAR })
+		push({
+			type = type,
+			value = value,
+			output = if Boolean.toJSBoolean(state.output) then "" else ONE_CHAR,
+		})
 		push({ type = "paren", extglob = true, value = advance(), output = output })
 		table.insert(extglobs, token)
 	end
 
-	local extglobClose = function(token: Object): ()
-		local output = if opts.capture then token.close .. ")" else token.close
+	local function extglobClose(token: Token)
+		local output = token.close .. (if Boolean.toJSBoolean(opts.capture) then ")" else "")
 		local rest
 
 		if token.type == "negate" then
 			local extglobStar = star
 
-			if token.inner ~= nil and string.len(token.inner) > 1 and string.find(token.inner, "/", 1, true) ~= nil then
+			if token.inner ~= nil and #token.inner > 1 and token.inner:find("/", 1, true) ~= nil then
 				extglobStar = globstar(opts)
 			end
 
 			if extglobStar ~= star or eos() or RegExp("^\\)+$"):test(remaining()) then
-				token.close = `)$)){extglobStar}`
+				token.close = (")$))%s"):format(extglobStar)
 				output = token.close
 			end
 
-			if string.find(token.inner, "*", 1, true) ~= nil then
-				rest = remaining()
-				if rest and RegExp("^\\.[^\\\\/.]+$"):test(rest) then
-					-- Any non-magical string (`.ts`) or even nested expression (`.{ts,tsx}`) can follow after the closing parenthesis.
-					-- In this case, we need to parse the string and use it in the output of the original pattern.
-					-- Suitable patterns: `/!(*.d).ts`, `/!(*.d).{ts,tsx}`, `**/!(*-dbg).@(js)`.
-					--
-					-- Disabling the `fastpaths` option due to a problem with parsing strings as `.ts` in the pattern like `**/!(*.d).ts`.
-					-- Lua NOTE: use table.clone instead of Object.assign({},...) for efficiency
-					local optionsClone = table.clone(options)
-					optionsClone.fastpaths = false
-					local expression = parse(rest, optionsClone).output
+			if
+				token.inner:find("*", 1, true) ~= nil
+				and (function()
+					rest = remaining()
+					return rest
+				end)()
+				and RegExp("^\\.[^\\\\/.]+$"):test(rest)
+			then
+				-- Any non-magical string (`.ts`) or even nested expression (`.{ts,tsx}`) can follow after the closing parenthesis.
+				-- In this case, we need to parse the string and use it in the output of the original pattern.
+				-- Suitable patterns: `/!(*.d).ts`, `/!(*.d).{ts,tsx}`, `**/!(*-dbg).@(js)`.
+				--
+				-- Disabling the `fastpaths` option due to a problem with parsing strings as `.ts` in the pattern like `**/!(*.d).ts`.
+				local expression = parse(rest, Object.assign({}, options, { fastpaths = false })).output
 
-					token.close = `){expression}){extglobStar})`
-					output = token.close
-				end
+				token.close = (")%s)%s)"):format(expression, extglobStar)
+				output = token.close
 			end
 
 			if token.prev.type == "bos" then
@@ -342,55 +361,55 @@ local function parse(input: string, options: Object): Object
 	end
 
 	--[[*
-   * Fast paths
-   ]]
+	 * Fast paths
+	 ]]
 
 	if opts.fastpaths ~= false and not RegExp('(^[*!]|[/()[\\]{}"])'):test(input) then
 		local backslashes = false
 
-		local output = String.replace(input, REGEX_SPECIAL_CHARS_BACKREF, function(m, esc, chars, first, rest, index)
+		-- deviation: using custom string.replace implementation
+		local output = String_replace(input, REGEX_SPECIAL_CHARS_BACKREF, function(m, esc, chars, first, rest, index)
 			if first == "\\" then
 				backslashes = true
 				return m
 			end
 
-			-- Lua NOTE: cache string.len(rest) instead of re-querying it, Lua runtimes don't help optimize this
-			local restLength = string.len(rest)
-			local charsLength = string.len(chars)
 			if first == "?" then
-				if esc ~= nil and esc ~= "" then
-					-- Lua NOTE: avoid concat of '' if we don't need to
-					return if rest == nil then esc .. first else esc .. first .. string.rep(QMARK, restLength)
+				if Boolean.toJSBoolean(esc) then
+					return esc .. first .. if rest ~= nil then string.rep(QMARK, #rest) else ""
 				end
 				if index == 0 then
-					return if rest ~= nil then qmarkNoDot .. string.rep(QMARK, restLength) else qmarkNoDot
+					return qmarkNoDot .. if rest ~= nil then string.rep(QMARK, #rest) else ""
 				end
-				return string.rep(QMARK, charsLength)
+				return string.rep(QMARK, #chars)
 			end
 
 			if first == "." then
-				return string.rep(DOT_LITERAL, charsLength)
+				return string.rep(DOT_LITERAL, #chars)
 			end
 
 			if first == "*" then
-				if esc ~= nil and esc ~= "" then
-					-- Lua NOTE: avoid concat of '' if we don't need to
-					return if rest ~= nil then esc .. first .. star else esc .. first
+				if Boolean.toJSBoolean(esc) then
+					return esc .. first .. if rest ~= nil then star else ""
 				end
 				return star
 			end
-			return if esc ~= nil and esc ~= "" then m else `"\\{m}`
+			return if Boolean.toJSBoolean(esc) then m else ("\\%s"):format(m)
 		end)
 
 		if backslashes == true then
 			if opts.unescape == true then
-				output = String.replace(output, RegExp("\\", "g"), function(_)
-					return ""
-				end)
+				-- FIXME START: change :replace to working solution
+				error("not implemented")
+				-- output = output:replace(RegExp("\\", "g")(""))
+				-- FIXME END
 			else
-				output = String.replace(output, RegExp("\\", "g"), function(m)
-					return if string.len(m) % 2 == 0 then "\\\\" else (if m ~= nil and m ~= "" then "\\" else "")
-				end)
+				-- FIXME START: change :replace to working solution
+				error("not implemented")
+				-- output = output:replace(RegExp("\\+", "g"), function(m)
+				-- 	return if #m % 2 == 0 then "\\\\" else (if Boolean.toJSBoolean(m) then "\\" else "")
+				-- end)
+				-- FIXME END
 			end
 		end
 
@@ -404,8 +423,8 @@ local function parse(input: string, options: Object): Object
 	end
 
 	--[[*
-   * Tokenize input until we reach end-of-string
-   ]]
+	 * Tokenize input until we reach end-of-string
+	 ]]
 
 	while not eos() do
 		value = advance()
@@ -415,10 +434,10 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Escaped characters
-     ]]
+		 * Escaped characters
+		 ]]
 
-		if value == "\\" :: string then
+		if value == "\\" then
 			local next = peek()
 
 			if next == "/" and opts.bash ~= true then
@@ -429,30 +448,31 @@ local function parse(input: string, options: Object): Object
 				continue
 			end
 
-			if not next or next == "" then
-				value ..= "\\"
+			if not Boolean.toJSBoolean(next) then
+				-- FIXME Luau: it seems that Luau narrows the type to be singleton type of "\\" and doesn't allow to append anything to it
+				value ..= "\\" :: any
 				push({ type = "text", value = value })
 				continue
 			end
 
 			-- collapse slashes to reduce potential for exploits
-			local match = RegExp("^\\\\+"):exec(remaining())
+			local match = (RegExp("^\\\\+")):exec(remaining())
 			local slashes = 0
 
-			-- Lua BUG: it thinks match isn't a type table
-			local firstMatchLength = if match ~= nil then string.len((match :: any)[1]) else 0
-			if firstMatchLength > 2 then
-				slashes = firstMatchLength
+			if match ~= nil and #match[1] > 2 then
+				slashes = #match[1]
 				state.index += slashes
 				if slashes % 2 ~= 0 then
-					value ..= "\\"
+					-- FIXME Luau: it seems that Luau narrows the type to be singleton type of "\\" and doesn't allow to append anything to it
+					value ..= "\\" :: any
 				end
 			end
 
 			if opts.unescape == true then
 				value = advance()
 			else
-				value ..= advance()
+				-- FIXME Luau: it seems that Luau narrows the type to be singleton type of "\\" and doesn't allow to append anything to it
+				value ..= advance() :: any
 			end
 
 			if state.brackets == 0 then
@@ -462,17 +482,17 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * If we're inside a regex character class, continue
-     * until we reach the closing bracket.
-     ]]
+		 * If we're inside a regex character class, continue
+		 * until we reach the closing bracket.
+		 ]]
 
 		if state.brackets > 0 and (value ~= "]" or prev.value == "[" or prev.value == "[^") then
 			if opts.posix ~= false and value == ":" then
 				local inner = String.slice(prev.value, 1)
-				if string.find(inner, "[", 1, true) ~= nil then
+				if inner:find("[", 1, true) ~= nil then
 					prev.posix = true
 
-					if string.find(inner, ":", 1, true) ~= nil then
+					if inner:find(":", 1, true) ~= nil then
 						local idx = String.lastIndexOf(prev.value, "[")
 						local pre = String.slice(prev.value, 1, idx)
 						local rest = String.slice(prev.value, idx + 2)
@@ -482,7 +502,10 @@ local function parse(input: string, options: Object): Object
 							state.backtrack = true
 							advance()
 
-							if not (bos.output == nil or bos.output == "") and Array.indexOf(tokens, prev) == 2 then
+							if
+								not Boolean.toJSBoolean(bos.output)
+								and Array.indexOf(tokens, prev) == 2 --[[ ROBLOX deviation: added 1 to account for 1-based indexing]]
+							then
 								bos.output = ONE_CHAR
 							end
 							continue
@@ -492,49 +515,50 @@ local function parse(input: string, options: Object): Object
 			end
 
 			if value == "[" and peek() ~= ":" or value == "-" and peek() == "]" then
-				value = `\\{value}`
+				value = ("\\%s"):format(value)
 			end
 
 			if value == "]" and (prev.value == "[" or prev.value == "[^") then
-				value = `\\{value}`
+				value = ("\\%s"):format(value)
 			end
 
 			if opts.posix == true and value == "!" and prev.value == "[" then
 				value = "^"
 			end
 
-			-- Lua BUG: totally bogus TypeError: Type 'string' could not be converted into '"[" | "[^"'; none of the union options are compatible
+			-- FIXME Luau: it seems that Luau narrows the type to be singleton type of "\\" and doesn't allow to append anything to it
 			prev.value ..= value :: any
-			append({ value = value :: string })
+			append({ value = value })
 			continue
 		end
 
 		--[[*
-     * If we're inside a quoted string, continue
-     * until we reach the closing double quote.
-     ]]
+		 * If we're inside a quoted string, continue
+		 * until we reach the closing double quote.
+		 ]]
 
 		if state.quotes == 1 and value ~= '"' then
-			value = utils.escapeRegex(value :: string)
+			value = utils.escapeRegex(value)
 			prev.value ..= value
 			append({ value = value })
 			continue
 		end
 
 		--[[*
-     * Double quotes
-     ]]
+		 * Double quotes
+		 ]]
 
 		if value == '"' then
-			state.quotes = if state.quotes == 1 then 0 else 1
+			state.quotes = state.quotes == 1 and 0 or 1
 			if opts.keepQuotes == true then
 				push({ type = "text", value = value })
 			end
 			continue
 		end
+
 		--[[*
-     * Parentheses
-     ]]
+		 * Parentheses
+		 ]]
 
 		if value == "(" then
 			increment("parens")
@@ -544,35 +568,35 @@ local function parse(input: string, options: Object): Object
 
 		if value == ")" then
 			if state.parens == 0 and opts.strictBrackets == true then
-				error("SyntaxError: " .. syntaxError("opening", "("))
+				error(Error.new("SyntaxError: " .. syntaxError("opening", "(")))
 			end
 
 			local extglob = extglobs[#extglobs]
 			if extglob ~= nil and state.parens == extglob.parens + 1 then
-				-- Lua note: type solver doesn't know that extglob non-nil at index of table lenth means table.remove() is guaranteed non-nil
-				extglobClose(table.remove(extglobs) :: Object)
+				extglobClose(table.remove(extglobs) :: Token)
 				continue
 			end
 
 			push({
 				type = "paren",
 				value = value,
-				output = if state.parens ~= 0 then ")" else "\\)",
+				output = if Boolean.toJSBoolean(state.parens) then ")" else "\\)",
 			})
 			decrement("parens")
 			continue
 		end
+
 		--[[*
-     * Square brackets
-     ]]
+		 * Square brackets
+		 ]]
 
 		if value == "[" then
-			if opts.nobracket == true or string.find(remaining(), "]", 1, true) == nil then
+			if opts.nobracket == true or remaining():find("]", 1, true) == nil then
 				if opts.nobracket ~= true and opts.strictBrackets == true then
-					error("SyntaxError: " .. syntaxError("closing", "]"))
+					error(Error.new("SyntaxError: " .. syntaxError("closing", "]")))
 				end
 
-				value = `\\{value}`
+				value = ("\\%s"):format(value)
 			else
 				increment("brackets")
 			end
@@ -580,29 +604,26 @@ local function parse(input: string, options: Object): Object
 			push({ type = "bracket", value = value })
 			continue
 		end
+
 		if value == "]" then
 			if opts.nobracket == true or (prev ~= nil and prev.type == "bracket" and #prev.value == 1) then
-				push({ type = "text", value = value, output = `\\{value}` })
+				push({ type = "text", value = value, output = ("\\%s"):format(value) })
 				continue
 			end
 			if state.brackets == 0 then
 				if opts.strictBrackets == true then
-					error(syntaxError("opening", "["))
+					error(Error.new("SyntaxError: " .. syntaxError("opening", "[")))
 				end
 
-				push({ type = "text", value = value, output = `\\{value}` })
+				push({ type = "text", value = value, output = ("\\%s"):format(value) })
 				continue
 			end
 
 			decrement("brackets")
 
 			local prevValue = String.slice(prev.value, 2)
-			if
-				prev.posix ~= true
-				and string.sub(prevValue, 1, 1) == "^"
-				and string.find(prevValue, "/", 1, true) == nil
-			then
-				value = `/{value}`
+			if prev.posix ~= true and prevValue:sub(1, 1) == "^" and prevValue:find("/", 1, true) == nil then
+				value = ("/%s"):format(value)
 			end
 
 			prev.value ..= value
@@ -615,7 +636,7 @@ local function parse(input: string, options: Object): Object
 			end
 
 			local escaped = utils.escapeRegex(prev.value)
-			state.output = String.slice(state.output, 1, -string.len(prev.value))
+			state.output = String.slice(state.output, 1, -#prev.value)
 
 			-- when literal brackets are explicitly enabled
 			-- assume we should escape the brackets to match literal characters
@@ -626,14 +647,14 @@ local function parse(input: string, options: Object): Object
 			end
 
 			-- when the user specifies nothing, try to match both
-			prev.value = `({capture}{escaped}|{prev.value})`
+			prev.value = ("(%s%s|%s)"):format(capture, escaped, prev.value)
 			state.output ..= prev.value
 			continue
 		end
 
 		--[[*
-     * Braces
-     ]]
+		 * Braces
+		 ]]
 
 		if value == "{" and opts.nobrace ~= true then
 			increment("braces")
@@ -642,8 +663,7 @@ local function parse(input: string, options: Object): Object
 				type = "brace",
 				value = value,
 				output = "(",
-				-- Lua TODO? should this be utf8?
-				outputIndex = string.len(state.output),
+				outputIndex = #state.output,
 				tokensIndex = #state.tokens,
 			}
 
@@ -651,10 +671,11 @@ local function parse(input: string, options: Object): Object
 			push(open)
 			continue
 		end
+
 		if value == "}" then
 			local brace = braces[#braces]
 
-			if opts.nobrace == true or not brace then
+			if opts.nobrace == true or not Boolean.toJSBoolean(brace) then
 				push({ type = "text", value = value, output = value })
 				continue
 			end
@@ -683,12 +704,12 @@ local function parse(input: string, options: Object): Object
 				local out = String.slice(state.output, 1, brace.outputIndex)
 				local toks = Array.slice(state.tokens, brace.tokensIndex)
 				brace.output = "\\{"
-				brace.value = brace.output :: any
+				brace.value = brace.output
 				output = "\\}"
 				value = output
 				state.output = out
 				for _, t in ipairs(toks) do
-					state.output ..= if t.output ~= nil and string.len(t.output) ~= 0 then t.output else t.value
+					state.output ..= if Boolean.toJSBoolean(t.output) then t.output else t.value
 				end
 			end
 
@@ -699,8 +720,8 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Pipes
-     ]]
+		 * Pipes
+		 ]]
 
 		if value == "|" then
 			if #extglobs > 0 then
@@ -711,14 +732,14 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Commas
-     ]]
+		 * Commas
+		 ]]
 
 		if value == "," then
 			local output = value
 
 			local brace = braces[#braces]
-			if brace ~= nil and stack[#stack] == "braces" then
+			if Boolean.toJSBoolean(brace) and stack[#stack] == "braces" then
 				brace.comma = true
 				output = "|"
 			end
@@ -728,8 +749,8 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Slashes
-     ]]
+		 * Slashes
+		 ]]
 
 		if value == "/" then
 			-- if the beginning of the glob is "./", advance the start
@@ -750,8 +771,8 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Dots
-     ]]
+		 * Dots
+		 ]]
 
 		if value == "." then
 			if state.braces > 0 and prev.type == "dot" then
@@ -776,29 +797,29 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Question marks
-     ]]
+		 * Question marks
+		 ]]
 
 		if value == "?" then
-			local isGroup = prev ~= nil and prev.value == "("
+			local isGroup = Boolean.toJSBoolean(prev) and prev.value == "("
 			if not isGroup and opts.noextglob ~= true and peek() == "(" and peek(2) ~= "?" then
 				extglobOpen("qmark", value)
 				continue
 			end
 
-			if prev ~= nil and prev.type == "paren" then
+			if Boolean.toJSBoolean(prev) and prev.type == "paren" then
 				local next = peek()
 				local output = value
 
 				if next == "<" and not utils.supportsLookbehinds() then
-					error("Lua does not support regex lookbehinds")
+					error(Error.new("Node.js v10 or higher is required for regex lookbehinds"))
 				end
 
 				if
 					(prev.value == "(" and not RegExp("[!=<:]"):test(next))
 					or (next == "<" and not RegExp("<([!=]|\\w+>)"):test(remaining()))
 				then
-					output = `\\{value}`
+					output = ("\\%s"):format(value)
 				end
 
 				push({ type = "text", value = value, output = output })
@@ -815,8 +836,8 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Exclamation
-     ]]
+		 * Exclamation
+		 ]]
 
 		if value == "!" then
 			if opts.noextglob ~= true and peek() == "(" then
@@ -833,8 +854,8 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Plus
-     ]]
+		 * Plus
+		 ]]
 
 		if value == "+" then
 			if opts.noextglob ~= true and peek() == "(" and peek(2) ~= "?" then
@@ -860,8 +881,8 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Plain text
-     ]]
+		 * Plain text
+		 ]]
 
 		if value == "@" then
 			if opts.noextglob ~= true and peek() == "(" and peek(2) ~= "?" then
@@ -874,18 +895,18 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Plain text
-     ]]
+		 * Plain text
+		 ]]
 
 		if value ~= "*" then
 			if value == "$" or value == "^" then
-				value = `\\{value}`
+				value = ("\\%s"):format(value)
 			end
 
 			local match = string.match(remaining(), REGEX_NON_SPECIAL_CHARS)
-			if match then
+			if match ~= nil then
 				value ..= match
-				state.index += string.len(match)
+				state.index += #match
 			end
 
 			push({ type = "text", value = value })
@@ -893,8 +914,8 @@ local function parse(input: string, options: Object): Object
 		end
 
 		--[[*
-     * Stars
-     ]]
+		 * Stars
+		 ]]
 
 		if prev ~= nil and (prev.type == "globstar" or prev.star == true) then
 			prev.type = "star"
@@ -908,7 +929,7 @@ local function parse(input: string, options: Object): Object
 		end
 
 		local rest = remaining()
-		if opts.noextglob ~= true and RegExp("^\\([^?]"):test(rest) then
+		if Boolean.toJSBoolean(opts.noextglob ~= true and RegExp("^\\([^?]"):test(rest)) then
 			extglobOpen("star", value)
 			continue
 		end
@@ -922,9 +943,11 @@ local function parse(input: string, options: Object): Object
 			local prior = prev.prev
 			local before = prior.prev
 			local isStart = prior.type == "slash" or prior.type == "bos"
-			local afterStar = before ~= nil and (before.type == "star" or before.type == "globstar")
+			local afterStar = if Boolean.toJSBoolean(before)
+				then before.type == "star" or before.type == "globstar"
+				else before
 
-			if opts.bash == true and (not isStart or (string.len(rest) > 0 and string.sub(rest, 1, 1) ~= "/")) then
+			if opts.bash == true and (not isStart or (rest:sub(1, 1) ~= nil and rest:sub(1, 1) ~= "/")) then
 				push({ type = "star", value = value, output = "" })
 				continue
 			end
@@ -938,8 +961,8 @@ local function parse(input: string, options: Object): Object
 
 			-- strip consecutive `/**/`
 			while String.slice(rest, 1, 4) == "/**" do
-				local after = string.sub(input, state.index + 4, state.index + 4)
-				if after ~= nil and after ~= "" and after ~= "/" then
+				local after = input:sub(state.index + 4, state.index + 4)
+				if Boolean.toJSBoolean(after) and after ~= "/" then
 					break
 				end
 				rest = String.slice(rest, 4)
@@ -956,10 +979,9 @@ local function parse(input: string, options: Object): Object
 				continue
 			end
 
-			-- Lua BUG: afterStar not syntax highlighted correctly here
-			if prior.type == "slash" and prior.prev.type ~= "bos" and not afterStar and eos() then
-				state.output = String.slice(state.output, 1, -(string.len(prior.output) + string.len(prev.output)))
-				prior.output = `?:{prior.output}`
+			if prior.type == "slash" and prior.prev.type ~= "bos" and not Boolean.toJSBoolean(afterStar) and eos() then
+				state.output = String.slice(state.output, 1, -#(prior.output .. prev.output))
+				prior.output = ("(?:%s"):format(prior.output)
 
 				prev.type = "globstar"
 				prev.output = globstar(opts) .. (if opts.strictSlashes then ")" else "|$)")
@@ -970,14 +992,14 @@ local function parse(input: string, options: Object): Object
 				continue
 			end
 
-			if prior.type == "slash" and prior.prev.type ~= "bos" and string.sub(rest, 1, 1) == "/" then
-				local end_ = if string.sub(rest, 2, 2) ~= nil then "|$" else ""
+			if prior.type == "slash" and prior.prev.type ~= "bos" and rest:sub(1, 1) == "/" then
+				local end_ = if rest:sub(2, 2) ~= nil then "|$" else ""
 
-				state.output = String.slice(state.output, 1, -(string.len(prior.output) + string.len(prev.output)))
-				prior.output = `(?:{prior.output}`
+				state.output = String.slice(state.output, 1, -#(prior.output .. prev.output))
+				prior.output = ("(?:%s"):format(prior.output)
 
 				prev.type = "globstar"
-				prev.output = `{globstar(opts)}{SLASH_LITERAL}|{SLASH_LITERAL}{end_})`
+				prev.output = ("%s%s|%s%s)"):format(globstar(opts), SLASH_LITERAL, SLASH_LITERAL, end_)
 				prev.value ..= value
 
 				state.output ..= prior.output .. prev.output
@@ -989,10 +1011,10 @@ local function parse(input: string, options: Object): Object
 				continue
 			end
 
-			if prior.type == "bos" and string.sub(rest, 1, 1) == "/" then
+			if prior.type == "bos" and rest:sub(1, 1) == "/" then
 				prev.type = "globstar"
 				prev.value ..= value
-				prev.output = `(?:^|{SLASH_LITERAL}|{globstar(opts)}{SLASH_LITERAL})`
+				prev.output = ("(?:^|%s|%s%s)"):format(SLASH_LITERAL, globstar(opts), SLASH_LITERAL)
 				state.output = prev.output
 				state.globstar = true
 				consume(value .. advance())
@@ -1001,8 +1023,7 @@ local function parse(input: string, options: Object): Object
 			end
 
 			-- remove single star from output
-			-- Lua TODO? should we use utg8.len here?
-			state.output = String.slice(state.output, 1, -string.len(prev.output))
+			state.output = String.slice(state.output, 1, -#prev.output)
 
 			-- reset previous token to globstar
 			prev.type = "globstar"
@@ -1056,7 +1077,7 @@ local function parse(input: string, options: Object): Object
 
 	while state.brackets > 0 do
 		if opts.strictBrackets == true then
-			error(syntaxError("closing", "]"))
+			error(Error.new("SyntaxError: " .. syntaxError("closing", "]")))
 		end
 		state.output = utils.escapeLast(state.output, "[")
 		decrement("brackets")
@@ -1064,7 +1085,7 @@ local function parse(input: string, options: Object): Object
 
 	while state.parens > 0 do
 		if opts.strictBrackets == true then
-			error(syntaxError("closing", ")"))
+			error(Error.new("SyntaxError: " .. syntaxError("closing", ")")))
 		end
 		state.output = utils.escapeLast(state.output, "(")
 		decrement("parens")
@@ -1072,22 +1093,22 @@ local function parse(input: string, options: Object): Object
 
 	while state.braces > 0 do
 		if opts.strictBrackets == true then
-			error(syntaxError("closing", "}"))
+			error(Error.new("SyntaxError: " .. syntaxError("closing", "}")))
 		end
 		state.output = utils.escapeLast(state.output, "{")
 		decrement("braces")
 	end
 
 	if opts.strictSlashes ~= true and (prev.type == "star" or prev.type == "bracket") then
-		push({ type = "maybe_slash", value = "", output = `{SLASH_LITERAL}?` })
+		push({ type = "maybe_slash", value = "", output = ("%s?"):format(SLASH_LITERAL) })
 	end
 
 	-- rebuild the output if we had to backtrack at any point
 	if state.backtrack == true then
 		state.output = ""
 
-		for _, token in state.tokens do
-			state.output ..= token.output or token.value
+		for _, token: Token in ipairs(state.tokens) do
+			state.output ..= if token.output ~= nil then token.output else token.value
 
 			if token.suffix then
 				state.output ..= token.suffix
@@ -1103,99 +1124,108 @@ end
  * impact when none of the fast paths match.
  ]]
 
--- parse.fastpaths = function(input: string, options)
---   local opts = table.clone(options) or {}
---   local max = if type(opts.maxLength) == 'number' then math.min(MAX_LENGTH, opts.maxLength) else MAX_LENGTH
--- 	local len = #input
--- 	if len > max then
--- 		error(
--- 			Error.new(
--- 				("SyntaxError: Input length: %s, exceeds maximum allowed length: %s"):format(
--- 					tostring(len),
--- 					tostring(max)
--- 				)
--- 			)
--- 		)
--- 	end
+parse.fastpaths = function(input: string, options: Object?)
+	local opts = Object.assign({}, options)
+	local max = if typeof(opts.maxLength) == "number" then math.min(MAX_LENGTH, opts.maxLength) else MAX_LENGTH
+	local len = #input
+	if len > max then
+		error(
+			Error.new(
+				("SyntaxError: Input length: %s, exceeds maximum allowed length: %s"):format(
+					tostring(len),
+					tostring(max)
+				)
+			)
+		)
+	end
 
--- 	input = if REPLACEMENTS[input] then and REPLACEMENTS[input] else input
--- 	local win32 = utils.isWindows(options)
+	input = Boolean.toJSBoolean(REPLACEMENTS[input]) and REPLACEMENTS[input] or input
+	local win32 = utils.isWindows(options)
 
--- 	-- create constants based on platform, for windows or posix
+	-- create constants based on platform, for windows or posix
 
--- 	local ref = constants.globChars(win32)
--- 	local DOT_LITERAL, SLASH_LITERAL, ONE_CHAR, DOTS_SLASH, NO_DOT, NO_DOTS, NO_DOTS_SLASH, STAR, START_ANCHOR =
--- 		ref.DOT_LITERAL,
--- 		ref.SLASH_LITERAL,
--- 		ref.ONE_CHAR,
--- 		ref.DOTS_SLASH,
--- 		ref.NO_DOT,
--- 		ref.NO_DOTS,
--- 		ref.NO_DOTS_SLASH,
--- 		ref.STAR,
--- 		ref.START_ANCHOR
+	local ref = constants.globChars(win32)
+	local DOT_LITERAL, SLASH_LITERAL, ONE_CHAR, DOTS_SLASH, NO_DOT, NO_DOTS, NO_DOTS_SLASH, STAR, START_ANCHOR =
+		ref.DOT_LITERAL,
+		ref.SLASH_LITERAL,
+		ref.ONE_CHAR,
+		ref.DOTS_SLASH,
+		ref.NO_DOT,
+		ref.NO_DOTS,
+		ref.NO_DOTS_SLASH,
+		ref.STAR,
+		ref.START_ANCHOR
 
---   local nodot = opts.dot ? NO_DOTS : NO_DOT
---   local slashDot = opts.dot ? NO_DOTS_SLASH : NO_DOT
---   local capture = opts.capture ? '' : '?:'
---   local state = { negated: false, prefix: '' }
---   local star = opts.bash == true ? '.*?' : STAR
+	local nodot = if Boolean.toJSBoolean(opts.dot) then NO_DOTS else NO_DOT
+	local slashDot = if Boolean.toJSBoolean(opts.dot) then NO_DOTS_SLASH else NO_DOT
+	local capture = if Boolean.toJSBoolean(opts.capture) then "" else "?:"
+	local state = { negated = false, prefix = "" }
+	local star = if opts.bash == true then ".*?" else STAR
 
---   if (opts.capture) {
---     star = `({star})`
---   }
+	if Boolean.toJSBoolean(opts.capture) then
+		star = ("(%s)"):format(star)
+	end
 
---   local globstar = opts => {
---     if (opts.noglobstar == true) return star
---     return `({capture}(?:(?!{START_ANCHOR}{opts.dot ? DOTS_SLASH : DOT_LITERAL}).)*?)`
---   }
+	local function globstar(opts)
+		if opts.noglobstar == true then
+			return star
+		end
+		return ("(%s(?:(?!%s%s).)*?)"):format(
+			capture,
+			START_ANCHOR,
+			if Boolean.toJSBoolean(opts.dot) then DOTS_SLASH else DOT_LITERAL
+		)
+	end
 
---   local create = str => {
---     switch (str) {
---       case '*':
---         return `{nodot}{ONE_CHAR}{star}`
+	local function create(str): string?
+		if str == "*" then
+			return ("%s%s%s"):format(nodot, ONE_CHAR, star)
+		elseif str == ".*" then
+			return ("%s%s%s"):format(DOT_LITERAL, ONE_CHAR, star)
+		elseif str == "*.*" then
+			return ("%s%s%s%s%s"):format(nodot, star, DOT_LITERAL, ONE_CHAR, star)
+		elseif str == "*/*" then
+			return ("%s%s%s%s%s%s"):format(nodot, star, SLASH_LITERAL, ONE_CHAR, slashDot, star)
+		elseif str == "**" then
+			return nodot .. globstar(opts)
+		elseif str == "**/*" then
+			return ("(?:%s%s%s)?%s%s%s"):format(nodot, globstar(opts), SLASH_LITERAL, slashDot, ONE_CHAR, star)
+		elseif str == "**/*.*" then
+			return ("(?:%s%s%s)?%s%s%s%s%s"):format(
+				nodot,
+				globstar(opts),
+				SLASH_LITERAL,
+				slashDot,
+				star,
+				DOT_LITERAL,
+				ONE_CHAR,
+				star
+			)
+		elseif str == "**/.*" then
+			return ("(?:%s%s%s)?%s%s%s"):format(nodot, globstar(opts), SLASH_LITERAL, DOT_LITERAL, ONE_CHAR, star)
+		else
+			local match = RegExp("^(.*?)\\.(\\w+)$"):exec(str)
+			if not Boolean.toJSBoolean(match) then
+				return nil
+			end
 
---       case '.*':
---         return `{DOT_LITERAL}{ONE_CHAR}{star}`
+			local source = create(match[2])
+			if not Boolean.toJSBoolean(source) then
+				return nil
+			end
 
---       case '*.*':
---         return `{nodot}{star}{DOT_LITERAL}{ONE_CHAR}{star}`
+			return source .. DOT_LITERAL .. match[3]
+		end
+	end
 
---       case '*--[[':
---         return `{nodot}{star}{SLASH_LITERAL}{ONE_CHAR}{slashDot}{star}`
+	local output = utils.removePrefix(input, state)
+	local source = create(output)
 
---       case '**':
---         return nodot + globstar(opts)
+	if source ~= nil and Boolean.toJSBoolean(source) and opts.strictSlashes ~= true then
+		source ..= ("%s?"):format(SLASH_LITERAL)
+	end
 
---       case '**--[[':
---         return `(?:{nodot}{globstar(opts)}{SLASH_LITERAL})?{slashDot}{ONE_CHAR}{star}`
-
---       case '**--[[.*':
---         return `(?:{nodot}{globstar(opts)}{SLASH_LITERAL})?{slashDot}{star}{DOT_LITERAL}{ONE_CHAR}{star}`
-
---       case '*]].*':
---         return `(?:{nodot}{globstar(opts)}{SLASH_LITERAL})?{DOT_LITERAL}{ONE_CHAR}{star}`
-
---       default: {
---         local match = /^(.*?)\.(\w+)$/.exec(str)
---         if (!match) return
-
---         local source = create(match[1])
---         if (!source) return
-
---         return source + DOT_LITERAL + match[2]
---       }
---     }
---   }
-
---   local output = utils.removePrefix(input, state)
---   local source = create(output)
-
---   if (source and opts.strictSlashes ~= true) {
---     source += `{SLASH_LITERAL}?`
---   }
-
---   return source
--- }
+	return source
+end
 
 return parse

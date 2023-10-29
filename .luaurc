@@ -1,3 +1,7 @@
 {
-	"languageMode": "strict"
+	"languageMode": "strict",
+	"lint": {
+		"*": true,
+		"TableOperations": false
+	}
 }

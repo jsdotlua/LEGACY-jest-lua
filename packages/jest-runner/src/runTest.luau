@@ -149,7 +149,7 @@ local function runTestInternal(
 			(require :: any)(testEnvironment)
 		-- transformer:requireAndTranspileModule(testEnvironment):expect()
 		-- deviation START: use only JestCircus runner
-		local testFramework: TestFramework = require(Packages.JestCircus).runner
+		local testFramework: TestFramework = (require(Packages.JestCircus) :: any).runner
 		-- local testFramework: TestFramework = transformer
 		-- 	:requireAndTranspileModule(
 		-- 		if process.env.JEST_JASMINE == "1" then require_:resolve("jest-jasmine2") else config.testRunner

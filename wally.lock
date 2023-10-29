@@ -5,7 +5,7 @@ registry = "test"
 [[package]]
 name = "brooke/jest-lua"
 version = "0.1.0"
-dependencies = [["LuauPolyfill", "jsdotlua/luau-polyfill@1.2.3"], ["Promise", "evaera/promise@4.0.0"], ["RegExp", "jsdotlua/regex@1.0.2"]]
+dependencies = [["LuauPolyfill", "jsdotlua/luau-polyfill@1.2.3"], ["Promise", "evaera/promise@4.0.0"], ["ReactIs", "jsdotlua/react-is@17.0.2"], ["RegExp", "jsdotlua/regex@1.0.2"]]
 
 [[package]]
 name = "evaera/promise"
@@ -53,8 +53,18 @@ version = "1.2.3"
 dependencies = []
 
 [[package]]
+name = "jsdotlua/react-is"
+version = "17.0.2"
+dependencies = [["Shared", "jsdotlua/shared@17.0.2"]]
+
+[[package]]
 name = "jsdotlua/regex"
 version = "1.0.2"
+dependencies = [["LuauPolyfill", "jsdotlua/luau-polyfill@1.2.3"]]
+
+[[package]]
+name = "jsdotlua/shared"
+version = "17.0.2"
 dependencies = [["LuauPolyfill", "jsdotlua/luau-polyfill@1.2.3"]]
 
 [[package]]

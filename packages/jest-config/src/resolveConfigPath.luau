@@ -117,7 +117,7 @@ function resolveConfigPathByTraversing(
 ) --[[ deviation: using ModuleScript instead of Config_Path]]: ModuleScript
 	-- deviation START: custom logic
 	-- NOTE: additional nil check
-	if pathToResolve == nil or typeof(pathToResolve.GetChildren) ~= "function" then
+	if (pathToResolve :: Instance?) == nil or typeof(pathToResolve.GetChildren) ~= "function" then
 		error(Error.new(makeResolutionErrorMessage(initialPath, cwd)))
 	end
 
