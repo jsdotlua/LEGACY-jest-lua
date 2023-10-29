@@ -1,7 +1,7 @@
 [package]
 name = 'jsdotlua/jest-validate'
 description = 'https://github.com/jsdotlua/jest-lua'
-version = '3.2.5'
+version = '3.4.1'
 license = 'MIT'
 authors = ['Roblox Corporation']
 registry = 'https://github.com/UpliftGames/wally-index'

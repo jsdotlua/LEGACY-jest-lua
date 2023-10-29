@@ -1,0 +1,6 @@
+{
+  "name": "jest-benchmark",
+  "tree": {
+    "$path": "src/"
+  }
+}

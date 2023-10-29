@@ -1,5 +1,5 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/__tests__/matchers.test.js
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/expect/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/expect/src/__tests__/matchers.test.js
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/expect/src/utils.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -329,7 +329,7 @@ local function subsetEquality(object: any, subset: any): boolean | nil
 				if isObjectWithKeys(subset_[key]) then
 					if seenReferences[subset_[key]] then
 						--[[
-								ROBLOX TODO: (ADO-1217) replace the line below
+								TODO: (ADO-1217) replace the line below
 								once Map/Set functionality is implemented
 
 								return equals(localObject[key], localSubset[key], {iterableEquality})
@@ -342,7 +342,7 @@ local function subsetEquality(object: any, subset: any): boolean | nil
 					and hasPropertyInObject(object_, key)
 					and equals(object_[key], subset_[key], {
 						--[[
-									ROBLOX TODO: (ADO-1217) uncomment the line
+									TODO: (ADO-1217) uncomment the line
 									iterableEquality,
 								]]
 						subsetEqualityWithContext(seenReferences),

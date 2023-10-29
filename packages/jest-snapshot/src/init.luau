@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-snapshot/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -210,7 +210,7 @@ function _toMatchSnapshot(config: MatchSnapshotConfig): {
 		else currentTestName or "" -- future BREAKING change: || hint
 
 	if typeof(properties) == "table" then
-		-- deviation: Roblox Instance matchers
+		-- deviation: Instance matchers
 		-- allow property matchers against received Instance values
 		if received == nil or (typeof(received) ~= "table" and getType(received) ~= "Instance") then
 			error(AssertionError.new({
@@ -227,7 +227,7 @@ function _toMatchSnapshot(config: MatchSnapshotConfig): {
 		local propertyPass = context.equals(received, properties, {
 			context.utils.iterableEquality,
 			context.utils.subsetEquality,
-			-- deviation: Roblox Instance matchers
+			-- deviation: Instance matchers
 			-- TODO: uncomment when implementing snapshot property matchers on Instances
 			-- context.utils.instanceSubsetEquality,
 		})

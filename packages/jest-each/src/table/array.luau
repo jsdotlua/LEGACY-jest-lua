@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-each/src/table/array.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-each/src/table/array.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -30,7 +30,7 @@ type Global_Row = typesModule.Global_Row
 type Global_Table = typesModule.Global_Table
 local pretty = require(Packages.PrettyFormat).format
 
--- devation: Circular dependency, inline type
+-- deviation: Circular dependency, inline type
 -- local bindModule = require(script.Parent.Parent.bind)
 -- type EachTests = bindModule.EachTests
 type EachTests = Array<{
@@ -42,11 +42,11 @@ type Templates = interpolationModule.Templates
 local interpolateVariables = interpolationModule.interpolateVariables
 
 --[[
-	ROBLOX deviation START: some strings require escaped version
+	deviation START: some strings require escaped version
 	depending where they are used
 ]]
 local SUPPORTED_PLACEHOLDERS = RegExp("%[sdifjoOp]")
-local SUPPORTED_PLACEHOLDERS_PATTERN = "%%[sdifjoOp]"
+local SUPPORTED_PLACEHOLDERS_PATTERN = "%%[sdifjoOp#]"
 local PRETTY_PLACEHOLDER = "%p"
 local PRETTY_PLACEHOLDER_PATTERN = "%%p"
 local INDEX_PLACEHOLDER = "%%#"
@@ -59,7 +59,7 @@ local JEST_EACH_PLACEHOLDER_ESCAPE = "@@__JEST_EACH_PLACEHOLDER_ESCAPE__@@"
 -- deviation: predeclare variables
 local isTemplates, normaliseTable, formatTitle, interpolateEscapedPlaceholders, isTable, colToRow, normalisePlaceholderValue, getMatchingPlaceholders, interpolatePrettyPlaceholder, interpolateTitleIndex
 
-local function default(title: string, arrayTable: Global_ArrayTable): EachTests
+local function array(title: string, arrayTable: Global_ArrayTable): EachTests
 	if isTemplates(title, arrayTable) then
 		return Array.map(arrayTable, function(template, index)
 			return {
@@ -81,7 +81,7 @@ local function default(title: string, arrayTable: Global_ArrayTable): EachTests
 	end)
 end
 
-exports.default = default
+exports.default = array
 
 function isTemplates(
 	title: string,

@@ -1,17 +1,17 @@
 [package]
 name = 'jsdotlua/jest-runtime'
 description = 'https://github.com/jsdotlua/jest-lua'
-version = '3.2.5'
+version = '3.4.1'
 license = 'MIT'
 authors = ['Roblox Corporation']
 registry = 'https://github.com/UpliftGames/wally-index'
 realm = 'shared'
 
 [dependencies]
-Expect = 'jsdotlua/expect@3.2.5'
-JestFakeTimers = 'jsdotlua/jest-fake-timers@3.2.5'
-JestMock = 'jsdotlua/jest-mock@3.2.5'
-JestSnapshot = 'jsdotlua/jest-snapshot@3.2.5'
-JestTypes = 'jsdotlua/jest-types@3.2.5'
+Expect = 'jsdotlua/expect@3.4.1'
+JestFakeTimers = 'jsdotlua/jest-fake-timers@3.4.1'
+JestMock = 'jsdotlua/jest-mock@3.4.1'
+JestSnapshot = 'jsdotlua/jest-snapshot@3.4.1'
+JestTypes = 'jsdotlua/jest-types@3.4.1'
 LuauPolyfill = 'jsdotlua/luau-polyfill@1.2.3'
 Promise = 'evaera/promise@4.0.0'

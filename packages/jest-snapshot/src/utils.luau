@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-snapshot/src/utils.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -60,7 +60,7 @@ local SNAPSHOT_GUIDE_LINK = "http://roblox.github.io/jest-roblox/snapshot-testin
 local normalizeNewLines, deepMerge
 
 local function writeSnapshotVersion()
-	return "-- Jest Roblox Snapshot v" .. SNAPSHOT_VERSION .. ", " .. SNAPSHOT_GUIDE_LINK
+	return "-- Jest Snapshot v" .. SNAPSHOT_VERSION .. ", " .. SNAPSHOT_GUIDE_LINK
 end
 
 -- TODO: ADO-1587, add snapshot version validation
@@ -135,7 +135,7 @@ local function getSnapshotData(
 	local data = {}
 	local dirty = false
 
-	-- deviation: snapshots in Jest Roblox are ModuleScripts, so we require them to load them
+	-- deviation: snapshots in Jest are ModuleScripts, so we require them to load them
 	pcall(function()
 		data = require(snapshotPath) :: any
 	end)
@@ -263,7 +263,7 @@ local function alphanumsort(o)
 	return o
 end
 
--- deviation: saves a valid Roblox ModuleScript
+-- deviation: saves a valid ModuleScript
 local function saveSnapshotFile(snapshotData: SnapshotData, snapshotPath: ConfigPath)
 	local snapshots = {
 		writeSnapshotVersion(),
@@ -318,8 +318,9 @@ end
 
 function deepMerge(target: any, source: any): any
 	if isObject(target) and isObject(source) then
-		-- JS.Lua Note: Converted this to table.clone rather than using a loop.
+		-- deviation START: use table.clone instead of manual copy
 		local mergedOutput = table.clone(target)
+		-- deviation END
 
 		for key, value in pairs(source) do
 			if isObject(source[key]) and not source[key]["$$typeof"] then

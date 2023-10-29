@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-runner/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-runner/src/index.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -101,7 +101,7 @@ export type TestRunner = {
 		eventName: Name,
 		listener: (
 			eventData: any
-			--[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]]
+			--[[ TODO: Unhandled node for type: TSIndexedAccessType ]]
 			--[[ TestEvents[Name] ]]
 		) -> ...Promise<nil>
 	) -> Emittery_UnsubscribeFn,
@@ -396,7 +396,7 @@ function TestRunner:on<Name>(
 	eventName: Name,
 	listener: (
 		eventData: any
-		--[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]]
+		--[[ TODO: Unhandled node for type: TSIndexedAccessType ]]
 		--[[ TestEvents[Name] ]]
 	) -> () | Promise<nil>
 ): Emittery_UnsubscribeFn

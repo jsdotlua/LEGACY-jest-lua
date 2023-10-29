@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/state.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-circus/src/state.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -8,7 +8,7 @@
 
 -- deviation: moved implementation from `state.lua` to avoid cyclic dependencies
 local CurrentModule = script.Parent
-local Packages = CurrentModule.Parent.Parent
+local Packages = CurrentModule.Parent
 
 local typesModule = require(Packages.JestTypes)
 type Circus_State = typesModule.Circus_State

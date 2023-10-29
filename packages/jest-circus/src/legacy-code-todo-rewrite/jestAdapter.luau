@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/legacy-code-todo-rewrite/jestAdapter.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-circus/src/legacy-code-todo-rewrite/jestAdapter.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent.Parent.Parent
+local Packages = script.Parent.Parent.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
@@ -83,7 +83,13 @@ local function jestAdapter(
 			end
 			if config.resetMocks then
 				runtime:resetAllMocks()
-				if config.timers == "legacy" then
+				if
+					Boolean.toJSBoolean(
+						if Boolean.toJSBoolean(config.fakeTimers.enableGlobally)
+							then config.fakeTimers.legacyFakeTimers
+							else config.fakeTimers.enableGlobally
+					)
+				then
 					-- during setup, this cannot be null (and it's fine to explode if it is)
 					(environment.fakeTimers :: any):useFakeTimers()
 				end

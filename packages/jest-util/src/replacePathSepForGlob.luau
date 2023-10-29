@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/replacePathSepForGlob.ts
+-- upstream: https://github.com/facebook/jest/tree/v28.0.0/packages/jest-util/src/replacePathSepForGlob.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -8,7 +8,7 @@
  ]]
 
 --[=[
-	ROBLOX deviation: not ported as it doesn't seem necessary in Lua
+	deviation: not ported as it doesn't seem necessary in Lua
 
 local CurrentModule = script.Parent
 local Packages = CurrentModule.Parent
@@ -20,7 +20,7 @@ type Config_Path = typesModule.Config_Path
 
 local function replacePathSepForGlob(path: Config_Path): Config_Glob
 	return path:replace(
-		error("not implemented"), --[[ ROBLOX TODO: Unhandled node for type: RegExpLiteral ]] --[[ /\\(?![{}()+?.^$])/g ]]
+		error("not implemented"), --[[ TODO: Unhandled node for type: RegExpLiteral ]] --[[ /\\(?![{}()+?.^$])/g ]]
 		"/"
 	)
 end

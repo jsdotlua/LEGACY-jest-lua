@@ -1,7 +1,7 @@
 [package]
 name = 'jsdotlua/test-utils'
 description = 'https://github.com/jsdotlua/jest-lua'
-version = '3.2.5'
+version = '3.4.1'
 license = 'MIT'
 authors = ['Roblox Corporation']
 registry = 'https://github.com/UpliftGames/wally-index'
@@ -9,7 +9,7 @@ realm = 'shared'
 
 [dependencies]
 ChalkLua = 'jsdotlua/chalk-lua@0.2.1'
-JestEnvironmentLuau = 'jsdotlua/jest-environment-luau@3.2.5'
-JestTypes = 'jsdotlua/jest-types@3.2.5'
+JestEnvironmentLuau = 'jsdotlua/jest-environment-luau@3.4.1'
+JestTypes = 'jsdotlua/jest-types@3.4.1'
 LuauPolyfill = 'jsdotlua/luau-polyfill@1.2.3'
-PrettyFormat = 'jsdotlua/pretty-format@3.2.5'
+PrettyFormat = 'jsdotlua/pretty-format@3.4.1'

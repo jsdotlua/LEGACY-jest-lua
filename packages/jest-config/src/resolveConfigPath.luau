@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/resolveConfigPath.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-config/src/resolveConfigPath.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -32,6 +32,8 @@ local JEST_CONFIG_BASE_NAME = constantsModule.JEST_CONFIG_BASE_NAME
 -- local JEST_CONFIG_EXT_ORDER = constantsModule.JEST_CONFIG_EXT_ORDER
 -- local PACKAGE_JSON = constantsModule.PACKAGE_JSON
 -- deviation END
+local utilsModule = require(script.Parent.utils)
+local DOCUMENTATION_NOTE = utilsModule.DOCUMENTATION_NOTE
 
 -- deviation START: predefine functions
 local resolveConfigPathByTraversing: (
@@ -112,10 +114,10 @@ function resolveConfigPathByTraversing(
 	-- deviation: using Instance instead of Config_Path
 	cwd: Instance,
 	skipMultipleConfigWarning: boolean
-) --[[ ROBLOX deviation: using ModuleScript instead of Config_Path]]: ModuleScript
+) --[[ deviation: using ModuleScript instead of Config_Path]]: ModuleScript
 	-- deviation START: custom logic
 	-- NOTE: additional nil check
-	if (pathToResolve :: any) == nil or typeof(pathToResolve.GetChildren) ~= "function" then
+	if pathToResolve == nil or typeof(pathToResolve.GetChildren) ~= "function" then
 		error(Error.new(makeResolutionErrorMessage(initialPath, cwd)))
 	end
 
@@ -153,7 +155,7 @@ end
 -- end
 -- local function hasPackageJsonJestKey(packagePath: Config_Path)
 -- 	local content = fs:readFileSync(packagePath, "utf8")
--- 	do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+-- 	do --[[ COMMENT: try-catch block conversion ]]
 -- 		local ok, result, hasReturned = xpcall(function()
 -- 			return Array.indexOf(Object.keys(JSON:parse(content)), "jest") ~= -1, true
 -- 		end, function()
@@ -206,7 +208,7 @@ local function extraIfPackageJson(configPath: Config_Path)
 end
 
 function makeMultipleConfigsWarning(configPaths: Array<ModuleScript>)
-	return chalk.yellow(
+	return chalk.yellow({
 		Array.join(
 			Array.concat(
 				{},
@@ -218,15 +220,12 @@ function makeMultipleConfigsWarning(configPaths: Array<ModuleScript>)
 					"",
 					"  Implicit config resolution does not allow multiple configuration files.",
 					"  Either remove unused config files or select one explicitly with `--config`.",
-					"",
-					"  Configuration Documentation:",
-					"  https://jestjs.io/docs/configuration.html",
-					"",
 				}
 			),
 			"\n"
-		)
-	)
+		),
+		DOCUMENTATION_NOTE,
+	})
 end
 
 return exports

@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/ReporterValidationErrors.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-config/src/ReporterValidationErrors.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -99,7 +99,7 @@ exports.validateReporters = validateReporters
 function validateArrayReporter(arrayReporter: Config_ReporterConfig, reporterIndex: number)
 	local path, options = table.unpack(arrayReporter, 1, 2)
 	-- deviation START: path needs to be ModuleScript and options need to be a table
-	if typeof(path) ~= "Instance" or not path:isA("ModuleScript") then
+	if typeof(path) ~= "Instance" or not path:IsA("ModuleScript") then
 		error(createArrayReporterError(arrayReporter, reporterIndex, 0, path, "ModuleScript", "Path"))
 	elseif typeof(options) ~= "table" then
 		error(createArrayReporterError(arrayReporter, reporterIndex, 1, options, "table", "Reporter Configuration"))

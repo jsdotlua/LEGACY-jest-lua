@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/globsToMatcher.ts
+-- upstream: https://github.com/facebook/jest/tree/v28.0.0/packages/jest-util/src/globsToMatcher.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -69,7 +69,7 @@ local function globsToMatcher(globs: Array<Config_Glob>): MatcherFn
 
 	local matchers = Array.map(globs, function(glob)
 		if not globsToMatchersMap:has(glob) then
-			local isMatch = (picomatch(glob, picomatchOptions, true) :: any) :: Matcher
+			local isMatch = picomatch(glob, picomatchOptions, true) :: Matcher
 
 			local matcher = {
 				isMatch = isMatch,

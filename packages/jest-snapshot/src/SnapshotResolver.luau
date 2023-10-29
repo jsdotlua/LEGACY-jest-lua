@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/SnapshotResolver.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-snapshot/src/SnapshotResolver.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -105,10 +105,10 @@ local function buildSnapshotResolver(
 end
 exports.buildSnapshotResolver = buildSnapshotResolver
 
-function createSnapshotResolver(--[[ ROBLOX deviation: not supported ]]--[[
+function createSnapshotResolver(--[[ deviation: not supported ]]--[[
 	localRequire: LocalRequire,
 	snapshotResolverPath: (Config_Path | nil)?
-]]--[[ ROBLOX deviation END ]]): Promise<SnapshotResolver>
+]]--[[ deviation END ]]): Promise<SnapshotResolver>
 	return Promise.resolve():andThen(function()
 		-- deviation START: only support default snapshot resolver
 		-- return if typeof(snapshotResolverPath) == "string"
@@ -195,8 +195,8 @@ function createDefaultSnapshotResolver(): SnapshotResolver
 end
 
 --[[
-	ROBLOX deviation: skipped lines 56-132
-	original code: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/SnapshotResolver.ts#L56-L132
+	deviation: skipped lines 56-132
+	original code: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-snapshot/src/SnapshotResolver.ts#L56-L132
 ]]
 
 return exports

@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-circus/src/utils.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -7,7 +7,7 @@
  ]]
 
 local CurrentModule = script.Parent
-local Packages = CurrentModule.Parent.Parent
+local Packages = CurrentModule.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
@@ -107,14 +107,14 @@ local getState = stateModule.getState
 
 local function takesDoneCallback(
 	fn: Circus_AsyncFn
-): boolean --[[ ROBLOX FIXME: change to TSTypePredicate equivalent if supported ]] --[[ fn is Global.DoneTakingTestFn ]]
+): boolean --[[ FIXME: change to TSTypePredicate equivalent if supported ]] --[[ fn is Global.DoneTakingTestFn ]]
 	return debug.info(fn, "a") > 1
 end
 
 -- deviation START: generator functions are not supported in Lua
 local function isGeneratorFunction(
 	_fn: Global_PromiseReturningTestFn | Global_GeneratorReturningTestFn
-): boolean --[[ ROBLOX FIXME: change to TSTypePredicate equivalent if supported ]] --[[ fn is Global.GeneratorReturningTestFn ]]
+): boolean --[[ FIXME: change to TSTypePredicate equivalent if supported ]] --[[ fn is Global.GeneratorReturningTestFn ]]
 	--[[
 		ROBLOX deviation START: generator functions are not supported in Lua
 		original code:
@@ -166,6 +166,7 @@ local function makeTest(
 		mode = mode,
 		name = convertDescriptorToString(name),
 		parent = parent,
+		retryReasons = {},
 		seenDone = false,
 		startedAt = nil,
 		status = nil,
@@ -268,7 +269,7 @@ local setTimeout, clearTimeout = LuauPolyfill.setTimeout, LuauPolyfill.clearTime
 
 local function checkIsError(
 	error_: unknown
-): boolean --[[ ROBLOX FIXME: change to TSTypePredicate equivalent if supported ]] --[[ error is Error ]]
+): boolean --[[ FIXME: change to TSTypePredicate equivalent if supported ]] --[[ error is Error ]]
 	return Boolean.toJSBoolean(error_)
 		and Boolean.toJSBoolean((error_ :: Error).message)
 		and Boolean.toJSBoolean((error_ :: Error).stack)
@@ -493,6 +494,7 @@ local function makeSingleTestResult(test: Circus_TestEntry): Circus_TestResult
 		errorsDetailed = errorsDetailed,
 		invocations = test.invocations,
 		location = location,
+		retryReasons = Array.map(Array.map(test.retryReasons, _getError), getErrorStack),
 		-- FIXME Luau: assert above should narrow the type to non-nil
 		status = status :: Circus_TestStatus,
 		testPath = Array.from(testPath),
@@ -583,7 +585,7 @@ exports.addErrorToEachTestUnderDescribe = addErrorToEachTestUnderDescribe
 function invariant(
 	condition: unknown,
 	message: string?
-): () --[[ ROBLOX FIXME: change to TSTypePredicate equivalent if supported ]] --[[ asserts condition ]]
+): () --[[ FIXME: change to TSTypePredicate equivalent if supported ]] --[[ asserts condition ]]
 	if not Boolean.toJSBoolean(condition) then
 		error(Error.new(message))
 	end
@@ -618,6 +620,7 @@ local function parseSingleTestResult(testResult: Circus_TestResult): AssertionRe
 		invocations = testResult.invocations,
 		location = testResult.location,
 		numPassingAsserts = 0,
+		retryReasons = Array.from(testResult.retryReasons),
 		status = status,
 		title = testResult.testPath[#testResult.testPath],
 	}

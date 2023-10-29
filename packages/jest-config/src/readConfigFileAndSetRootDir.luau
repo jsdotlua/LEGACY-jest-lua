@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/readConfigFileAndSetRootDir.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-config/src/readConfigFileAndSetRootDir.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -80,9 +80,9 @@ exports.default = readConfigFileAndSetRootDir
 -- local function loadTSConfigFile(configPath: Config_Path): Promise<Config_InitialOptions>
 -- 	return Promise.resolve():andThen(function()
 -- 		-- Register TypeScript compiler instance
--- 		do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+-- 		do --[[ COMMENT: try-catch block conversion ]]
 -- 			local ok, result, hasReturned = xpcall(function()
--- 				error("not implemented") --[[ ROBLOX TODO: Unhandled node for type: AssignmentExpression ]] --[[ registerer ||= require('ts-node').register({
+-- 				error("not implemented") --[[ TODO: Unhandled node for type: AssignmentExpression ]] --[[ registerer ||= require('ts-node').register({
 --       compilerOptions: {
 --         module: 'CommonJS'
 --       }

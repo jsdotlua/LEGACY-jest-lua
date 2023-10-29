@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-get-type/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-get-type/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -16,7 +16,7 @@ local Set = LuauPolyfill.Set
 local Map = LuauPolyfill.Map
 
 --[[
-	ROBLOX deviation: checks for Roblox builtin data types
+	deviation: checks for builtin data types
 	https://developer.roblox.com/en-us/api-reference/data-types
 ]]
 local function isRobloxBuiltin(value: any): boolean
@@ -25,7 +25,7 @@ end
 
 local function getType(value: any): string
 	--[[
-		ROBLOX deviation: code omitted because lua has no primitive undefined type
+		deviation: code omitted because lua has no primitive undefined type
 		lua makes no distinction between null and undefined so we just return nil
 	]]
 	if value == nil then
@@ -71,7 +71,7 @@ local function getType(value: any): string
 		return "set"
 	end
 	--[[
-		ROBLOX deviation: lua makes no distinction between tables, arrays, and objects
+		deviation: lua makes no distinction between tables, arrays, and objects
 		we always return table here and consumers are expected to perform the check
 	]]
 	if typeof(value) == "table" then
@@ -79,7 +79,7 @@ local function getType(value: any): string
 	end
 
 	--[[
-		ROBLOX deviation: returns name of Roblox datatype
+		deviation: returns name of datatype
 		https://developer.roblox.com/en-us/api-reference/data-types
 	]]
 	if isRobloxBuiltin(value) then

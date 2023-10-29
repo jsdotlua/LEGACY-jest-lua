@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/test-utils/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/test-utils/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -12,7 +12,7 @@ local alignedAnsiStyleSerializer = require(CurrentModule.alignedAnsiStyleSeriali
 local configModule = require(CurrentModule.config)
 
 --[[
-	ROBLOX deviation: ommiting ConditionalTest and config imports
+	deviation: ommiting ConditionalTest and config imports
 	original code:
 	export {
 	  isJestJasmineRun,

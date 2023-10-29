@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-runtime/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-runtime/src/index.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 -- deviation START: skipped
--- type void = nil --[[ ROBLOX FIXME: adding `void` type alias to make it easier to use Luau `void` equivalent when supported ]]
+-- type void = nil --[[ FIXME: adding `void` type alias to make it easier to use Luau `void` equivalent when supported ]]
 -- deviation END
 local Packages = script.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
@@ -33,9 +33,9 @@ type Promise<T> = LuauPolyfill.Promise<T>
 -- type Set<T> = LuauPolyfill.Set<T>
 -- type WeakMap<T, U> = LuauPolyfill.WeakMap<T, U>
 -- deviation END
-type Omit<T, K> = T --[[ ROBLOX TODO: TS 'Omit' built-in type is not available in Luau ]]
+type Omit<T, K> = T --[[ TODO: TS 'Omit' built-in type is not available in Luau ]]
 -- deviation START: skipped
--- type Parameters<T> = any --[[ ROBLOX TODO: TS 'Parameters' built-in type is not available in Luau ]]
+-- type Parameters<T> = any --[[ TODO: TS 'Parameters' built-in type is not available in Luau ]]
 -- local Promise = require(Packages.Promise)
 -- local exports = {}
 -- local nativeModule = require(Packages.module)
@@ -145,7 +145,7 @@ type FakeTimers = JestFakeTimers.FakeTimers
 -- deviation END
 -- deviation START: inline type
 -- type JestGlobals = Global_TestFrameworkGlobals & {
--- 	expect: typeof(__unhandledIdentifier__ --[[ ROBLOX TODO: Unhandled node for type: TSQualifiedName ]] --[[ JestGlobals.expect ]]),
+-- 	expect: typeof(__unhandledIdentifier__ --[[ TODO: Unhandled node for type: TSQualifiedName ]] --[[ JestGlobals.expect ]]),
 -- }
 type JestGlobals = {
 	expect: any,
@@ -158,7 +158,7 @@ type JestGlobals = {
 -- deviation END
 type JestGlobalsWithJest = JestGlobals & {
 	-- deviation START: use Jest type
-	-- jest: typeof(__unhandledIdentifier__ --[[ ROBLOX TODO: Unhandled node for type: TSQualifiedName ]] --[[ JestGlobals.jest ]]),
+	-- jest: typeof(__unhandledIdentifier__ --[[ TODO: Unhandled node for type: TSQualifiedName ]] --[[ JestGlobals.jest ]]),
 	jest: Jest,
 	-- deviation END
 }
@@ -216,8 +216,8 @@ type ModuleRegistry = Map<ModuleScript, InitialModule | Module>
 -- 	typeof((
 -- 		(
 -- 			{} :: any
--- 		) :: Parameters<typeof(__unhandledIdentifier__ --[[ ROBLOX TODO: Unhandled node for type: TSQualifiedName ]] --[[ require.resolve ]])>
--- 	)[1]) --[[ ROBLOX CHECK: Resulting type may differ ]] --[[ Upstream: Parameters<typeof require.resolve>[1] ]]
+-- 		) :: Parameters<typeof(__unhandledIdentifier__ --[[ TODO: Unhandled node for type: TSQualifiedName ]] --[[ require.resolve ]])>
+-- 	)[1]) --[[ CHECK: Resulting type may differ ]] --[[ Upstream: Parameters<typeof require.resolve>[1] ]]
 -- 	& { JEST_RESOLVE_OUTSIDE_VM_OPTION: (true)? }
 -- local testTimeoutSymbol = Symbol:for_("TEST_TIMEOUT_SYMBOL")
 -- local retryTimesSymbol = Symbol:for_("RETRY_TIMES")
@@ -232,7 +232,7 @@ type ModuleRegistry = Map<ModuleScript, InitialModule | Module>
 -- 		return Array.map(config.moduleNameMapper, function(ref0)
 -- 			local regex, moduleName = table.unpack(ref0, 1, 2)
 -- 			return { moduleName = moduleName, regex = RegExp.new(regex) }
--- 		end) --[[ ROBLOX CHECK: check if 'config.moduleNameMapper' is an Array ]]
+-- 		end) --[[ CHECK: check if 'config.moduleNameMapper' is an Array ]]
 -- 	end
 -- 	return nil
 -- end
@@ -242,7 +242,7 @@ type ModuleRegistry = Map<ModuleScript, InitialModule | Module>
 -- local runtimeSupportsVmModules = typeof(SyntheticModule) == "function"
 -- local supportsTopLevelAwait = if Boolean.toJSBoolean(runtimeSupportsVmModules)
 -- 	then (function()
--- 		do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+-- 		do --[[ COMMENT: try-catch block conversion ]]
 -- 			local ok, result, hasReturned = xpcall(function()
 -- 				-- eslint-disable-next-line no-new
 -- 				SourceTextModule.new("await Promise.resolve()")
@@ -257,7 +257,7 @@ type ModuleRegistry = Map<ModuleScript, InitialModule | Module>
 -- 	end)()
 -- 	else runtimeSupportsVmModules
 -- local supportsNodeColonModulePrefixInRequire = (function()
--- 	do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+-- 	do --[[ COMMENT: try-catch block conversion ]]
 -- 		local ok, result, hasReturned = xpcall(function()
 -- 			require_("node:fs")
 -- 			return true, true
@@ -413,7 +413,7 @@ type Runtime_private = { --
 	-- _currentlyExecutingModulePath: string,
 	-- deviation END
 	--[[
-		ROBLOX deviation START: There's no actual Jest Environment so we are just
+		deviation START: There's no actual Jest Environment so we are just
 		mocking some values in here for now.
 	]]
 	-- _environment: JestEnvironment,
@@ -428,13 +428,13 @@ type Runtime_private = { --
 	_explicitShouldMockModule: Map<ModuleScript, boolean>,
 	-- deviation END
 	-- deviation: no Legacy/Modern timers
-	-- _fakeTimersImplementation: LegacyFakeTimers<unknown> | ModernFakeTimers | nil, --[[ ROBLOX CHECK: verify if `null` wasn't used differently than `undefined` ]]
+	-- _fakeTimersImplementation: LegacyFakeTimers<unknown> | ModernFakeTimers | nil, --[[ CHECK: verify if `null` wasn't used differently than `undefined` ]]
 	_fakeTimersImplementation: FakeTimers,
 	-- deviation END
 	_internalModuleRegistry: ModuleRegistry,
 	-- deviation START: skipped
-	-- _isCurrentlyExecutingManualMock: string | nil, --[[ ROBLOX CHECK: verify if `null` wasn't used differently than `undefined` ]]
-	-- _mainModule: Module | nil, --[[ ROBLOX CHECK: verify if `null` wasn't used differently than `undefined` ]]
+	-- _isCurrentlyExecutingManualMock: string | nil, --[[ CHECK: verify if `null` wasn't used differently than `undefined` ]]
+	-- _mainModule: Module | nil, --[[ CHECK: verify if `null` wasn't used differently than `undefined` ]]
 	-- deviation END
 	-- deviation START: using ModuleScript instead of string
 	-- _mockFactories: Map<string, () -> unknown>,
@@ -483,7 +483,7 @@ type Runtime_private = { --
 	-- _unmockList: RegExp | nil,
 	-- _virtualMocks: Map<string, boolean>,
 	-- _virtualModuleMocks: Map<string, boolean>,
-	-- _moduleImplementation: typeof(__unhandledIdentifier__ --[[ ROBLOX TODO: Unhandled node for type: TSQualifiedName ]] --[[ nativeModule.Module ]]),
+	-- _moduleImplementation: typeof(__unhandledIdentifier__ --[[ TODO: Unhandled node for type: TSQualifiedName ]] --[[ nativeModule.Module ]]),
 	-- jestObjectCaches: Map<string, Jest>,
 	-- deviation END
 	jestGlobals: JestGlobals,
@@ -570,7 +570,7 @@ type Runtime_private = { --
 		options: InternalModuleOptions | nil,
 		moduleRegistry: ModuleRegistry,
 		-- deviation START: using ModuleScript instead of string
-		-- from: Config_Path | nil --[[ ROBLOX CHECK: verify if `null` wasn't used differently than `undefined` ]]
+		-- from: Config_Path | nil --[[ CHECK: verify if `null` wasn't used differently than `undefined` ]]
 		from: ModuleScript | nil,
 		-- deviation END
 		-- deviation START: additional param to not require return from test files
@@ -589,7 +589,7 @@ type Runtime_private = { --
 	-- _importCoreModule: (self: Runtime_private, moduleName: string, context: VMContext) -> any,
 	-- _getMockedNativeModule: (
 	-- 	self: Runtime_private
-	-- ) -> typeof(__unhandledIdentifier__ --[[ ROBLOX TODO: Unhandled node for type: TSQualifiedName ]] --[[ nativeModule.Module ]]),
+	-- ) -> typeof(__unhandledIdentifier__ --[[ TODO: Unhandled node for type: TSQualifiedName ]] --[[ nativeModule.Module ]]),
 	-- _generateMock: (self: Runtime_private, from: Config_Path, moduleName: string) -> any,
 	-- deviation END
 	_shouldMock: (
@@ -673,7 +673,7 @@ function Runtime.new(loadedModuleFns: Map<ModuleScript, { any }>?): Runtime
 	-- self._currentlyExecutingModulePath = ""
 	-- deviation END
 	--[[
-		ROBLOX deviation START: There's no actual Jest Environment so we are just
+		deviation START: There's no actual Jest Environment so we are just
 		mocking some values in here for now.
 	]]
 	-- self._environment = environment
@@ -741,7 +741,7 @@ function Runtime.new(loadedModuleFns: Map<ModuleScript, { any }>?): Runtime
 	-- self._unmockList = unmockRegExpCache:get(config)
 	-- if Boolean.toJSBoolean(not Boolean.toJSBoolean(self._unmockList) and config.unmockedModulePathPatterns) then
 	-- 	self._unmockList = RegExp.new(
-	-- 		Array.join(config.unmockedModulePathPatterns, "|") --[[ ROBLOX CHECK: check if 'config.unmockedModulePathPatterns' is an Array ]]
+	-- 		Array.join(config.unmockedModulePathPatterns, "|") --[[ CHECK: check if 'config.unmockedModulePathPatterns' is an Array ]]
 	-- 	)
 	-- 	unmockRegExpCache:set(config, self._unmockList)
 	-- end
@@ -755,7 +755,7 @@ function Runtime.new(loadedModuleFns: Map<ModuleScript, { any }>?): Runtime
 	-- 	Array.forEach(config.setupFiles, function(filePath)
 	-- 		if
 	-- 			Boolean.toJSBoolean(
-	-- 				Array.includes(filePath, NODE_MODULES) --[[ ROBLOX CHECK: check if 'filePath' is an Array ]]
+	-- 				Array.includes(filePath, NODE_MODULES) --[[ CHECK: check if 'filePath' is an Array ]]
 	-- 			)
 	-- 		then
 	-- 			local moduleID = self._resolver:getModuleID(
@@ -770,12 +770,12 @@ function Runtime.new(loadedModuleFns: Map<ModuleScript, { any }>?): Runtime
 	-- 			)
 	-- 			self._transitiveShouldMock:set(moduleID, false)
 	-- 		end
-	-- 	end) --[[ ROBLOX CHECK: check if 'config.setupFiles' is an Array ]]
+	-- 	end) --[[ CHECK: check if 'config.setupFiles' is an Array ]]
 	-- end
 	-- self:resetModules()
 	-- deviation END
 	--[[
-		ROBLOX deviation START: normally a jest object gets created for each
+		deviation START: normally a jest object gets created for each
 		test file and inserted into a cache, an instance gets injected into each
 		test module. Currently this implementation is global across all tests.
 	]]
@@ -784,7 +784,7 @@ function Runtime.new(loadedModuleFns: Map<ModuleScript, { any }>?): Runtime
 	-- deviation END
 
 	--[[
-		ROBLOX deviation START: added to hold references to all the clean up
+		deviation START: added to hold references to all the clean up
 		functions from loaded modules. Is used in Runtime.teardown
 	]]
 	self._cleanupFns = {}
@@ -840,9 +840,9 @@ end
 -- 		Boolean
 -- 	)
 -- 	local ignorePattern = if ignorePatternParts.length
--- 			> 0 --[[ ROBLOX CHECK: operator '>' works only if either both arguments are strings or both are a number ]]
+-- 			> 0 --[[ CHECK: operator '>' works only if either both arguments are strings or both are a number ]]
 -- 		then RegExp.new(
--- 			Array.join(ignorePatternParts, "|") --[[ ROBLOX CHECK: check if 'ignorePatternParts' is an Array ]]
+-- 			Array.join(ignorePatternParts, "|") --[[ CHECK: check if 'ignorePatternParts' is an Array ]]
 -- 		)
 -- 		else nil
 -- 	local refProp0 = config.cacheDirectory
@@ -889,7 +889,7 @@ end
 -- 		defaultPlatform = config.haste.defaultPlatform,
 -- 		extensions = Array.map(config.moduleFileExtensions, function(extension)
 -- 			return "." .. tostring(extension)
--- 		end), --[[ ROBLOX CHECK: check if 'config.moduleFileExtensions' is an Array ]]
+-- 		end), --[[ CHECK: check if 'config.moduleFileExtensions' is an Array ]]
 -- 		hasCoreModules = true,
 -- 		moduleDirectories = config.moduleDirectories,
 -- 		moduleNameMapper = getModuleNameMapper(config),
@@ -951,7 +951,7 @@ end
 -- 				supportsStaticESM = true,
 -- 				supportsTopLevelAwait = supportsTopLevelAwait,
 -- 			}):expect()
--- 			do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+-- 			do --[[ COMMENT: try-catch block conversion ]]
 -- 				local ok, result, hasReturned = xpcall(function()
 -- 					local module = SourceTextModule.new(transformedCode, {
 -- 						context = context,
@@ -1097,7 +1097,7 @@ end
 -- 		Array.forEach(cjsExports, function(exportName)
 -- 			-- @ts-expect-error
 -- 			self:setExport(exportName, cjs[tostring(exportName)])
--- 		end) --[[ ROBLOX CHECK: check if 'cjsExports' is an Array ]] -- @ts-expect-error: TS doesn't know what `this` is
+-- 		end) --[[ CHECK: check if 'cjsExports' is an Array ]] -- @ts-expect-error: TS doesn't know what `this` is
 -- 		self:setExport("default", cjs)
 -- 	end, { context = context, identifier = modulePath })
 -- 	return evaluateSyntheticModule(module)
@@ -1118,7 +1118,7 @@ end
 -- 					local key, value = table.unpack(ref0, 1, 2)
 -- 					-- @ts-expect-error: TS doesn't know what `this` is
 -- 					self:setExport(key, value)
--- 				end) --[[ ROBLOX CHECK: check if 'Object.entries(invokedFactory)' is an Array ]]
+-- 				end) --[[ CHECK: check if 'Object.entries(invokedFactory)' is an Array ]]
 -- 			end, { context = context, identifier = moduleName })
 -- 			self._moduleMockRegistry:set(moduleID, module)
 -- 			return evaluateSyntheticModule(module)
@@ -1144,8 +1144,8 @@ end
 -- 	Array.forEach(reexports, function(reexport)
 -- 		local resolved = self:_resolveModule(modulePath, reexport, { conditions = self.esmConditions })
 -- 		local exports = self:getExportsOfCjs(resolved)
--- 		Array.forEach(exports, namedExports.add, namedExports) --[[ ROBLOX CHECK: check if 'exports' is an Array ]]
--- 	end) --[[ ROBLOX CHECK: check if 'reexports' is an Array ]]
+-- 		Array.forEach(exports, namedExports.add, namedExports) --[[ CHECK: check if 'exports' is an Array ]]
+-- 	end) --[[ CHECK: check if 'reexports' is an Array ]]
 -- 	self._cjsNamedExports:set(modulePath, namedExports)
 -- 	return namedExports
 -- end
@@ -1264,7 +1264,7 @@ function Runtime_private:requireModule<T>(
 	}
 	moduleRegistry:set(modulePath, localModule)
 	-- deviation START: use pcall instead of xpcall
-	-- do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+	-- do --[[ COMMENT: try-catch block conversion ]]
 	-- 	local ok, result, hasReturned = xpcall(function()
 	-- 		self:_loadModule(localModule, from, moduleName, modulePath, options, moduleRegistry)
 	-- 	end, function(error_)
@@ -1379,7 +1379,7 @@ function Runtime_private:requireMock<T>(from: ModuleScript, moduleName: ModuleSc
 	-- 	-- corresponding to that particular my_module.js file.
 	-- 	local moduleDir = path:dirname(modulePath)
 	-- 	local moduleFileName = path:basename(modulePath)
-	-- 	local potentialManualMock = Array.join(path, moduleDir, "__mocks__", moduleFileName) --[[ ROBLOX CHECK: check if 'path' is an Array ]]
+	-- 	local potentialManualMock = Array.join(path, moduleDir, "__mocks__", moduleFileName) --[[ CHECK: check if 'path' is an Array ]]
 	-- 	if Boolean.toJSBoolean(fs:existsSync(potentialManualMock)) then
 	-- 		isManualMock = true
 	-- 		modulePath = potentialManualMock
@@ -1478,7 +1478,7 @@ function Runtime_private:requireModuleOrMock<T>(moduleName: ModuleScript): T
 	end
 	-- deviation END
 	-- deviation START: use pcall instead of xpcall
-	-- do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+	-- do --[[ COMMENT: try-catch block conversion ]]
 	-- 	local ok, result, hasReturned = xpcall(function()
 	-- 		if
 	-- 			Boolean.toJSBoolean(
@@ -1543,7 +1543,7 @@ function Runtime_private:isolateModules(fn: () -> ()): ()
 	end
 	self._isolatedModuleRegistry = Map.new()
 	self._isolatedMockRegistry = Map.new()
-	do --[[ ROBLOX COMMENT: try-finally block conversion ]]
+	do --[[ COMMENT: try-finally block conversion ]]
 		-- deviation START: function doesn't return
 		-- local ok, result, hasReturned = pcall(function()
 		-- 	fn()
@@ -1614,7 +1614,7 @@ function Runtime_private:resetModules(): ()
 	-- 	if Boolean.toJSBoolean(self._environment.global) then
 	-- 		local envGlobal = self._environment.global
 	-- 		Array.forEach(
-	-- 			Object.keys(envGlobal) :: Array<any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof typeof globalThis ]]>,
+	-- 			Object.keys(envGlobal) :: Array<any --[[ TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof typeof globalThis ]]>,
 	-- 			function(key)
 	-- 				local globalMock = envGlobal[tostring(key)]
 	-- 				if
@@ -1624,7 +1624,7 @@ function Runtime_private:resetModules(): ()
 	-- 					globalMock:mockClear()
 	-- 				end
 	-- 			end
-	-- 		) --[[ ROBLOX CHECK: check if 'Object.keys(envGlobal) as Array<keyof typeof globalThis>' is an Array ]]
+	-- 		) --[[ CHECK: check if 'Object.keys(envGlobal) as Array<keyof typeof globalThis>' is an Array ]]
 	-- 	end
 	-- 	if Boolean.toJSBoolean(self._environment.fakeTimers) then
 	-- 		self._environment.fakeTimers:clearAllTimers()
@@ -1660,7 +1660,7 @@ end
 -- 			Array.map(
 -- 				Array.filter(self._v8CoverageResult, function(res)
 -- 					return res.url:startsWith("file://")
--- 				end), --[[ ROBLOX CHECK: check if 'this._v8CoverageResult' is an Array ]]
+-- 				end), --[[ CHECK: check if 'this._v8CoverageResult' is an Array ]]
 -- 				function(res)
 -- 					return Object.assign({}, res, { url = fileURLToPath(res.url) })
 -- 				end
@@ -1783,7 +1783,7 @@ end
 -- function Runtime_private:_requireResolve(from: Config_Path, moduleName: string?, options_: ResolveOptions?)
 -- 	local options: ResolveOptions = if options_ ~= nil then options_ else {}
 -- 	if
--- 		moduleName == nil --[[ ROBLOX CHECK: loose equality used upstream ]]
+-- 		moduleName == nil --[[ CHECK: loose equality used upstream ]]
 -- 	then
 -- 		error(Error.new("The first argument to require.resolve must be a string. Received null or undefined."))
 -- 	end
@@ -1814,14 +1814,14 @@ end
 -- 				Resolver.ModuleNotFoundError.new(
 -- 					("Cannot resolve module '%s' from paths ['%s'] from %s"):format(
 -- 						tostring(moduleName),
--- 						tostring(Array.join(paths, "', '") --[[ ROBLOX CHECK: check if 'paths' is an Array ]]),
+-- 						tostring(Array.join(paths, "', '") --[[ CHECK: check if 'paths' is an Array ]]),
 -- 						tostring(from)
 -- 					)
 -- 				)
 -- 			)
 -- 		end
 -- 	end
--- 	do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+-- 	do --[[ COMMENT: try-catch block conversion ]]
 -- 		local ok, result, hasReturned = xpcall(function()
 -- 			return self:_resolveModule(from, moduleName, { conditions = self.cjsConditions }), true
 -- 		end, function(err: unknown)
@@ -1839,7 +1839,7 @@ end
 -- end
 -- function Runtime_private:_requireResolvePaths(from: Config_Path, moduleName: string?)
 -- 	if
--- 		moduleName == nil --[[ ROBLOX CHECK: loose equality used upstream ]]
+-- 		moduleName == nil --[[ CHECK: loose equality used upstream ]]
 -- 	then
 -- 		error(Error.new("The first argument to require.resolve.paths must be a string. Received null or undefined."))
 -- 	end
@@ -1848,7 +1848,7 @@ end
 -- 	end
 -- 	if
 -- 		moduleName[
--- 			1 --[[ ROBLOX adaptation: added 1 to array index ]]
+-- 			1 --[[ adaptation: added 1 to array index ]]
 -- 		] == "."
 -- 	then
 -- 		return { path:resolve(from, "..") }
@@ -1863,8 +1863,8 @@ function Runtime_private:_execModule(
 	options: InternalModuleOptions | nil,
 	moduleRegistry: ModuleRegistry,
 	-- deviation START: using ModuleScript instead of string
-	-- from: Config_Path | nil --[[ ROBLOX CHECK: verify if `null` wasn't used differently than `undefined` ]]
-	from: ModuleScript | nil, --[[ ROBLOX CHECK: verify if `null` wasn't used differently than `undefined` ]]
+	-- from: Config_Path | nil --[[ CHECK: verify if `null` wasn't used differently than `undefined` ]]
+	from: ModuleScript | nil, --[[ CHECK: verify if `null` wasn't used differently than `undefined` ]]
 	-- deviation END
 	-- deviation START: additional param to not require return from test files
 	noModuleReturnRequired: boolean?
@@ -1899,10 +1899,10 @@ function Runtime_private:_execModule(
 	-- 	module.paths = self._resolver:getModulePaths(module.path)
 	-- 	Object.defineProperty(module, "require", { value = self:_createRequireImplementation(module, options) })
 	-- 	local transformedCode = self:transformFile(filename, options)
-	-- 	local compiledFunction: ModuleWrapper | nil --[[ ROBLOX CHECK: verify if `null` wasn't used differently than `undefined` ]] =
+	-- 	local compiledFunction: ModuleWrapper | nil --[[ CHECK: verify if `null` wasn't used differently than `undefined` ]] =
 	-- 		nil
 	-- 	local script_ = self:createScriptFromCode(transformedCode, filename)
-	-- 	local runScript: RunScriptEvalResult | nil --[[ ROBLOX CHECK: verify if `null` wasn't used differently than `undefined` ]] =
+	-- 	local runScript: RunScriptEvalResult | nil --[[ CHECK: verify if `null` wasn't used differently than `undefined` ]] =
 	-- 		nil
 	-- 	local vmContext = self._environment:getVmContext()
 	-- 	if Boolean.toJSBoolean(vmContext) then
@@ -1920,7 +1920,7 @@ function Runtime_private:_execModule(
 	-- 	end
 	-- 	local jestObject = self:_createJestObjectFor(filename)
 	-- 	self.jestObjectCaches:set(filename, jestObject)
-	-- 	local lastArgs: Array<Jest | nil | any --[[ ROBLOX TODO: Unhandled node for type: TSRestType ]] --[[ ...Array<Global.Global> ]]> = Array.concat(
+	-- 	local lastArgs: Array<Jest | nil | any --[[ TODO: Unhandled node for type: TSRestType ]] --[[ ...Array<Global.Global> ]]> = Array.concat(
 	-- 		{},
 	-- 		{
 	-- 			if Boolean.toJSBoolean(self._config.injectGlobals) then jestObject else nil,
@@ -1936,13 +1936,13 @@ function Runtime_private:_execModule(
 	-- 					)
 	-- 				)
 	-- 			)
-	-- 		end) --[[ ROBLOX CHECK: check if 'this._config.extraGlobals' is an Array ]])
+	-- 		end) --[[ CHECK: check if 'this._config.extraGlobals' is an Array ]])
 	-- 	)
 	-- 	if not Boolean.toJSBoolean(self._mainModule) and filename == self._testPath then
 	-- 		self._mainModule = module
 	-- 	end
 	-- 	Object.defineProperty(module, "main", { enumerable = true, value = self._mainModule })
-	-- 	do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+	-- 	do --[[ COMMENT: try-catch block conversion ]]
 	-- 		local ok, result, hasReturned = xpcall(function()
 	-- 			compiledFunction(
 	-- 				module.exports,
@@ -1952,7 +1952,7 @@ function Runtime_private:_execModule(
 	-- 				module.path, -- __dirname
 	-- 				module.filename, -- __filename
 	-- 				-- @ts-expect-error
-	-- 				error("not implemented") --[[ ROBLOX TODO: Unhandled node for type: SpreadElement ]] --[[ ...lastArgs.filter(notEmpty) ]]
+	-- 				error("not implemented") --[[ TODO: Unhandled node for type: SpreadElement ]] --[[ ...lastArgs.filter(notEmpty) ]]
 	-- 			)
 	-- 		end, function(error_)
 	-- 			self:handleExecutionError(error_, module)
@@ -2008,7 +2008,7 @@ function Runtime_private:_execModule(
 			Object.assign(
 				{
 					--[[
-						ROBLOX NOTE:
+						NOTE:
 						Adding `script` directly into a table so that it is accessible to the debugger
 						It seems to be a similar issue to code inside of __index function not being debuggable
 					]]
@@ -2088,7 +2088,7 @@ end
 -- 	end)
 -- end
 -- function Runtime_private:createScriptFromCode(scriptSource: string, filename: string)
--- 	do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+-- 	do --[[ COMMENT: try-catch block conversion ]]
 -- 		local ok, result, hasReturned = xpcall(function()
 -- 			local scriptFilename = if Boolean.toJSBoolean(self._resolver:isCoreModule(filename))
 -- 				then ("jest-nodejs-core-%s"):format(tostring(filename))
@@ -2125,7 +2125,7 @@ end
 -- 	local moduleWithoutNodePrefix = if Boolean.toJSBoolean(
 -- 			if Boolean.toJSBoolean(supportPrefix) then moduleName:startsWith("node:") else supportPrefix
 -- 		)
--- 		then Array.slice(moduleName, ("node:").length) --[[ ROBLOX CHECK: check if 'moduleName' is an Array ]]
+-- 		then Array.slice(moduleName, ("node:").length) --[[ CHECK: check if 'moduleName' is an Array ]]
 -- 		else moduleName
 -- 	if moduleWithoutNodePrefix == "process" then
 -- 		return self._environment.global.process
@@ -2146,14 +2146,14 @@ end
 -- 				local key, value = table.unpack(ref0, 1, 2)
 -- 				-- @ts-expect-error: TS doesn't know what `this` is
 -- 				self:setExport(key, value)
--- 			end) --[[ ROBLOX CHECK: check if 'Object.entries(required)' is an Array ]]
+-- 			end) --[[ CHECK: check if 'Object.entries(required)' is an Array ]]
 -- 		end, -- should identifier be `node://${moduleName}`?
 -- 		{ context = context, identifier = moduleName }
 -- 	)
 -- 	return evaluateSyntheticModule(module)
 -- end
 -- function Runtime_private:_getMockedNativeModule(
--- ): typeof(__unhandledIdentifier__ --[[ ROBLOX TODO: Unhandled node for type: TSQualifiedName ]] --[[ nativeModule.Module ]])
+-- ): typeof(__unhandledIdentifier__ --[[ TODO: Unhandled node for type: TSQualifiedName ]] --[[ nativeModule.Module ]])
 -- 	if Boolean.toJSBoolean(self._moduleImplementation) then
 -- 		return self._moduleImplementation
 -- 	end
@@ -2181,19 +2181,19 @@ end
 -- 			path = path:dirname(filename),
 -- 		})
 -- 	end -- should we implement the class ourselves?
--- 	type Module = {} --[[ ROBLOX comment: Unhandled superclass type: LuaMemberExpression ]]
+-- 	type Module = {} --[[ comment: Unhandled superclass type: LuaMemberExpression ]]
 -- 	type Module_statics = { new: () -> Module }
 -- 	local Module = (setmetatable({}, { __index = nativeModule.Module }) :: any) :: Module & Module_statics;
 -- 	(Module :: any).__index = Module
 -- 	function Module.new(): Module
--- 		local self = setmetatable({}, Module) --[[ ROBLOX TODO: super constructor may be used ]]
+-- 		local self = setmetatable({}, Module) --[[ TODO: super constructor may be used ]]
 -- 		return (self :: any) :: Module
 -- 	end
 -- 	Array.forEach(Object.entries(nativeModule.Module), function(ref0)
 -- 		local key, value = table.unpack(ref0, 1, 2)
 -- 		-- @ts-expect-error
 -- 		Module[tostring(key)] = value
--- 	end) --[[ ROBLOX CHECK: check if 'Object.entries(nativeModule.Module)' is an Array ]]
+-- 	end) --[[ CHECK: check if 'Object.entries(nativeModule.Module)' is an Array ]]
 -- 	Module.Module = Module
 -- 	if Array.indexOf(Object.keys(nativeModule), "createRequire") ~= -1 then
 -- 		Module.createRequire = createRequire
@@ -2242,7 +2242,7 @@ end
 -- 		self._moduleRegistry = origModuleRegistry
 -- 		local mockMetadata = self._moduleMocker:getMetadata(moduleExports)
 -- 		if
--- 			mockMetadata == nil --[[ ROBLOX CHECK: loose equality used upstream ]]
+-- 			mockMetadata == nil --[[ CHECK: loose equality used upstream ]]
 -- 		then
 -- 			error(
 -- 				Error.new(
@@ -2302,7 +2302,7 @@ function Runtime_private:_shouldMock(
 
 	-- deviation START: skipped
 	-- local modulePath
-	-- do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+	-- do --[[ COMMENT: try-catch block conversion ]]
 	-- 	local ok, result, hasReturned = xpcall(function()
 	-- 		modulePath = self:_resolveModule(from, moduleName, options)
 	-- 	end, function(e: unknown)
@@ -2328,9 +2328,9 @@ function Runtime_private:_shouldMock(
 	-- local currentModuleID = self._resolver:getModuleID(self._virtualMocks, from, nil, options)
 	-- if
 	-- 	Boolean.toJSBoolean(self._transitiveShouldMock:get(currentModuleID) == false or (function()
-	-- 		local ref = Array.includes(from, NODE_MODULES) --[[ ROBLOX CHECK: check if 'from' is an Array ]]
+	-- 		local ref = Array.includes(from, NODE_MODULES) --[[ CHECK: check if 'from' is an Array ]]
 	-- 		local ref = if Boolean.toJSBoolean(ref)
-	-- 			then Array.includes(modulePath, NODE_MODULES) --[[ ROBLOX CHECK: check if 'modulePath' is an Array ]]
+	-- 			then Array.includes(modulePath, NODE_MODULES) --[[ CHECK: check if 'modulePath' is an Array ]]
 	-- 			else ref
 	-- 		return if Boolean.toJSBoolean(ref)
 	-- 			then (function()
@@ -2579,6 +2579,14 @@ function Runtime_private:_createJestObjectFor(from: ModuleScript): Jest
 		advanceTimersToNextTimer = function(steps: number?)
 			return _getFakeTimers():advanceTimersToNextTimer(steps)
 		end,
+		-- deviation START: additional method to allow mocking of game-engine timer behavior
+		getEngineFrameTime = function()
+			return _getFakeTimers():getEngineFrameTime()
+		end,
+		setEngineFrameTime = function(frameTimeMs: number)
+			return _getFakeTimers():setEngineFrameTime(frameTimeMs)
+		end,
+		-- deviation END
 		-- TODO START: not implemented yet
 		-- autoMockOff = disableAutomock,
 		-- autoMockOn = enableAutomock,
@@ -2699,10 +2707,10 @@ end
 -- 		Array.filter(
 -- 			(ReferenceError.new(("%s%s"):format(tostring(errorMessage), tostring(testPath))).stack :: any):split("\n"), -- Remove this file from the stack (jest-message-utils will keep one line)
 -- 			function(line)
--- 				return Array.indexOf(line, __filename) --[[ ROBLOX CHECK: check if 'line' is an Array ]]
+-- 				return Array.indexOf(line, __filename) --[[ CHECK: check if 'line' is an Array ]]
 -- 					== -1
 -- 			end
--- 		), --[[ ROBLOX CHECK: check if 'new ReferenceError(`${errorMessage}${testPath}`).stack!.split('\n')' is an Array ]]
+-- 		), --[[ CHECK: check if 'new ReferenceError(`${errorMessage}${testPath}`).stack!.split('\n')' is an Array ]]
 -- 		"\n"
 -- 	)
 -- 	local message, stack
@@ -2722,7 +2730,7 @@ end
 -- 	local args = self:constructInjectedModuleParameters()
 -- 	return '({"'
 -- 		.. tostring(EVAL_RESULT_VARIABLE)
--- 		.. ('":function(%s){'):format(tostring(Array.join(args, ",") --[[ ROBLOX CHECK: check if 'args' is an Array ]]))
+-- 		.. ('":function(%s){'):format(tostring(Array.join(args, ",") --[[ CHECK: check if 'args' is an Array ]]))
 -- end
 -- function Runtime_private:constructInjectedModuleParameters(): Array<string>
 -- 	return Array.filter(
@@ -2748,7 +2756,7 @@ end
 -- 					table.insert(
 -- 						moduleNotFoundError.requireStack,
 -- 						Boolean.toJSBoolean(cursor.filename) and cursor.filename or cursor.id
--- 					) --[[ ROBLOX CHECK: check if 'moduleNotFoundError.requireStack' is an Array ]]
+-- 					) --[[ CHECK: check if 'moduleNotFoundError.requireStack' is an Array ]]
 -- 					cursor = cursor.parent
 -- 				end
 -- 			end
@@ -2775,7 +2783,7 @@ end
 -- 			local key, value = table.unpack(ref0, 1, 2)
 -- 			-- @ts-expect-error: TS doesn't know what `this` is
 -- 			self:setExport(key, value)
--- 		end) --[[ ROBLOX CHECK: check if 'Object.entries(globals)' is an Array ]]
+-- 		end) --[[ CHECK: check if 'Object.entries(globals)' is an Array ]]
 -- 	end, { context = context, identifier = "@jest/globals" })
 -- 	return evaluateSyntheticModule(module)
 -- end
@@ -2843,14 +2851,14 @@ end
 -- local function invariant(
 -- 	condition: unknown,
 -- 	message: string?
--- ): boolean --[[ ROBLOX FIXME: change to TSTypePredicate equivalent if supported ]] --[[ asserts condition ]]
+-- ): boolean --[[ FIXME: change to TSTypePredicate equivalent if supported ]] --[[ asserts condition ]]
 -- 	if not Boolean.toJSBoolean(condition) then
 -- 		error(Error.new(message))
 -- 	end
 -- end
 -- local function notEmpty<T>(
--- 	value: T | nil --[[ ROBLOX CHECK: verify if `null` wasn't used differently than `undefined` ]] | nil
--- ): boolean --[[ ROBLOX FIXME: change to TSTypePredicate equivalent if supported ]] --[[ value is T ]]
+-- 	value: T | nil --[[ CHECK: verify if `null` wasn't used differently than `undefined` ]] | nil
+-- ): boolean --[[ FIXME: change to TSTypePredicate equivalent if supported ]] --[[ value is T ]]
 -- 	return value ~= nil and value ~= nil
 -- end
 -- local function evaluateSyntheticModule(module: SyntheticModule)

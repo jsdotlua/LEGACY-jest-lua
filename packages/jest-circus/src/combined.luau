@@ -1,6 +1,6 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/globalErrorHandlers.ts
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/state.ts
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-circus/src/eventHandler.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-circus/src/globalErrorHandlers.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-circus/src/state.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-circus/src/eventHandler.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -12,7 +12,7 @@
 local exports = {}
 
 local CurrentModule = script.Parent
-local Packages = CurrentModule.Parent.Parent
+local Packages = CurrentModule.Parent
 
 local typesModule = require(Packages.JestTypes)
 type Circus_EventHandler = typesModule.Circus_EventHandler
@@ -138,7 +138,7 @@ do
 					state.currentDescribeBlock, state.currentlyRunningTest, state.hasStarted
 				local asyncError,
 					fn,
-					type_: Circus_HookType, --[[ ROBLOX FIXME Luau: roblox-cli doesn't correctly infer this type]]
+					type_: Circus_HookType, --[[ FIXME Luau: roblox-cli doesn't correctly infer this type]]
 					timeout =
 					event.asyncError, event.fn, event.hookType, event.timeout
 

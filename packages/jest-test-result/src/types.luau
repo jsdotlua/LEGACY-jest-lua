@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-test-result/src/types.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-test-result/src/types.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -51,7 +51,7 @@ export type RuntimeTransformResult = TransformTypes_TransformResult & { wrapperL
 
 export type V8CoverageResult = Array<{
 	codeTransformResult: RuntimeTransformResult | nil,
-	result: any, --[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ V8Coverage[number] ]]
+	result: any, --[[ TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ V8Coverage[number] ]]
 }>
 
 export type SerializableError = TestResult_SerializableError
@@ -132,7 +132,7 @@ export type Snapshot = {
 
 export type TestResult = {
 	console: ConsoleBuffer?,
-	coverage: any?, -- [[ ROBLOX TODO: convert any to CoverageMapData when type is available ]]
+	coverage: any?, -- [[ TODO: convert any to CoverageMapData when type is available ]]
 	displayName: Config_DisplayName?,
 	failureMessage: (string | nil)?,
 	leaks: boolean,
@@ -146,7 +146,7 @@ export type TestResult = {
 	skipped: boolean,
 	snapshot: Snapshot,
 	testExecError: SerializableError?,
-	testFilePath: Config_Path,
+	testFilePath: string,
 	testResults: Array<AssertionResult>,
 	v8Coverage: V8CoverageResult?,
 }
@@ -222,7 +222,7 @@ export type TestEvents = {
 	["test-file-start"]: Array<Test>,
 	["test-file-success"]: Array<Test | TestResult>,
 	["test-file-failure"]: Array<Test | SerializableError>,
-	["test-case-result"]: Array<Config_Path | AssertionResult>,
+	["test-case-result"]: Array<string | AssertionResult>,
 }
 
 -- deviation START: unroll `keyof TestEvents` as this operation is not supported in Luau
@@ -230,7 +230,7 @@ type KeyOfTestEvents = "test-file-start" | "test-file-success" | "test-file-fail
 
 export type TestFileEvent<T = KeyOfTestEvents> = (
 	eventName: T,
-	args: any --[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ TestEvents[T] ]]
+	args: any --[[ TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ TestEvents[T] ]]
 ) -> unknown
 -- deviation END
 

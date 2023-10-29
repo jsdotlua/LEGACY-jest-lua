@@ -17,6 +17,9 @@
         "Jest": {
             "$path": "packages/jest/default.project.json"
         },
+        "JestBenchmark": {
+            "$path": "packages/jest-benchmark/default.project.json"
+        },
         "JestCircus": {
             "$path": "packages/jest-circus/default.project.json"
         },
@@ -46,6 +49,9 @@
         },
         "JestGetType": {
             "$path": "packages/jest-get-type/default.project.json"
+        },
+        "JestGlobals": {
+            "$path": "packages/jest-globals/default.project.json"
         },
         "JestMatcherUtils": {
             "$path": "packages/jest-matcher-utils/default.project.json"

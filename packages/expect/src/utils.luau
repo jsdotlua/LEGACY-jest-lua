@@ -149,10 +149,10 @@ end
 -- ): boolean | nil
 -- 	if
 -- 		not Boolean.toJSBoolean(
--- 			error('not implemented') --[[ ROBLOX TODO: Unhandled node for type: BinaryExpression ]] --[[ a instanceof ArrayBuffer ]]
+-- 			error('not implemented') --[[ TODO: Unhandled node for type: BinaryExpression ]] --[[ a instanceof ArrayBuffer ]]
 -- 		)
 -- 		or not Boolean.toJSBoolean(
--- 			error('not implemented') --[[ ROBLOX TODO: Unhandled node for type: BinaryExpression ]] --[[ b instanceof ArrayBuffer ]]
+-- 			error('not implemented') --[[ TODO: Unhandled node for type: BinaryExpression ]] --[[ b instanceof ArrayBuffer ]]
 -- 		)
 -- 	then
 -- 		return nil

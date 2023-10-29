@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-console/src/CustomConsole.ts
+-- upstream: https://github.com/facebook/jest/tree/v28.0.0/packages/jest-console/src/CustomConsole.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -198,7 +198,7 @@ end
 
 function CustomConsole.time(self: CustomConsolePrivate, label_: string?)
 	local label: string = if label_ ~= nil then label_ else "default"
-	if self._timers[label] ~= nil :: any then
+	if self._timers[label] ~= nil then
 		return
 	end
 	self._timers[label] = DateTime.now()

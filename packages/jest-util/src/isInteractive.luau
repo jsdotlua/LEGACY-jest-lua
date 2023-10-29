@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/isInteractive.ts
+-- upstream: https://github.com/facebook/jest/tree/v28.0.0/packages/jest-util/src/isInteractive.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -7,7 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 --[[
-	ROBLOX deviation: no equivalent in Lua. Always returning false
+	deviation: no equivalent in Lua. Always returning false
 	original code:
 	import {isCI} from 'ci-info';
 

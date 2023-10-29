@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/plugins/lib/escapeHTML.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/pretty-format/src/plugins/lib/escapeHTML.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *

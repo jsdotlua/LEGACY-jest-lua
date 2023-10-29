@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest-util/src/createProcessObject.ts
+-- upstream: https://github.com/facebook/jest/tree/v28.0.0/packages/jest-util/src/createProcessObject.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -8,7 +8,7 @@
  ]]
 
 --[[
-	ROBLOX deviation:
+	deviation:
 	skipped whole file as it seems unnecessary in Lua environment
 ]]
 
@@ -56,7 +56,7 @@ return {
 -- 	local lookup: typeof(process.env) = {}
 
 -- 	local function deletePropertyWin32(_target: unknown, key: unknown)
--- 		error("not implemented") --[[ ROBLOX TODO: Unhandled node for type: ForInStatement ]] --[[ for (const name in real) {
+-- 		error("not implemented") --[[ TODO: Unhandled node for type: ForInStatement ]] --[[ for (const name in real) {
 --       if (real.hasOwnProperty(name)) {
 --         if (typeof key === 'string') {
 --           if (name.toLowerCase() === key.toLowerCase()) {
@@ -171,7 +171,7 @@ return {
 -- 	end
 -- 	-- Sequentially execute all constructors over the object.
 -- 	local proto = process
--- 	error("not implemented") --[[ ROBLOX TODO: Unhandled node for type: WhileStatement ]] --[[ while (proto = Object.getPrototypeOf(proto)) {
+-- 	error("not implemented") --[[ TODO: Unhandled node for type: WhileStatement ]] --[[ while (proto = Object.getPrototypeOf(proto)) {
 --     if (typeof proto.constructor === 'function') {
 --       proto.constructor.call(newProcess);
 --     }

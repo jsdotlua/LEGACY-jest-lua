@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest/src/jest.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest/src/jest.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -13,7 +13,7 @@ local coreModule = require(Packages.JestCore)
 exports.SearchSource = coreModule.SearchSource
 exports.TestWatcher = coreModule.TestWatcher
 exports.createTestScheduler = coreModule.createTestScheduler
--- ROBLOX deviation START: not ported
+-- deviation START: not ported
 -- exports.getVersion = coreModule.getVersion
 -- deviation END
 exports.runCLI = coreModule.runCLI

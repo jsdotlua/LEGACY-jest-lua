@@ -1,18 +1,18 @@
 [package]
 name = 'jsdotlua/expect'
 description = 'https://github.com/jsdotlua/jest-lua'
-version = '3.2.5'
+version = '3.4.1'
 license = 'MIT'
 authors = ['Roblox Corporation']
 registry = 'https://github.com/UpliftGames/wally-index'
 realm = 'shared'
 
 [dependencies]
-JestGetType = 'jsdotlua/jest-get-type@3.2.5'
-JestMatcherUtils = 'jsdotlua/jest-matcher-utils@3.2.5'
-JestMessageUtil = 'jsdotlua/jest-message-util@3.2.5'
-JestSnapshot = 'jsdotlua/jest-snapshot@3.2.5'
+JestGetType = 'jsdotlua/jest-get-type@3.4.1'
+JestMatcherUtils = 'jsdotlua/jest-matcher-utils@3.4.1'
+JestMessageUtil = 'jsdotlua/jest-message-util@3.4.1'
+JestSnapshot = 'jsdotlua/jest-snapshot@3.4.1'
 LuauPolyfill = 'jsdotlua/luau-polyfill@1.2.3'
 Promise = 'evaera/promise@4.0.0'
 RegExp = 'jsdotlua/regex@1.0.2'
-RobloxShared = 'jsdotlua/roblox-shared@3.2.5'
+RobloxShared = 'jsdotlua/roblox-shared@3.4.1'

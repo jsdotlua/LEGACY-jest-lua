@@ -1,0 +1,13 @@
+[package]
+name = 'jsdotlua/jest-benchmark'
+description = 'https://github.com/jsdotlua/jest-lua'
+version = '3.4.1'
+license = 'MIT'
+authors = ['Roblox Corporation']
+registry = 'https://github.com/UpliftGames/wally-index'
+realm = 'shared'
+
+[dependencies]
+JestGlobals = 'jsdotlua/jest-globals@3.4.1'
+JestTypes = 'jsdotlua/jest-types@3.4.1'
+LuauPolyfill = 'jsdotlua/luau-polyfill@1.2.3'

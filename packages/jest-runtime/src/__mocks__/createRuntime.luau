@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/jest-runtime/src/__mocks__/createRuntime.js
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/jest-runtime/src/__mocks__/createRuntime.js
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -23,9 +23,9 @@ local Runtime = require(script.Parent.Parent) -- Copy from jest-config (since we
 -- deviation START: not used
 -- local function getCacheDirectory()
 -- 	local getuid = process.getuid
--- 	local tmpdirPath = Array.join(path, tryRealpath(tmpdir()), "jest") --[[ ROBLOX CHECK: check if 'path' is an Array ]]
+-- 	local tmpdirPath = Array.join(path, tryRealpath(tmpdir()), "jest") --[[ CHECK: check if 'path' is an Array ]]
 -- 	if
--- 		getuid == nil --[[ ROBLOX CHECK: loose equality used upstream ]]
+-- 		getuid == nil --[[ CHECK: loose equality used upstream ]]
 -- 	then
 -- 		return tmpdirPath
 -- 	else
@@ -42,7 +42,7 @@ local Runtime = require(script.Parent.Parent) -- Copy from jest-config (since we
 -- 				then config.moduleNameMapper[tostring(regex)]
 -- 				else config.moduleNameMapper
 -- 			return if Boolean.toJSBoolean(item) then { regex, item:replace("<rootDir>", rootDir) } else item
--- 		end) --[[ ROBLOX CHECK: check if 'Object.keys(config.moduleNameMapper)' is an Array ]]
+-- 		end) --[[ CHECK: check if 'Object.keys(config.moduleNameMapper)' is an Array ]]
 -- 	end
 -- 	return {}
 -- end
@@ -51,7 +51,7 @@ local Runtime = require(script.Parent.Parent) -- Copy from jest-config (since we
 -- 		local transform = config.transform
 -- 		return Array.map(Object.keys(transform), function(regex)
 -- 			return { regex, path:resolve(rootDir, transform[tostring(regex)]) }
--- 		end) --[[ ROBLOX CHECK: check if 'Object.keys(transform)' is an Array ]]
+-- 		end) --[[ CHECK: check if 'Object.keys(transform)' is an Array ]]
 -- 	end
 -- 	return { { "^.+\\.[jt]sx?$", require_:resolve("babel-jest") } }
 -- end
@@ -87,7 +87,7 @@ return function( -- deviation START: arguments not needed. filename only kept to
 		-- 	name = "Runtime-"
 		-- 		.. tostring(
 		-- 			filename:replace(
-		-- 				error("not implemented"), --[[ ROBLOX TODO: Unhandled node for type: RegExpLiteral ]] --[[ /\W/ ]]
+		-- 				error("not implemented"), --[[ TODO: Unhandled node for type: RegExpLiteral ]] --[[ /\W/ ]]
 		-- 				"-"
 		-- 			)
 		-- 		)
@@ -126,8 +126,8 @@ return function( -- deviation START: arguments not needed. filename only kept to
 		-- 		runtime:requireModule(path)
 		-- 	end
 		-- end
-		-- runtime.__mockRootPath = Array.join(path, config.rootDir, "root.js") --[[ ROBLOX CHECK: check if 'path' is an Array ]]
-		-- runtime.__mockSubdirPath = Array.join(path, config.rootDir, "subdir2", "module_dir", "module_dir_module.js") --[[ ROBLOX CHECK: check if 'path' is an Array ]]
+		-- runtime.__mockRootPath = Array.join(path, config.rootDir, "root.js") --[[ CHECK: check if 'path' is an Array ]]
+		-- runtime.__mockSubdirPath = Array.join(path, config.rootDir, "subdir2", "module_dir", "module_dir_module.js") --[[ CHECK: check if 'path' is an Array ]]
 		local runtime = Runtime.new();
 		-- NOTE: this is JS file upstream so no type checking is performed
 		(runtime :: any).__mockRootPath = script.Parent.Parent.__tests__.test_root

@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/pretty-format/src/plugins/ReactTestComponent.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/pretty-format/src/plugins/ReactTestComponent.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -54,7 +54,7 @@ local function getPropKeys(object: ReactTestObject)
 		else {}
 end
 
--- local serialize: Function --[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ NewPlugin['serialize'] ]]
+-- local serialize: Function --[[ TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ NewPlugin['serialize'] ]]
 local function serialize(
 	object: ReactTestObject,
 	config: Config,
@@ -88,7 +88,7 @@ local function serialize(
 end
 exports.serialize = serialize
 
--- local test: any --[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ NewPlugin['test'] ]]
+-- local test: any --[[ TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ NewPlugin['test'] ]]
 local function test(val)
 	return typeof(val) == "table" and val["$$typeof"] == testSymbol
 end

@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-message-util/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-message-util/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -49,7 +49,7 @@ export type StackTraceConfig = {
 export type StackTraceOptions = { noStackTrace: boolean, noCodeFrame: boolean? }
 
 --[[
-	ROBLOX deviation: rewrote regex patterns and split up patterns for alternations
+	deviation: rewrote regex patterns and split up patterns for alternations
 	original code:
 	const JASMINE_IGNORE =
 	  /^\s+at(?:(?:.jasmine\-)|\s+jasmine\.buildExpectationResult)/;
@@ -58,7 +58,7 @@ export type StackTraceOptions = { noStackTrace: boolean, noCodeFrame: boolean? }
 local JASMINE_IGNORE = "%s+at(.jasmine%-)"
 local JASMINE_IGNORE_BUILDEXPECTATIONRESULT = "%s+at(%s+jasmine%.buildExpectationResult)"
 --[[
-	ROBLOX deviation: skipping JEST_INTERNALS_IGNORE
+	deviation: skipping JEST_INTERNALS_IGNORE
 	original code:
 	const JEST_INTERNALS_IGNORE =
 	  /^\s+at.*?jest(-.*?)?(\/|\\)(build|node_modules|packages)(\/|\\)/;
@@ -80,13 +80,14 @@ local STACK_PATH_REGEXP_NATIVE = "%s*at.*%(?native%)?"
 local EXEC_ERROR_MESSAGE = "Test suite failed to run"
 
 -- deviation START: rewrote this because Lua doesn't have negative lookahead
-local function indentAllLines(lines: string, indent: string): string
+local function indentAllLines(lines: string, indent: string?): string
 	local t = string.split(lines, "\n")
 	for i, l in t do
-		t[i] = indent .. l
+		t[i] = (indent or "") .. l
 	end
 	return table.concat(t, "\n")
 end
+exports.indentAllLines = indentAllLines
 -- deviation END
 
 -- string trim5 implementation from http://lua-users.org/wiki/StringTrim
@@ -152,7 +153,7 @@ local function formatExecError(
 	error_: Error | TestResult_SerializableError | string | nil,
 	config: StackTraceConfig,
 	options: StackTraceOptions,
-	testPath: Path?,
+	testPath: string?,
 	reuseMessage: boolean?
 ): string
 	if not Boolean.toJSBoolean(error_) or typeof(error_) == "number" then
@@ -187,7 +188,7 @@ local function formatExecError(
 	-- deviation START: using string.find instead
 	-- 	if
 	-- 		Boolean.toJSBoolean(
-	-- 			Array.includes(separated.message, trim(message)) --[[ ROBLOX CHECK: check if 'separated.message' is an Array ]]
+	-- 			Array.includes(separated.message, trim(message)) --[[ CHECK: check if 'separated.message' is an Array ]]
 	-- 		)
 	-- 	then
 	if string.find(separated.message, trim(message), 1, true) ~= nil then
@@ -376,7 +377,7 @@ function separateMessageFromStack(content: string): { message: string, stack: st
 	-- If the error is a plain "Error:" instead of a SyntaxError or TypeError we
 	-- remove the prefix from the message because it is generally not useful.
 	--[[
-		ROBLOX deviation START: adjusted the RegExp to look for Luau specific stacktrace - line starting with LoadedCode
+		deviation START: adjusted the RegExp to look for Luau specific stacktrace - line starting with LoadedCode
 		original regexp: RegExp([=[^(?:Error: )?([\s\S]*?(?=\n\s*at\s.*:\d*:\d*)|\s*.*)([\s\S]*)$]=])
 	]]
 	local re = RegExp([=[^(?:Error: )?([\s\S]*?(?=\n\s*LoadedCode.*:\d*)|\s*.*)([\s\S]*)$]=])
@@ -390,5 +391,6 @@ function separateMessageFromStack(content: string): { message: string, stack: st
 	local stack = removeBlankErrorLine(messageMatch[3])
 	return { message = message, stack = stack }
 end
+exports.separateMessageFromStack = separateMessageFromStack
 
 return exports

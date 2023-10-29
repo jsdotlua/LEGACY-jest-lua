@@ -99,7 +99,7 @@ end
 
 local function isPromise<T>(
 	obj: any
-): boolean --[[ ROBLOX FIXME: change to TSTypePredicate equivalent if supported ]] --[[ obj is PromiseLike<T> ]]
+): boolean --[[ FIXME: change to TSTypePredicate equivalent if supported ]] --[[ obj is PromiseLike<T> ]]
 	return not not Boolean.toJSBoolean(obj)
 		and (typeof(obj) == "table" or typeof(obj) == "function")
 		and typeof(obj.andThen) == "function"
@@ -196,7 +196,7 @@ function makeRejectMatcher(
 	matcherName: string,
 	matcher: RawMatcherFn,
 	isNot: boolean,
-	actual: Promise<any> | any --[[ ROBLOX TODO: Unhandled node for type: TSParenthesizedType ]] --[[ (() => Promise<any>) ]],
+	actual: Promise<any> | any --[[ TODO: Unhandled node for type: TSParenthesizedType ]] --[[ (() => Promise<any>) ]],
 	outerErr: JestAssertionError
 ): PromiseMatcherFn
 	return function(...)

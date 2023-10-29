@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-environment/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-environment/src/index.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -54,14 +54,14 @@ export type EnvironmentContext = {
 
 -- Different Order than https://nodejs.org/api/modules.html#modules_the_module_wrapper , however needs to be in the form [jest-transform]ScriptTransformer accepts
 export type ModuleWrapper = (
-	this: any, --[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ Module['exports'] ]]
+	this: any, --[[ TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ Module['exports'] ]]
 	module: Module,
-	exports: any, --[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ Module['exports'] ]]
-	require: Object, --[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ Module['require'] ]]
+	exports: any, --[[ TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ Module['exports'] ]]
+	require: Object, --[[ TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ Module['require'] ]]
 	__dirname: string,
-	__filename: string, --[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ Module['filename'] ]]
+	__filename: string, --[[ TODO: Unhandled node for type: TSIndexedAccessType ]] --[[ Module['filename'] ]]
 	jest: Jest?,
-	...any --[[ ROBLOX CHECK: check correct type of elements. Upstream type: <Array<Global.Global[keyof Global.Global]>> ]]
+	...any --[[ CHECK: check correct type of elements. Upstream type: <Array<Global.Global[keyof Global.Global]>> ]]
 ) -> any
 
 export type JestEnvironment<Timer = any> = {
@@ -294,7 +294,7 @@ export type Jest = {
 	* Instructs Jest to use fake versions of the standard timer functions.
 	]]
 	--[[
-		ROBLOX deviation: because there is no modern/legacy timers it doesn't make sense to pick one, removing 'implementation' parameter
+		deviation: because there is no modern/legacy timers it doesn't make sense to pick one, removing 'implementation' parameter
 		Original fn: useFakeTimers: (implementation: ("modern" | "legacy")?) -> Jest,
 	]]
 	useFakeTimers: () -> Jest,
@@ -309,6 +309,21 @@ export type Jest = {
 	* every test so that local module state doesn't conflict between tests.
 	]]
 	isolateModules: (fn: () -> ()) -> Jest,
+	--[[*
+	* deviation START: configurable engine frame time
+	* Because the game engine processes things in frames rather than in continuous time, users can configure
+	* an engine frame time when using fake timers to more simulate engine timer behavior more accurately.
+	]]
+	--[[*
+	* When using the fake versions of the standard timer functions, returns the frame time (in ms). By default, this is 0 (i.e. continuous time).
+	]]
+	getEngineFrameTime: () -> number,
+	--[[*
+	* When using the fake versions of the standard timer functions, set the frame time (in ms) for processing timeouts. Simulates the way
+	* the engine scheduler processes timeouts (i.e. in batches delineated by frames). Timers process in the first frame greater than their set time.
+	]]
+	setEngineFrameTime: (frameTimeMs: number) -> (),
+	-- deviation END
 	--[[*
 	* When mocking time, `Date.now()` will also be mocked. If you for some reason need access to the real current time, you can invoke this function.
 	*

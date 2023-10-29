@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-snapshot/src/plugins.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-snapshot/src/plugins.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -20,8 +20,7 @@ local plugins = require(Packages.PrettyFormat).plugins
 local PLUGINS: PrettyFormatPlugins = {
 	jestMockSerializer,
 	plugins.AsymmetricMatcher,
-	-- TODO: Re-enable React support. See: https://github.com/jsdotlua/jest-lua/issues/2
-	-- plugins.ReactElement,
+	plugins.ReactElement,
 	plugins.ReactTestComponent,
 	-- deviation: Roblox Instance matchers
 	plugins.RobloxInstance,

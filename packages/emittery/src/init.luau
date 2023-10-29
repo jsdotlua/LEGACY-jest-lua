@@ -314,7 +314,7 @@ end
 -- 			error(TypeError.new("`target` must be function"))
 -- 		end
 -- 		for _, methodName in
--- 			ipairs(methodNames) --[[ ROBLOX CHECK: check if 'methodNames' is an Array ]]
+-- 			ipairs(methodNames) --[[ CHECK: check if 'methodNames' is an Array ]]
 -- 		do
 -- 			if target.prototype[tostring(methodName)] ~= nil then
 -- 				error(
@@ -341,7 +341,7 @@ end
 -- 		)
 -- 		local function emitteryMethodCaller(methodName)
 -- 			return function(
--- 				...: any --[[ ROBLOX CHECK: check correct type of elements. ]]
+-- 				...: any --[[ CHECK: check correct type of elements. ]]
 -- 			)
 -- 				local args = { ... }
 -- 				return self[tostring(emitteryPropertyName)][tostring(methodName)](
@@ -351,7 +351,7 @@ end
 -- 			end
 -- 		end
 -- 		for _, methodName in
--- 			ipairs(methodNames) --[[ ROBLOX CHECK: check if 'methodNames' is an Array ]]
+-- 			ipairs(methodNames) --[[ CHECK: check if 'methodNames' is an Array ]]
 -- 		do
 -- 			Object.defineProperty(
 -- 				target.prototype,
@@ -629,7 +629,7 @@ end
 -- 	end
 -- 	methodNames = defaultMethodNamesOrAssert(methodNames)
 -- 	for _, methodName in
--- 		ipairs(methodNames) --[[ ROBLOX CHECK: check if 'methodNames' is an Array ]]
+-- 		ipairs(methodNames) --[[ CHECK: check if 'methodNames' is an Array ]]
 -- 	do
 -- 		if target[tostring(methodName)] ~= nil then
 -- 			error(Error.new(("The property `%s` already exists on `target`"):format(tostring(methodName))))

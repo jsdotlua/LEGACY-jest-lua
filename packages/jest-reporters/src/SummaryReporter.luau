@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/SummaryReporter.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-reporters/src/SummaryReporter.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -65,7 +65,7 @@ local NPM_EVENTS = Set.new({
 	"postrestart",
 })
 
--- deviation: These are assigned in the constructor for testing
+-- DEVIATION: These are assigned in the constructor for testing
 local npm_config_user_agent, npm_lifecycle_event, npm_lifecycle_script
 
 export type SummaryReporter = {

@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/ReporterDispatcher.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-core/src/ReporterDispatcher.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -32,9 +32,14 @@ type TestResult = test_resultModule.TestResult
 local jest_runtimeModule = require(Packages.JestRuntime)
 type Context = jest_runtimeModule.Context
 
+-- deviation START: add additional imports and types
+local types = require(script.Parent.types)
+type ReporterConstructor = types.ReporterConstructor
+-- deviation END
+
 export type ReporterDispatcher = {
 	register: (self: ReporterDispatcher, reporter: Reporter) -> (),
-	unregister: (self: ReporterDispatcher, ReporterClass: Function) -> (),
+	unregister: (self: ReporterDispatcher, reporterConstructor: ReporterConstructor) -> (),
 	onTestFileResult: (
 		self: ReporterDispatcher,
 		test: Test,

@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-reporters/src/getResultHeader.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-reporters/src/getResultHeader.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -41,7 +41,7 @@ local FAIL_TEXT = "FAIL"
 local PASS_TEXT = "PASS"
 
 --[[
-	ROBLOX deviation START chalk_supportsColor: chalk.supportsColor isn't defined so we'll assume
+	deviation START chalk_supportsColor: chalk.supportsColor isn't defined so we'll assume
 	it supports colors unless it is explicitly set to false
 ]]
 local FAIL = if chalk.supportsColor == nil or chalk.supportsColor == true

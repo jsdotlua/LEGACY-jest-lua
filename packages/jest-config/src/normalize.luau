@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/normalize.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-config/src/normalize.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -92,6 +92,9 @@ local getDisplayNameColor = require(script.Parent.color).getDisplayNameColor
 -- local DEFAULT_REPORTER_LABEL = constantsModule.DEFAULT_REPORTER_LABEL
 -- deviation END
 local getMaxWorkers = require(script.Parent.getMaxWorkers).default
+-- deviation START: not needed now. Will be necessary when we want to implement TestSequencer
+-- local parseShardPair = require(script.Parent.parseShardPair).parseShardPair
+-- deviation END
 local setFromArgv = require(script.Parent.setFromArgv).default
 local utilsModule = require(script.Parent.utils)
 local BULLET = utilsModule.BULLET
@@ -200,12 +203,12 @@ end
 -- 			if Boolean.toJSBoolean(presetPath:startsWith(".")) then presetPath else path.join(presetPath, PRESET_NAME),
 -- 			{ basedir = options.rootDir, extensions = PRESET_EXTENSIONS }
 -- 		)
--- 		do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+-- 		do --[[ COMMENT: try-catch block conversion ]]
 -- 			local ok, result, hasReturned = xpcall(function()
 -- 				if not Boolean.toJSBoolean(presetModule) then
 -- 					error(Error.new(("Cannot find module '%s'"):format(tostring(presetPath))))
 -- 				end -- Force re-evaluation to support multiple projects
--- 				do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+-- 				do --[[ COMMENT: try-catch block conversion ]]
 -- 					local ok, result, hasReturned = xpcall(function()
 -- 						require_.cache[tostring(require_:resolve(presetModule))] = nil
 -- 					end, function() end)
@@ -217,8 +220,8 @@ end
 -- 			end, function(error_)
 -- 				if
 -- 					Boolean.toJSBoolean((function()
--- 						local ref = error("not implemented") --[[ ROBLOX TODO: Unhandled node for type: BinaryExpression with 'instanceof' operator ]] --[[ error instanceof SyntaxError ]]
--- 						return Boolean.toJSBoolean(ref) and ref or error("not implemented") --[[ ROBLOX TODO: Unhandled node for type: BinaryExpression with 'instanceof' operator ]] --[[ error instanceof TypeError ]]
+-- 						local ref = error("not implemented") --[[ TODO: Unhandled node for type: BinaryExpression with 'instanceof' operator ]] --[[ error instanceof SyntaxError ]]
+-- 						return Boolean.toJSBoolean(ref) and ref or error("not implemented") --[[ TODO: Unhandled node for type: BinaryExpression with 'instanceof' operator ]] --[[ error instanceof TypeError ]]
 -- 					end)())
 -- 				then
 -- 					error(
@@ -233,12 +236,12 @@ end
 -- 				end
 -- 				if
 -- 					Boolean.toJSBoolean(
--- 						Array.includes(error_.message, "Cannot find module") --[[ ROBLOX CHECK: check if 'error.message' is an Array ]]
+-- 						Array.includes(error_.message, "Cannot find module") --[[ CHECK: check if 'error.message' is an Array ]]
 -- 					)
 -- 				then
 -- 					if
 -- 						Boolean.toJSBoolean(
--- 							Array.includes(error_.message, presetPath) --[[ ROBLOX CHECK: check if 'error.message' is an Array ]]
+-- 							Array.includes(error_.message, presetPath) --[[ CHECK: check if 'error.message' is an Array ]]
 -- 						)
 -- 					then
 -- 						local preset = Resolver:findNodeModule(presetPath, { basedir = options.rootDir })
@@ -279,13 +282,13 @@ end
 -- 		end
 -- 		if Boolean.toJSBoolean(options.setupFiles) then
 -- 			options.setupFiles =
--- 				Array.concat(Boolean.toJSBoolean(preset.setupFiles) and preset.setupFiles or {}, options.setupFiles) --[[ ROBLOX CHECK: check if 'preset.setupFiles || []' is an Array ]]
+-- 				Array.concat(Boolean.toJSBoolean(preset.setupFiles) and preset.setupFiles or {}, options.setupFiles) --[[ CHECK: check if 'preset.setupFiles || []' is an Array ]]
 -- 		end
 -- 		if Boolean.toJSBoolean(options.setupFilesAfterEnv) then
 -- 			options.setupFilesAfterEnv = Array.concat(
 -- 				Boolean.toJSBoolean(preset.setupFilesAfterEnv) and preset.setupFilesAfterEnv or {},
 -- 				options.setupFilesAfterEnv
--- 			) --[[ ROBLOX CHECK: check if 'preset.setupFilesAfterEnv || []' is an Array ]]
+-- 			) --[[ CHECK: check if 'preset.setupFilesAfterEnv || []' is an Array ]]
 -- 		end
 -- 		if
 -- 			Boolean.toJSBoolean(
@@ -295,7 +298,7 @@ end
 -- 			)
 -- 		then
 -- 			options.modulePathIgnorePatterns =
--- 				Array.concat(preset.modulePathIgnorePatterns, options.modulePathIgnorePatterns) --[[ ROBLOX CHECK: check if 'preset.modulePathIgnorePatterns' is an Array ]]
+-- 				Array.concat(preset.modulePathIgnorePatterns, options.modulePathIgnorePatterns) --[[ CHECK: check if 'preset.modulePathIgnorePatterns' is an Array ]]
 -- 		end
 -- 		mergeModuleNameMapperWithPreset(options, preset)
 -- 		mergeTransformWithPreset(options, preset)
@@ -312,38 +315,38 @@ end
 -- 			local regex = RegExp.new(pattern)
 -- 			local ref = regex:test("a.js")
 -- 			return Boolean.toJSBoolean(ref) and ref or regex:test("a.jsx")
--- 		end) --[[ ROBLOX CHECK: check if 'Object.keys(transform)' is an Array ]]
+-- 		end) --[[ CHECK: check if 'Object.keys(transform)' is an Array ]]
 -- 		local customTSPattern = Array.find(Object.keys(transform), function(pattern)
 -- 			local regex = RegExp.new(pattern)
 -- 			local ref = regex:test("a.ts")
 -- 			return Boolean.toJSBoolean(ref) and ref or regex:test("a.tsx")
--- 		end) --[[ ROBLOX CHECK: check if 'Object.keys(transform)' is an Array ]]
+-- 		end) --[[ CHECK: check if 'Object.keys(transform)' is an Array ]]
 -- 		Array.forEach({ customJSPattern, customTSPattern }, function(pattern)
 -- 			if Boolean.toJSBoolean(pattern) then
 -- 				local customTransformer = transform[tostring(pattern)]
 -- 				if Boolean.toJSBoolean(Array.isArray(customTransformer)) then
 -- 					if
 -- 						customTransformer[
--- 							1 --[[ ROBLOX adaptation: added 1 to array index ]]
+-- 							1 --[[ adaptation: added 1 to array index ]]
 -- 						] == "babel-jest"
 -- 					then
 -- 						babelJest = require_:resolve("babel-jest")
 -- 						customTransformer[
--- 							1 --[[ ROBLOX adaptation: added 1 to array index ]]
+-- 							1 --[[ adaptation: added 1 to array index ]]
 -- 						] =
 -- 							babelJest
 -- 					elseif
 -- 						Boolean.toJSBoolean(
 -- 							Array.includes(
 -- 								customTransformer[
--- 									1 --[[ ROBLOX adaptation: added 1 to array index ]]
+-- 									1 --[[ adaptation: added 1 to array index ]]
 -- 								],
 -- 								"babel-jest"
--- 							) --[[ ROBLOX CHECK: check if 'customTransformer[0]' is an Array ]]
+-- 							) --[[ CHECK: check if 'customTransformer[0]' is an Array ]]
 -- 						)
 -- 					then
 -- 						babelJest = customTransformer[
--- 							1 --[[ ROBLOX adaptation: added 1 to array index ]]
+-- 							1 --[[ adaptation: added 1 to array index ]]
 -- 						]
 -- 					end
 -- 				else
@@ -352,7 +355,7 @@ end
 -- 						transform[tostring(pattern)] = babelJest
 -- 					elseif
 -- 						Boolean.toJSBoolean(
--- 							Array.includes(customTransformer, "babel-jest") --[[ ROBLOX CHECK: check if 'customTransformer' is an Array ]]
+-- 							Array.includes(customTransformer, "babel-jest") --[[ CHECK: check if 'customTransformer' is an Array ]]
 -- 						)
 -- 					then
 -- 						babelJest = customTransformer
@@ -368,7 +371,7 @@ end
 
 -- local function normalizeCollectCoverageOnlyFrom(
 -- 	options: Config_InitialOptionsWithRootDir & Required<Pick<Config_InitialOptions, "collectCoverageOnlyFrom">>,
--- 	key: any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Pick<Config.InitialOptions, 'collectCoverageOnlyFrom'> ]]
+-- 	key: any --[[ TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Pick<Config.InitialOptions, 'collectCoverageOnlyFrom'> ]]
 -- )
 -- 	local initialCollectCoverageFrom = options[key]
 -- 	local collectCoverageOnlyFrom: Array<Config_Glob> = if Boolean.toJSBoolean(
@@ -380,12 +383,12 @@ end
 -- 		filePath = path:resolve(options.rootDir, replaceRootDirInPath(options.rootDir, filePath))
 -- 		map[tostring(filePath)] = true
 -- 		return map
--- 	end, Object.create(nil)) --[[ ROBLOX CHECK: check if 'collectCoverageOnlyFrom' is an Array ]]
+-- 	end, Object.create(nil)) --[[ CHECK: check if 'collectCoverageOnlyFrom' is an Array ]]
 -- end
 
 -- local function normalizeCollectCoverageFrom(
 -- 	options: Config_InitialOptions & Required<Pick<Config_InitialOptions, "collectCoverageFrom">>,
--- 	key: any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Pick<Config.InitialOptions, 'collectCoverageFrom'> ]]
+-- 	key: any --[[ TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Pick<Config.InitialOptions, 'collectCoverageFrom'> ]]
 -- )
 -- 	local initialCollectCoverageFrom = options[key]
 -- 	local value: Array<Config_Glob> | nil
@@ -393,7 +396,7 @@ end
 -- 		value = {}
 -- 	end
 -- 	if not Boolean.toJSBoolean(Array.isArray(initialCollectCoverageFrom)) then
--- 		do --[[ ROBLOX COMMENT: try-catch block conversion ]]
+-- 		do --[[ COMMENT: try-catch block conversion ]]
 -- 			local ok, result, hasReturned = xpcall(function()
 -- 				value = JSON:parse(initialCollectCoverageFrom)
 -- 			end, function() end)
@@ -416,17 +419,17 @@ end
 -- 	if Boolean.toJSBoolean(value) then
 -- 		value = Array.map(value, function(filePath)
 -- 			return filePath:replace(
--- 				error("not implemented"), --[[ ROBLOX TODO: Unhandled node for type: RegExpLiteral ]] --[[ /^(!?)(<rootDir>\/)(.*)/ ]]
+-- 				error("not implemented"), --[[ TODO: Unhandled node for type: RegExpLiteral ]] --[[ /^(!?)(<rootDir>\/)(.*)/ ]]
 -- 				"$1$3"
 -- 			)
--- 		end) --[[ ROBLOX CHECK: check if 'value' is an Array ]]
+-- 		end) --[[ CHECK: check if 'value' is an Array ]]
 -- 	end
 -- 	return value
 -- end
 
 -- local function normalizeUnmockedModulePathPatterns(
 -- 	options: Config_InitialOptionsWithRootDir,
--- 	key: any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Pick<Config.InitialOptions, 'coveragePathIgnorePatterns' | 'modulePathIgnorePatterns' | 'testPathIgnorePatterns' | 'transformIgnorePatterns' | 'watchPathIgnorePatterns' | 'unmockedModulePathPatterns'> ]]
+-- 	key: any --[[ TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Pick<Config.InitialOptions, 'coveragePathIgnorePatterns' | 'modulePathIgnorePatterns' | 'testPathIgnorePatterns' | 'transformIgnorePatterns' | 'watchPathIgnorePatterns' | 'unmockedModulePathPatterns'> ]]
 -- )
 -- 	-- _replaceRootDirTags is specifically well-suited for substituting
 -- 	-- <rootDir> in paths (it deals with properly interpreting relative path
@@ -492,8 +495,8 @@ local function normalizeMissingOptions(
 	-- deviation END
 	projectIndex: number
 ): Config_InitialOptionsWithRootDir
-	if not Boolean.toJSBoolean(options.name) then
-		options.name = getRelativePath((options.rootDir :: any) :: Instance, nil)
+	if not Boolean.toJSBoolean(options.id) then
+		options.id = getRelativePath((options.rootDir :: any) :: Instance, nil)
 		-- deviation START: createHash not supported
 		-- 	options.name = createHash("md5")
 		-- 		:update(options.rootDir)
@@ -584,7 +587,7 @@ local function buildTestPathPattern(argv: Config_Argv): string
 		-- 	return patternAsString
 		-- end
 		-- return patternAsString:gsub("",
-		-- 	error("not implemented"), --[[ ROBLOX TODO: Unhandled node for type: RegExpLiteral ]] --[[ /\//g ]]
+		-- 	error("not implemented"), --[[ TODO: Unhandled node for type: RegExpLiteral ]] --[[ /\//g ]]
 		-- 	"\\\\"
 		-- )
 		-- deviation END
@@ -621,14 +624,14 @@ end
 -- 		local string_ = Array.join(
 -- 			Array.map(opts, function(ext)
 -- 				return ("'%s'"):format(tostring(ext))
--- 			end), --[[ ROBLOX CHECK: check if 'opts' is an Array ]]
+-- 			end), --[[ CHECK: check if 'opts' is an Array ]]
 -- 			", "
 -- 		)
 -- 		return chalk.bold(("extensionsToTreatAsEsm: [%s]"):format(tostring(string_)))
 -- 	end
 -- 	local extensionWithoutDot = Array.some(extensionsToTreatAsEsm, function(ext)
 -- 		return not Boolean.toJSBoolean(ext:startsWith("."))
--- 	end) --[[ ROBLOX CHECK: check if 'extensionsToTreatAsEsm' is an Array ]]
+-- 	end) --[[ CHECK: check if 'extensionsToTreatAsEsm' is an Array ]]
 -- 	if Boolean.toJSBoolean(extensionWithoutDot) then
 -- 		error(createConfigError(([[  Option: %s includes a string that does not start with a period (%s).
 --   Please change your configuration to %s.]]):format(
@@ -637,13 +640,13 @@ end
 -- 			tostring(printConfig(
 -- 				Array.map(extensionsToTreatAsEsm, function(ext)
 -- 					return if Boolean.toJSBoolean(ext:startsWith(".")) then ext else (".%s"):format(tostring(ext))
--- 				end) --[[ ROBLOX CHECK: check if 'extensionsToTreatAsEsm' is an Array ]]
+-- 				end) --[[ CHECK: check if 'extensionsToTreatAsEsm' is an Array ]]
 -- 			))
 -- 		)))
 -- 	end
 -- 	if
 -- 		Boolean.toJSBoolean(
--- 			Array.includes(extensionsToTreatAsEsm, ".js") --[[ ROBLOX CHECK: check if 'extensionsToTreatAsEsm' is an Array ]]
+-- 			Array.includes(extensionsToTreatAsEsm, ".js") --[[ CHECK: check if 'extensionsToTreatAsEsm' is an Array ]]
 -- 		)
 -- 	then
 -- 		error(
@@ -659,7 +662,7 @@ end
 -- 	end
 -- 	if
 -- 		Boolean.toJSBoolean(
--- 			Array.includes(extensionsToTreatAsEsm, ".cjs") --[[ ROBLOX CHECK: check if 'extensionsToTreatAsEsm' is an Array ]]
+-- 			Array.includes(extensionsToTreatAsEsm, ".cjs") --[[ CHECK: check if 'extensionsToTreatAsEsm' is an Array ]]
 -- 		)
 -- 	then
 -- 		error(
@@ -673,7 +676,7 @@ end
 -- 	end
 -- 	if
 -- 		Boolean.toJSBoolean(
--- 			Array.includes(extensionsToTreatAsEsm, ".mjs") --[[ ROBLOX CHECK: check if 'extensionsToTreatAsEsm' is an Array ]]
+-- 			Array.includes(extensionsToTreatAsEsm, ".mjs") --[[ CHECK: check if 'extensionsToTreatAsEsm' is an Array ]]
 -- 		)
 -- 	then
 -- 		error(
@@ -745,7 +748,7 @@ local function normalize(
 		-- 		end
 
 		-- 		if Boolean.toJSBoolean(options.setupTestFrameworkScriptFile) then
-		-- 			table.insert(options.setupFilesAfterEnv, options.setupTestFrameworkScriptFile) --[[ ROBLOX CHECK: check if 'options.setupFilesAfterEnv' is an Array ]]
+		-- 			table.insert(options.setupFilesAfterEnv, options.setupTestFrameworkScriptFile) --[[ CHECK: check if 'options.setupFilesAfterEnv' is an Array ]]
 		-- 		end
 		-- deviation END
 
@@ -804,11 +807,11 @@ local function normalize(
 		-- deviation END
 
 		local optionKeys =
-			Object.keys(options) :: Array<string --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Config.InitialOptions ]]>
+			Object.keys(options) :: Array<string --[[ TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Config.InitialOptions ]]>
 
 		Array.reduce(optionKeys, function(
 			newOptions,
-			key: string --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Config.InitialOptions ]]
+			key: string --[[ TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Config.InitialOptions ]]
 		)
 			-- The resolver has been resolved separately; skip it
 			if key == "resolver" then
@@ -823,7 +826,7 @@ local function normalize(
 			-- & Required<Pick<Config_InitialOptions, typeof(key)>>
 			-- deviation END
 			local value: any
-			repeat --[[ ROBLOX comment: switch statement conversion ]]
+			repeat --[[ comment: switch statement conversion ]]
 				-- deviation START: not supported
 				if false then
 					-- if key == "collectCoverageOnlyFrom" then
@@ -936,7 +939,7 @@ local function normalize(
 					-- 			return if Boolean.toJSBoolean(item)
 					-- 				then { regex, _replaceRootDirTags(options.rootDir, item) }
 					-- 				else item
-					-- 		end) --[[ ROBLOX CHECK: check if 'Object.keys(moduleNameMapper)' is an Array ]]
+					-- 		end) --[[ CHECK: check if 'Object.keys(moduleNameMapper)' is an Array ]]
 					-- 		else moduleNameMapper
 					-- 	break
 					-- elseif key == "transform" then
@@ -951,7 +954,7 @@ local function normalize(
 					-- 						filePath = if Boolean.toJSBoolean(Array.isArray(transformElement))
 					-- 							then
 					-- 								transformElement[
-					-- 									1 --[[ ROBLOX adaptation: added 1 to array index ]]
+					-- 									1 --[[ adaptation: added 1 to array index ]]
 					-- 								]
 					-- 							else transformElement,
 					-- 						key = key,
@@ -960,11 +963,11 @@ local function normalize(
 					-- 					if Boolean.toJSBoolean(Array.isArray(transformElement))
 					-- 						then
 					-- 							transformElement[
-					-- 								2 --[[ ROBLOX adaptation: added 1 to array index ]]
+					-- 								2 --[[ adaptation: added 1 to array index ]]
 					-- 							]
 					-- 						else {},
 					-- 				}
-					-- 			end) --[[ ROBLOX CHECK: check if 'Object.keys(transform)' is an Array ]]
+					-- 			end) --[[ CHECK: check if 'Object.keys(transform)' is an Array ]]
 					-- 		else transform
 					-- 	break
 					-- deviation END
@@ -984,7 +987,7 @@ local function normalize(
 					-- elseif key == "haste" then
 					-- 	value = Object.assign({}, oldOptions[key])
 					-- 	if
-					-- 		value.hasteImplModulePath ~= nil --[[ ROBLOX CHECK: loose inequality used upstream ]]
+					-- 		value.hasteImplModulePath ~= nil --[[ CHECK: loose inequality used upstream ]]
 					-- 	then
 					-- 		local resolvedHasteImpl = resolve(newOptions.resolver, {
 					-- 			filePath = replaceRootDirInPath(options.rootDir, value.hasteImplModulePath),
@@ -1055,7 +1058,7 @@ local function normalize(
 					-- 					then -- Only require 'js' for the default jest-runner
 					-- 						-- Only require 'js' for the default jest-runner
 					-- 						not Boolean.toJSBoolean(
-					-- 							Array.includes(value, "js") --[[ ROBLOX CHECK: check if 'value' is an Array ]]
+					-- 							Array.includes(value, "js") --[[ CHECK: check if 'value' is an Array ]]
 					-- 						)
 					-- 					else ref
 					-- 			end)())
@@ -1161,7 +1164,7 @@ local function normalize(
 					or key == "listTests"
 					or key == "logHeapUsage"
 					or key == "maxConcurrency"
-					or key == "name"
+					or key == "id"
 					or key == "noStackTrace"
 					or key == "notify"
 					or key == "notifyMode"
@@ -1375,7 +1378,7 @@ local function normalize(
 		-- 		return if Boolean.toJSBoolean(path:isAbsolute(filename))
 		-- 			then path:relative(options.rootDir, filename)
 		-- 			else filename
-		-- 	end) --[[ ROBLOX CHECK: check if 'newOptions.nonFlagArgs' is an Array ]] -- Don't override existing collectCoverageFrom options
+		-- 	end) --[[ CHECK: check if 'newOptions.nonFlagArgs' is an Array ]] -- Don't override existing collectCoverageFrom options
 		-- 	if Boolean.toJSBoolean(newOptions.collectCoverageFrom) then
 		-- 		collectCoverageFrom = Array.reduce(collectCoverageFrom, function(patterns, filename)
 		-- 			if
@@ -1387,7 +1390,7 @@ local function normalize(
 		-- 				return patterns
 		-- 			end
 		-- 			return Array.concat({}, Array.spread(patterns), { filename })
-		-- 		end, newOptions.collectCoverageFrom) --[[ ROBLOX CHECK: check if 'collectCoverageFrom' is an Array ]]
+		-- 		end, newOptions.collectCoverageFrom) --[[ CHECK: check if 'collectCoverageFrom' is an Array ]]
 		-- 	end
 		-- 	newOptions.collectCoverageFrom = collectCoverageFrom
 		-- elseif not Boolean.toJSBoolean(newOptions.collectCoverageFrom) then

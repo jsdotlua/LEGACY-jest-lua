@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-core/src/getNoTestFoundVerbose.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-core/src/getNoTestFoundVerbose.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -24,14 +24,18 @@ local typesModule = require(script.Parent.types)
 type Stats = typesModule.Stats
 type TestRunData = typesModule.TestRunData
 
-local function getNoTestFoundVerbose(testRunData: TestRunData, globalConfig: Config_GlobalConfig): string
+local function getNoTestFoundVerbose(
+	testRunData: TestRunData,
+	globalConfig: Config_GlobalConfig,
+	willExitWith0: boolean
+): string
 	local individualResults = Array.map(testRunData, function(testRun)
 		local stats_ = testRun.matches.stats ~= nil and testRun.matches.stats or {} :: Stats
 		local config = testRun.context.config
 		local statsMessage = Array.join(
 			Array.filter(
 				Array.map(
-					Object.keys(stats_) :: Array<any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Stats ]]>,
+					Object.keys(stats_) :: Array<any --[[ TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Stats ]]>,
 					function(key): string | nil
 						if key == "roots" and #config.roots == 1 then
 							return nil
@@ -75,8 +79,14 @@ local function getNoTestFoundVerbose(testRunData: TestRunData, globalConfig: Con
 	else
 		dataMessage = ("Pattern: %s - 0 matches"):format(chalk.yellow(globalConfig.testPathPattern))
 	end
-	return chalk.bold("No tests found, exiting with code 1")
-		.. "\n"
+	if Boolean.toJSBoolean(willExitWith0) then
+		return ("%s\n%s\n%s"):format(
+			chalk.bold("No tests found, exiting with code 0"),
+			tostring(Array.join(individualResults, "\n") --[[ CHECK: check if 'individualResults' is an Array ]]),
+			tostring(dataMessage)
+		)
+	end
+	return ("%s\n"):format(chalk.bold("No tests found, exiting with code 1"))
 		.. "Run with `--passWithNoTests` to exit with code 0"
 		.. "\n"
 		.. Array.join(individualResults, "\n")

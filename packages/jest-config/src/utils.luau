@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/utils.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-config/src/utils.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -82,7 +82,7 @@ exports.DOCUMENTATION_NOTE = DOCUMENTATION_NOTE
 
 -- local function escapeGlobCharacters(path: Config_Path): Config_Glob
 -- 	return path:replace(
--- 		error("not implemented"), --[[ ROBLOX TODO: Unhandled node for type: RegExpLiteral ]] --[[ /([()*{}\[\]!?\\])/g ]]
+-- 		error("not implemented"), --[[ TODO: Unhandled node for type: RegExpLiteral ]] --[[ /([()*{}\[\]!?\\])/g ]]
 -- 		"\\$1"
 -- 	)
 -- end
@@ -140,7 +140,7 @@ type JSONString = string & {
 } -- newtype
 local function isJSONString(
 	text: (JSONString | string)?
-): boolean --[[ ROBLOX FIXME: change to TSTypePredicate equivalent if supported ]] --[[ text is JSONString ]]
+): boolean --[[ FIXME: change to TSTypePredicate equivalent if supported ]] --[[ text is JSONString ]]
 	return text ~= nil and typeof(text) == "string" and String.startsWith(text, "{") and String.endsWith(text, "}")
 end
 exports.isJSONString = isJSONString

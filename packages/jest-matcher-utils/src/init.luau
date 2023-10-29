@@ -1,5 +1,5 @@
 --!nonstrict
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-matcher-utils/src/index.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-matcher-utils/src/index.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -43,7 +43,7 @@ local deepCyclicCopyReplaceable = require(CurrentModule.deepCyclicCopyReplaceabl
 local prettyFormatPlugins = PrettyFormat.plugins
 local PLUGINS = {
 	prettyFormatPlugins.AsymmetricMatcher,
-	-- deviation: Roblox Instance matchers
+	-- deviation: Instance matchers
 	prettyFormatPlugins.RobloxInstance,
 }
 
@@ -96,12 +96,14 @@ local SUGGEST_TO_CONTAIN_EQUAL =
 local replaceTrailingSpaces, getCommonAndChangedSubstrings, isLineDiffable, shouldPrintDiff, replaceMatchedToAsymmetricMatcher, isAsymmetricMatcher
 local matcherErrorMessage, matcherHint
 
-local function stringify(object: any, maxDepth: number?): string
-	-- deviation: Added this if logic to deal with handling nil values in Lua tables
+local function stringify(object: unknown, maxDepth_: number?, maxWidth_: number?): string
+	-- deviation START: Added this if logic to deal with handling nil values in Lua tables
 	if object == Symbol.for_("$$nil") then
 		object = nil
 	end
-	maxDepth = maxDepth or 10
+	-- deviation END
+	local maxDepth: number = if maxDepth_ ~= nil then maxDepth_ else 10
+	local maxWidth: number = if maxWidth_ ~= nil then maxWidth_ else 10
 
 	local MAX_LENGTH = 10000
 	local result
@@ -109,6 +111,7 @@ local function stringify(object: any, maxDepth: number?): string
 	local ok = pcall(function()
 		result = prettyFormat(object, {
 			maxDepth = maxDepth,
+			maxWidth = maxWidth,
 			min = true,
 			plugins = PLUGINS,
 		})
@@ -118,21 +121,31 @@ local function stringify(object: any, maxDepth: number?): string
 		result = prettyFormat(object, {
 			callToJSON = false,
 			maxDepth = maxDepth,
+			maxWidth = maxWidth,
 			min = true,
 			plugins = PLUGINS,
 		})
 	end
 
-	if #result >= MAX_LENGTH and maxDepth > 1 then
-		--[[
-			ROBLOX TODO: Remove the "if maxDepth" check once it can pass through
-			Luau cleanly
-		]]
-		if maxDepth then
-			return stringify(object, math.floor(maxDepth / 2))
-		end
+	if
+		-- deviation START: fix length check
+		-- result.length >= MAX_LENGTH --[[ CHECK: operator '>=' works only if either both arguments are strings or both are a number ]]
+		#result >= MAX_LENGTH
+		-- deviation END
+		and maxDepth > 1 --[[ CHECK: operator '>' works only if either both arguments are strings or both are a number ]]
+	then
+		return stringify(object, math.floor(maxDepth / 2), maxWidth)
+	elseif
+		-- deviation START: fix length check
+		-- result.length >= MAX_LENGTH --[[ CHECK: operator '>=' works only if either both arguments are strings or both are a number ]]
+		#result >= MAX_LENGTH
+		-- deviation END
+		and maxWidth > 1 --[[ CHECK: operator '>' works only if either both arguments are strings or both are a number ]]
+	then
+		return stringify(object, maxDepth, math.floor(maxWidth / 2))
+	else
+		return result
 	end
-	return result
 end
 
 local function highlightTrailingWhitespace(text: string): string
@@ -544,7 +557,7 @@ function matcherHint(matcherName: string, received: string?, expected: string?, 
 	options = options or {}
 
 	--[[
-		ROBLOX TODO: Remove the "if options" check once it can pass through
+		TODO: Remove the "if options" check once it can pass through
 		Luau cleanly and define all of the variables in-line i.e.
 		local comment = options.comment or ""
 	]]

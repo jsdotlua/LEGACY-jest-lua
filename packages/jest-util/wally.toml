@@ -1,7 +1,7 @@
 [package]
 name = 'jsdotlua/jest-util'
 description = 'https://github.com/jsdotlua/jest-lua'
-version = '3.2.5'
+version = '3.4.1'
 license = 'MIT'
 authors = ['Roblox Corporation']
 registry = 'https://github.com/UpliftGames/wally-index'
@@ -9,9 +9,9 @@ realm = 'shared'
 
 [dependencies]
 ChalkLua = 'jsdotlua/chalk-lua@0.2.1'
-JestTypes = 'jsdotlua/jest-types@3.2.5'
+JestTypes = 'jsdotlua/jest-types@3.4.1'
 LuauPolyfill = 'jsdotlua/luau-polyfill@1.2.3'
 Picomatch = 'jsdotlua/picomatch-lua@5.2.1'
 Promise = 'evaera/promise@4.0.0'
 RegExp = 'jsdotlua/regex@1.0.2'
-RobloxShared = 'jsdotlua/roblox-shared@3.2.5'
+RobloxShared = 'jsdotlua/roblox-shared@3.4.1'

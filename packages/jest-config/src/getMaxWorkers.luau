@@ -1,4 +1,4 @@
--- upstream: https://github.com/facebook/jest/blob/v27.4.7/packages/jest-config/src/getMaxWorkers.ts
+-- upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-config/src/getMaxWorkers.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -68,12 +68,12 @@ exports.default = getMaxWorkers
 -- 			local ref = if Boolean.toJSBoolean(ref)
 -- 				then
 -- 					parsed
--- 					> 0 --[[ ROBLOX CHECK: operator '>' works only if either both arguments are strings or both are a number ]]
+-- 					> 0 --[[ CHECK: operator '>' works only if either both arguments are strings or both are a number ]]
 -- 				else ref
 -- 			return if Boolean.toJSBoolean(ref)
 -- 				then
 -- 					parsed
--- 					<= 100 --[[ ROBLOX CHECK: operator '<=' works only if either both arguments are strings or both are a number ]]
+-- 					<= 100 --[[ CHECK: operator '<=' works only if either both arguments are strings or both are a number ]]
 -- 				else ref
 -- 		end)())
 -- 	then
